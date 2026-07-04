@@ -96,6 +96,7 @@ LOGIN_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -131,7 +132,14 @@ WSGI_APPLICATION = 'rincart.wsgi.application'
 
 
 import os
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# ⚡ വൈറ്റ്നോയ്‌സ് വഴി ഫയലുകൾ കംപ്രസ്സ് ചെയ്ത് സ്പീഡിൽ ലോഡ് ചെയ്യാൻ ഇത് സഹായിക്കും
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 import environ
