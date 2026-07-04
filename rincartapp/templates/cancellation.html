@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}
+Confirm Cancellation
+{% endblock %}
+{% block content %}
+
+<style>
+    /* Custom Radio Box Styling */
+    .reason-box {
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: #ffffff;
+    }
+    
+    .reason-box:hover {
+        border-color: #fca5a5;
+        background-color: #fff5f5;
+    }
+    
+    /* റേഡിയോ ബട്ടൺ സെലക്ട് ചെയ്യുമ്പോൾ ബോക്സിന്റെ കളർ മാറാൻ */
+    .reason-input:checked + .reason-label-text {
+        color: #dc2626;
+        font-weight: 600;
+    }
+    
+    .reason-input:checked ~ .reason-box-wrapper {
+        border-color: #ef4444;
+        background-color: #fef2f2;
+    }
+
+    .reason-input {
+        accent-color: #ef4444;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container d-flex justify-content-center my-5">
+   <div class="card shadow-lg border-0 text-center p-4 p-sm-5 rounded-4" style="max-width: 500px; width: 100%; background: #ffffff;">
+      
+      <div class="mb-3">
+         <div class="bg-danger bg-opacity-10 d-inline-block rounded-circle p-3 shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 2.5rem; line-height: 1;"></i>
+         </div>
+      </div>
+
+      <h4 class="fw-bold text-dark mb-1">Cancel Order?</h4>
+      <p class="text-muted px-2 small">Are you sure you want to cancel this order? This action cannot be undone. 😥</p>
+      
+      <hr class="my-4 text-muted opacity-25">
+
+      <form method="POST" action="{% url 'cancel_order_view' order.id %}" class="text-start mb-4">
+         {% csrf_token %}
+         
+         <label class="form-label small text-uppercase fw-bold text-muted mb-3 d-block text-center">Please select a reason for cancellation:</label>
+
+         <label class="reason-box w-100" for="reason1">
+            <input type="radio" name="reason" id="reason1" value="bad_quality" class="reason-input me-3" required>
+            <span class="text-dark small reason-label-text">I changed my mind / Don't like it</span>
+         </label>
+
+         <label class="reason-box w-100" for="reason2">
+            <input type="radio" name="reason" id="reason2" value="wrong_size" class="reason-input me-3">
+            <span class="text-dark small reason-label-text">Size / Fit issue</span>
+         </label>
+
+         <label class="reason-box w-100" for="reason3">
+            <input type="radio" name="reason" id="reason3" value="delivery_delay" class="reason-input me-3">
+            <span class="text-dark small reason-label-text">Delivery is taking too long</span>
+         </label>
+
+         <label class="reason-box w-100" for="reason4">
+            <input type="radio" name="reason" id="reason4" value="other" class="reason-input me-3">
+            <span class="text-dark small reason-label-text">Other reasons</span>
+         </label>
+
+         <div class="row g-2 mt-4">
+            <div class="col-6">
+               <a href="{% url 'view_deals' %}" class="btn btn-light w-100 py-2.5 fw-bold rounded-3 border text-secondary">
+                  No, Keep It
+               </a>
+            </div>
+            <div class="col-6">
+               <button type="submit" class="btn btn-danger w-100 py-2.5 fw-bold rounded-3 shadow-sm" style="background-color: #ef4444; border: none;">
+                  Cancel Order
+               </button>
+            </div>
+            
+         </div>
+
+      </form>
+
+      <div class="text-center">
+         <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-shield-lock me-1"></i> Safe & Secure Refund Policy Applicable</small>
+      </div>
+
+   </div>
+</div>
+
+{% endblock %}

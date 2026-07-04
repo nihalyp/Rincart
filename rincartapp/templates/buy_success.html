@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    /* Premium Success Page Styling */
+    .success-card {
+        background: #ffffff;
+        border: none;
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+    }
+    .success-icon-wrap {
+        animation: scaleIn 0.5s ease-out forwards;
+    }
+    .savings-banner {
+        background: linear-gradient(135deg, #d1e7dd 0%, #c1e1d2 100%);
+        border-left: 5px solid #198754;
+        border-radius: 12px;
+    }
+    .btn-deals {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b31c4 100%);
+        color: white;
+        border: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-deals:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        color: white;
+    }
+    /* Scrollbar for multiple items */
+    .ordered-items-box {
+        max-height: 260px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+    .ordered-items-box::-webkit-scrollbar {
+        width: 5px;
+    }
+    .ordered-items-box::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    /* 🌟 ലോങ് ടെക്സ്റ്റ് കാരണം ലേഔട്ട് തകരാതിരിക്കാനുള്ള ഫിക്സ് */
+    .product-img-container {
+        width: 65px;
+        height: 65px;
+        flex-shrink: 0; /* ഇമേജ് ബോക്സ് ചുരുങ്ങിപ്പോകില്ല */
+    }
+    .product-text-container {
+        min-width: 0; /* text-truncate കൃത്യമായി വർക്ക് ചെയ്യാൻ ഇത് നിർബന്ധമാണ് */
+    }
+
+    @keyframes scaleIn {
+        0% { transform: scale(0); opacity: 0; }
+        80% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+</style>
+
+<div class="container my-5 d-flex justify-content-center">
+    <div class="card success-card p-4 p-sm-5 text-center" style="max-width: 550px; width: 100%;">
+        
+        <div class="success-icon-wrap mb-4">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 5.5rem; line-height: 1;"></i>
+        </div>
+
+        <h2 class="fw-bold text-success mb-1">Booking Successful!</h2>
+        <p class="text-muted small px-3">Thank you for your purchase. Your order has been verified and securely processed.</p>
+        
+        <div class="ordered-items-box my-4">
+            {% for item in ordered_items %}
+            <div class="d-flex align-items-center gap-3 bg-light p-3 rounded-3 text-start border border-dashed mb-2">
+                
+                <div class="product-img-container">
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="65" height="65" style="object-fit: cover;" class="bg-white p-1 rounded border shadow-sm">
+                    {% else %}
+                        <div class="bg-white p-1 rounded border shadow-sm d-flex align-items-center justify-content-center w-100 h-100">
+                            <i class="bi bi-box-seam text-secondary fs-3"></i>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="product-text-container flex-grow-1">
+                    <h6 class="fw-bold text-dark mb-1 lh-sm text-truncate" title="{{ item.product.name }}" style="font-size: 0.95rem;">
+                        {{ item.product.name }}
+                    </h6>
+                    <span class="badge bg-secondary rounded-pill small">Qty: {{ item.quantity }}</span>
+                </div>
+
+                <div class="text-end flex-shrink-0">
+                    <span class="fw-bold text-dark small">₹{{ item.final_amount|floatformat:2 }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if total_savings > 0 %}
+        <div class="savings-banner p-3 text-start mb-4 shadow-sm">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-piggy-bank-fill text-success fs-4"></i>
+                <h5 class="fw-bold text-success mb-0">You Saved ₹{{ total_savings|floatformat:2 }}!</h5>
+            </div>
+            <p class="text-success-emphasis small mb-0 mt-1">Awesome! You successfully locked in the best original price discount on this slot.</p>
+        </div>
+        {% endif %}
+
+        <div class="text-start  p-3 rounded-3 mb-4 small border">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Original Total Price:</span>
+                <span class="text-decoration-line-through text-muted fw-semibold">₹{{ original_total|floatformat:2 }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Your Discounted Price:</span>
+                <span class=" fw-bold">₹{{ discounted_total|floatformat:2 }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">GST / Government Taxes:</span>
+                <span class=" fw-semibold">+₹{{ tax_amount|floatformat:2 }}</span>
+            </div>
+            <hr class="my-2 opacity-25">
+            <div class="d-flex justify-content-between align-items-center fs-6 fw-bold">
+                <span >Final Amount Paid:</span>
+                <span class="text-success" style="font-size: 1.2rem;">₹{{ final_amount|floatformat:2 }}</span>
+            </div>
+        </div>
+
+        <div class="d-grid mt-2">
+            <a href="{% url 'view_deals' %}" class="btn btn-deals btn-lg py-3 fw-bold rounded-3 d-flex align-items-center justify-content-center gap-2 shadow-sm">
+                <i class="bi bi-lightning-charge-fill text-warning"></i> View Exclusive Deals
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

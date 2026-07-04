@@ -1,0 +1,617 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* 💚 Flipkart Green Discount & Down Arrow Style */
+    .flipkart-green-discount {
+        color: #388e3c;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    /* 🌟 PREMIUM COLOR CIRCLE INDICATORS */
+    .color-circle {
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: 2px solid #e2e8f0;
+        outline-offset: 2px;
+    }
+    .color-circle:hover {
+        transform: scale(1.15);
+    }
+    .active-color {
+        outline: 3px solid #4f46e5 !important;
+        transform: scale(1.1);
+    }
+
+    /* Layout Configurations & Amazon/Flipkart Carousel Custom CSS */
+    .main-image-carousel-container {
+        height: 440px;
+        background: #ffffff;
+        position: relative;
+    }
+    .carousel-inner, .carousel-item {
+        height: 100%;
+    }
+    .carousel-item img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
+
+    /* 🏹 Custom Amazon Style Round Arrows */
+    .carousel-control-prev-icon-custom,
+    .carousel-control-next-icon-custom {
+        background-color: rgba(255, 255, 255, 0.9);
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #e5e7eb;
+        transition: all 0.2s ease;
+    }
+    .carousel-control-prev-icon-custom:hover,
+    .carousel-control-next-icon-custom:hover {
+        background-color: #ffffff;
+        transform: scale(1.08);
+    }
+    .carousel-control-prev, .carousel-control-next {
+        width: 8%;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    /* Hover ചെയ്യുമ്പോൾ മാത്രം ഡെസ്ക്ടോപ്പിൽ അമ്പടയാളം കാണാൻ */
+    #productImageCarousel:hover .carousel-control-prev,
+    #productImageCarousel:hover .carousel-control-next {
+        opacity: 1;
+    }
+
+    .thumb-box {
+        cursor: pointer;
+        background: #ffffff;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+    .thumb-box:hover {
+        transform: translateY(-2px);
+    }
+    .active-thumb {
+        border-color: #ffc107 !important;
+        box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.3);
+    }
+    .spec-label {
+        font-weight: 600;
+        color: #4b5563;
+        width: 35%;
+    }
+
+    /* 📱 FIXED BOTTOM ACTION BAR - NO LEAK STYLE */
+    .flipkart-bottom-bar {
+        height: 52px;
+        z-index: 1060;
+        box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+    }
+
+    .btn-flipkart {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        text-decoration: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+    }
+
+    .bg-orange {
+        background-color: #ff9f00 !important;
+    }
+    
+    .btn-flipkart:active {
+        opacity: 0.85;
+    }
+
+    @media (max-width: 767.98px) {
+        body {
+            padding-bottom: 52px !important; 
+        }
+        .main-image-carousel-container {
+            height: 300px; /* മൊബൈലിൽ കാരോസൽ ബോക്സ് ചെറുതാക്കുന്നു */
+        }
+        .carousel-control-prev, .carousel-control-next {
+            opacity: 0.6; /* മൊബൈലിൽ എപ്പോഴും ചെറിയ രീതിയിൽ അമ്പടയാളം കാണാം */
+            width: 12%;
+        }
+    }
+    .fw-extrabold {
+        font-weight: 850 !important;
+    }
+    .tracking-tight {
+        letter-spacing: -0.5px;
+    }
+
+    /* 🏷️ വെട്ടിയിട്ട വിലയുടെ സ്റ്റൈൽ */
+    .style-original-price {
+        font-size: 1.15rem;
+        margin-left: 2px;
+    }
+
+    /* 💚 Flipkart Green Discount Label */
+    .flipkart-premium-discount {
+        color: #388e3c; /* ഫ്ലിപ്കാർട്ട് ഒറിജിനൽ ഗ്രീൻ */
+        font-weight: 700;
+        font-size: 1.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 1px;
+        margin-left: 4px;
+    }
+
+    /* ഐക്കൺ അമ്പടയാളം അല്പം വലുതാക്കാൻ */
+    .flipkart-premium-discount i {
+        font-size: 1.4rem;
+        line-height: 0;
+        font-weight: 900;
+    }
+    .product-img-box {
+        height: 180px;
+        width: 100%;
+        overflow: hidden;
+    }
+    .custom-img {
+        max-height: 100%;
+        object-fit: contain;
+    }
+</style>
+
+<div class="container my-5 mx-auto" style="max-width: 1200px;">
+    <div class="row g-4 g-md-5 justify-content-center">
+        
+        <!-- 📸 Left Column: Image Section with Carousel (Arrows & Touch Swipe) -->
+        <div class="col-md-6">
+            <div class="position-sticky" style="top: 20px;">
+                
+                <!-- ❤️ വിഷ്‌ലിസ്റ്റ് ഹാർട്ട് ബട്ടൺ -->
+                <button class="wishlist-btn position-absolute top-0 end-0 m-3 bg-white rounded-circle d-flex align-items-center justify-content-center border-0" 
+                        data-item-id="{{ product.id }}"
+                        style="width: 50px; height: 50px; z-index: 15; border: 1px solid #f0f0f0;">
+                    {% if product.id in wishlist_ids %}
+                        <i class="bi bi-heart-fill text-danger" style="font-size: 2rem;"></i>
+                    {% else %}
+                        <i class="bi bi-heart text-secondary" style="font-size: 2rem;"></i>
+                    {% endif %}
+                </button>
+                
+                <!-- 🎠 Bootstrap Carousel (Touch Swipe enabled via data-bs-touch="true") -->
+                <div id="productImageCarousel" class="carousel slide main-image-carousel-container border rounded-4 bg-white p-4 shadow-sm mb-3" data-bs-ride="false" data-bs-touch="true">
+                    <div class="carousel-inner">
+                        <!-- Main Product Image -->
+                        <div class="carousel-item active" data-thumb-index="0">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">No Image Available</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Extra Images Loop -->
+                        {% for extra in product.extra_images.all %}
+                        <div class="carousel-item" data-thumb-index="{{ forloop.counter }}">
+                            <img src="{{ extra.additional_image.url }}" alt="{{ product.name }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Left Round Arrow (Amazon Style) -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productImageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon-custom shadow-sm" aria-hidden="true">
+                            <i class="bi bi-chevron-left text-dark fs-4"></i>
+                        </span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+
+                    <!-- Right Round Arrow (Amazon Style) -->
+                    <button class="carousel-control-next" type="button" data-bs-target="#productImageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon-custom shadow-sm" aria-hidden="true">
+                            <i class="bi bi-chevron-right text-dark fs-4"></i>
+                        </span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                
+                <!-- 🖼️ Thumbnail List नीचे (ക്ലിക്ക് ചെയ്താൽ കാരോസൽ സ്ലൈഡ് മാറും) -->
+                <div class="d-flex gap-2 overflow-auto py-1 justify-content-center">
+                    {% if product.image %}
+                    <div class="thumb-box border rounded-3 p-1 active-thumb js-thumb" data-slide-to="0" onclick="switchCarouselImage(0, this)">
+                        <img src="{{ product.image.url }}" width="60" height="60" style="object-fit: contain;">
+                    </div>
+                    {% endif %}
+
+                    {% for extra in product.extra_images.all %}
+                    <div class="thumb-box border rounded-3 p-1 js-thumb" data-slide-to="{{ forloop.counter }}" onclick="switchCarouselImage({{ forloop.counter }}, this)">
+                        <img src="{{ extra.additional_image.url }}" width="60" height="60" style="object-fit: contain;">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 🏷️ Right Column: Product Details -->
+          <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2 text-uppercase small fw-semibold">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Home</a></li>
+                    <li class="breadcrumb-item active text-warning" aria-current="page">{{ product.get_category_display|default:product.category }}</li>
+                </ol>
+            </nav>
+            
+            <h1 class="fw-bold lh-sm mb-2" style="font-size: 1.6rem;">{{ product.name }}</h1>
+            <p class="text-muted fs-6 mb-4">{{ product.description }}</p>
+
+            {% if color_variants.count > 1 %}
+            <div class="mb-4 p-3 border rounded-3 shadow-sm">
+                <span class="fw-bold d-block mb-2 text-uppercase small tracking-wider">
+                    Select Color: <span class="text-primary fw-bold ms-1">{{ product.color_name|default:"Default Color" }}</span>
+                </span>
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    {% for variant in color_variants %}
+                        {% if variant.color_code %}
+                        <a href="{% url 'product_detail' variant.id %}" class="text-decoration-none" title="{{ variant.color_name }}">
+                            <span class="color-circle shadow-sm d-block rounded-circle {% if variant.id == product.id %}active-color{% endif %}" 
+                                  style="background-color: {{ variant.color_code }}; width: 38px; height: 38px; border: 2px solid #fff; cursor: pointer;">
+                            </span>
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if product.category == 'fashion' %}
+            <div class="mt-3">
+                <h6 class="fw-bold text-secondary mb-3">Select Size:</h6>
+                <div class="d-flex gap-2 flex-wrap">
+                    {% for variant in size_variants %}
+                        <button type="button" 
+                                class="btn btn-outline-secondary px-4 py-2 fw-semibold size-btn" 
+                                data-price="{{ variant.price }}"
+                                data-original="{% if variant.original_price %}{{ variant.original_price }}{% else %}{% endif %}"
+                                data-discount="{{ variant.Discount_percentage }}">
+                            {{ variant.size|upper }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}          
+            <hr class="text-muted opacity-25">
+
+            <div class="d-flex align-items-baseline gap-2.5 my-3 flex-wrap">
+                <span id="discount-wrapper" class="flipkart-premium-discount" {% if not product.original_price or product.original_price <= product.price %}style="display:none;"{% endif %}>
+                    <span id="discount-percent">{{ discount_percentage }}</span>%<i class="bi bi-arrow-down-short fs-1"riginal-price fs-2">
+                        ₹<span id="original-price">{{ product.original_price|default:"" }}</span>
+                    </span>
+                </span>
+
+                <span class="fs-1 fw-extrabold tracking-tight ms-2">₹<span id="product-price">{{ product.price }}</span></span>
+            </div>
+
+            <!-- Features Cards -->
+            <div class="card border-0 bg-light rounded-4 p-4 mb-4 shadow-sm">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="bg-white p-2 rounded-3 text-success shadow-sm" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-truck-fast fs-5"></i>
+                    </div>
+                    <div>
+                        <span class="d-block fw-bold">FREE Delivery</span>
+                        <small class="text-muted">No hidden shipping charges applied</small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="bg-white p-2 rounded-3 text-primary shadow-sm" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-calendar-check fs-5"></i>
+                    </div>
+                    <div>
+                        <span>Arriving by <strong class="text-primary">{{ delivery_date }}</strong></span>
+                        <small class="d-block text-muted">Fastest checkout dispatch tracking enabled</small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    {% if product.is_cod_available %}
+                        <div class="bg-white p-2 rounded-3 text-success shadow-sm" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(25, 135, 84, 0.15);">
+                            <i class="fa-solid fa-hand-holding-dollar fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold">Cash on Delivery</span>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 small fw-semibold" style="font-size: 0.75rem;">Available</span>
+                            </div>
+                            <small class="text-muted">Pay with cash or UPI at your doorstep</small>
+                        </div>
+                    {% else %}
+                        <div class="bg-white p-2 rounded-3 text-danger shadow-sm" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(220, 53, 69, 0.15);">
+                            <i class="fa-solid fa-ban fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-dark fw-bold text-opacity-75">Cash on Delivery</span>
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 small fw-semibold" style="font-size: 0.75rem;">Not Available</span>
+                            </div>
+                            <small class="text-danger small fw-medium"><i class="fa-solid fa-circle-exclamation me-1"></i>Requires online payment during checkout</small>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex align-items-start pt-2 border-top border-2 border-white mt-2">
+                    <div class="bg-white p-2 rounded-3 text-warning shadow-sm me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-rotate-left fs-5"></i>
+                    </div>
+                    <div class="policy-text">
+                        <span class="d-block fw-bold mb-0.5">10-Day Return & Exchange Policy</span>
+                        <span class="small text-muted mb-0 lh-base d-block">
+                            Not the perfect fit? Keep it intact and return within 10 days. 
+                            <a href="{% url 'return_policy' %}" class="text-primary text-decoration-none fw-semibold ms-1">Learn more</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Buttons -->
+            <div class="d-none d-md-flex gap-3 mb-4">
+                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline btn-lg py-3 px-4 flex-grow-1 fw-bold dynamic-btn" style="border-radius: 12px; font-size: 1rem;">
+                    <i class="fa-solid fa-cart-shopping me-2"></i>ADD TO CART
+                </a>
+                <a href="{% url 'checkout_single' product.id %}" class="btn btn-warning btn-lg py-3 px-4 flex-grow-1 text-white fw-bold dynamic-btn" style="background-color: #ff9f00; border: none; border-radius: 12px; font-size: 1rem;">
+                    <i class="fa-solid fa-bolt me-2"></i>BUY NOW
+                </a>
+            </div>
+
+            <!-- Mobile Sticky Bottom Bar -->
+            <div class="flipkart-bottom-bar fixed-bottom bg-white border-top d-block d-md-none">
+                <div class="row g-0 w-100 h-100 m-0 p-0">
+                    <div class="col-6 p-0 m-0 h-100">
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn-flipkart text-dark bg-white">
+                            <i class="fa-solid fa-cart-shopping me-1.5 text-secondary"></i>ADD TO CART
+                        </a>
+                    </div>
+                    <div class="col-6 p-0 m-0 h-100">
+                        <a href="{% url 'checkout_single' product.id %}" class="btn-flipkart text-white bg-orange">
+                            <i class="fa-solid fa-bolt me-1.5"></i>BUY NOW
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technical Specifications -->
+    {% if product.mobile_specs %}
+    <div class="mt-5 pt-4">
+        <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-microchip text-warning"></i> Technical Specifications
+        </h4>
+        
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden spec-card mx-auto">
+            <div class="row g-0">
+                <div class="col-md-4 bg-dark text-white p-4 d-flex flex-column justify-content-center align-items-center text-center">
+                    <i class="fa-solid fa-mobile-screen-button display-4 text-warning mb-3"></i>
+                    <h5 class="fw-bold m-0">{{ product.name }}</h5>
+                    <p class="text-muted small mt-1 mb-0">Full hardware summary verification configuration</p>
+                </div>
+                <div class="col-md-8 p-4">
+                    <div class="table-responsive">
+                        <table class="table table-borderless m-0 custom-spec-table">
+                            <tbody>
+                                <tr>
+                                    <td class="spec-label"><i class="bi bi-cpu bold me-2"></i> Processor</td>
+                                    <td class="spec-value">{{ product.mobile_specs.processor }}</td>
+                                </tr>
+                                {% if product.mobile_specs.chipset %}
+                                <tr>
+                                    <td class="spec-label"><i class="fa-solid fa-gear me-2"></i> Architecture</td>
+                                    <td class="spec-value">{{ product.mobile_specs.chipset }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="spec-label"><i class="fa-solid fa-memory me-2"></i> Memory (RAM)</td>
+                                    <td class="spec-value"><span class="badge bg-light text-dark border px-2.5 py-1.5">{{ product.mobile_specs.ram }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="spec-label"><i class="fa-solid fa-hard-drive me-2"></i> Internal Storage</td>
+                                    <td class="spec-value">{{ product.mobile_specs.storage }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="spec-label"><i class="fa-solid fa-battery-three-quarters me-2"></i> Battery & Charging</td>
+                                    <td class="spec-value">{{ product.mobile_specs.battery }}</td>
+                                </tr>
+                                {% if product.mobile_specs.display %}
+                                <tr>
+                                    <td class="spec-label"><i class="fa-solid fa-bezier-curve me-2"></i> Display Layout</td>
+                                    <td class="spec-value">{{ product.mobile_specs.display }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if product.mobile_specs.camera %}
+                                <tr>
+                                    <td class="spec-label"><i class="fa-solid fa-camera me-2"></i> Optics Setup</td>
+                                    <td class="spec-value text-muted">{{ product.mobile_specs.camera }}</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Similar Products Section -->
+    <div class="container-sm my-5">
+        <h3 class="fw-bold mb-4">Similar Products</h3>
+        
+        <div class="d-flex flex-nowrap overflow-auto pb-3 scrollbar-hidden" style="gap: 1rem; scroll-behavior: smooth;">
+            {% for sim_product in similar_products %}
+            <div class="card flex-shrink-0 position-relative shadow-sm" style="width: 18rem; border-radius: 12px; overflow: hidden;">
+                <!-- Wishlist Button -->
+                <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
+                    <button class="wishlist-btn position-absolute top-0 end-0 m-3 bg-white shadow-sm rounded-circle d-flex align-items-center justify-content-center border-0" 
+                            data-item-id="{{ sim_product.id }}"
+                            style="width: 32px; height: 32px; z-index: 15; border: 1px solid #f0f0f0;">
+                        
+                        {% if sim_product.id in wishlist_ids %}
+                            <i class="bi bi-heart-fill text-danger" style="font-size: 0.9rem;"></i>
+                        {% else %}
+                            <i class="bi bi-heart text-secondary" style="font-size: 0.9rem;"></i>
+                        {% endif %}
+                    </button>
+                </div>
+
+                <!-- Product Image -->
+                <a href="{% url 'product_detail' sim_product.id %}" class="text-decoration-none">
+                    {% if sim_product.image %}
+                    <div class="product-img-box d-flex align-items-center justify-content-center p-2 bg-white mt-2">
+                        <img src="{{ sim_product.image.url }}" class="img-fluid custom-img" alt="{{ sim_product.name }}">
+                        
+                        <!-- 🌟 Hover Sizes Overlay (ലൂപ്പ് ചെയ്ത് സൈസ് എടുക്കുന്നു) -->
+                        {% if sim_product.variant.all %}
+                        <div class="size-overlay">
+                            <span class="d-block text-dark mb-1" style="font-size: 0.62rem; font-weight:700; text-transform: uppercase; letter-spacing:0.3px;">Available Sizes</span>
+                            <div class="d-flex justify-content-center flex-wrap gap-1">
+                                {% for var in sim_product.variant.all %}
+                                    <span class="size-badge-sm">{{ var.size|upper }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="bi bi-image text-muted fs-1"></i>
+                        </div>
+                    {% endif %}
+                </a>
+
+                <!-- Card Body -->
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <a href="{% url 'product_detail' sim_product.id %}" class="text-decoration-none">
+                            <h6 class="card-title text-truncate fw-semibold mb-1">{{ sim_product.name }}</h6>
+                        </a>
+                        <p class="text-muted small mb-2">{{ sim_product.category.name }}</p>
+                    </div>
+
+                    <div class="mt-2">
+                        <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                            {% if sim_product.original_price and sim_product.original_price > sim_product.price %}
+                            <span class="flipkart-green-discount">
+                                {{ sim_product.discount_percentage }}% <i class="bi bi-arrow-down"></i>
+                            </span>
+                            <span class="text-muted text-decoration-line-through" style="font-size: 0.8rem;">
+                                ₹{{ sim_product.original_price }} 
+                            </span>
+                            {% endif %}
+                            <span class="fs-5 fw-bold ms-1">₹{{ sim_product.price }}</span>
+                        </div>
+                        <div class="mt-1">
+                            <small class="text-muted" style="font-size: 0.7rem; font-weight: 500;">Free Delivery</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="w-100 text-center py-4 text-muted">
+                <p>No similar products found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% if product.category == 'fashion' %}
+<script>
+    document.querySelectorAll('.size-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // 1. സെലക്ട് ചെയ്ത ബട്ടണിന്റെ സ്റ്റൈൽ മാറ്റുന്നു
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('btn-dark', 'text-white');
+                btn.classList.add('btn-outline-secondary');
+            });
+            this.classList.remove('btn-outline-secondary');
+            this.classList.add('btn-dark', 'text-white');
+
+            // 2. ബട്ടണിൽ നിന്നും വാല്യൂസ് എടുക്കുന്നു
+            const newPrice = this.getAttribute('data-price');
+            const newOriginalPrice = this.getAttribute('data-original');
+            const newDiscount = this.getAttribute('data-discount');
+
+            // 3. വാല്യൂസ് HTML-ലേക്ക് മാറ്റുന്നു
+            document.getElementById('product-price').innerText = newPrice;
+
+            const discountWrapper = document.getElementById('discount-wrapper');
+            
+            // ഒറിജിനൽ വില ഉണ്ടെങ്കിൽ മാത്രം ഡിസ്‌കൗണ്ട് കാണിക്കുക
+            if (newOriginalPrice && parseInt(newOriginalPrice) > parseInt(newPrice)) {
+                document.getElementById('original-price').innerText = newOriginalPrice;
+                document.getElementById('discount-percent').innerText = newDiscount;
+                discountWrapper.style.display = 'inline-flex'; // കാണിക്കുക
+            } else {
+                discountWrapper.style.display = 'none'; // മറച്ചു വെക്കുക
+            }
+        });
+    });
+</script>
+{% endif %}
+<!-- 🛠️ Updated JavaScript Localized logic -->
+<script>
+    // 1. തമ്പ്നെയിലിൽ ക്ലിക്ക് ചെയ്യുമ്പോൾ കാരോസൽ ആ ഇമേജിലേക്ക് സ്ലൈഡ് ചെയ്യാൻ
+    function switchCarouselImage(slideIndex, thumbnailElement) {
+        const carouselElement = document.getElementById('productImageCarousel');
+        const carousel = bootstrap.Carousel.getInstance(carouselElement) || new bootstrap.Carousel(carouselElement);
+        
+        carousel.to(slideIndex); // കാരോസൽ ആ ഇൻഡക്സിലേക്ക് മൂവ് ചെയ്യും
+
+        // ആക്റ്റീവ് തമ്പ്നെയിൽ ബോക്സ് മാറ്റുന്നു
+        document.querySelectorAll('.js-thumb').forEach(box => {
+            box.classList.remove('active-thumb');
+        });
+        if(thumbnailElement) {
+            thumbnailElement.classList.add('active-thumb');
+        }
+    }
+
+    // 2. യൂസർ മൊബൈലിൽ സ്വൈപ്പ് ചെയ്യുമ്പോഴോ അമ്പടയാളത്തിൽ ക്ലിക്ക് ചെയ്യുമ്പോഴോ താഴെയുള്ള തമ്പ്നെയിലും ഒപ്പം മാറാൻ
+    document.addEventListener('DOMContentLoaded', function () {
+        const carouselElement = document.getElementById('productImageCarousel');
+        
+        carouselElement.addEventListener('slid.bs.carousel', function (event) {
+            const activeIndex = event.to; // നിലവിലെ ആക്റ്റീവ് കാരോസൽ ഇൻഡക്സ്
+            
+            document.querySelectorAll('.js-thumb').forEach(box => {
+                box.classList.remove('active-thumb');
+                if (parseInt(box.getAttribute('data-slide-to')) === activeIndex) {
+                    box.classList.add('active-thumb');
+                    box.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            });
+        });
+    });
+
+</script>
+            
+
+{% endblock %} 

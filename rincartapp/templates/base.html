@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    {% load static %}
+    
+</head>
+<body class="bg-light">
+<style>
+    @media (min-width: 992px) {
+        .navbar .container-fluid {
+            flex-direction: row !important; /* Forces it to stay inline on large screens */
+        }
+    }
+    
+    /* Active Link Touch */
+    .navbar .nav-link:hover {
+        color: #ffc107 !important;
+    }
+    .scrollable-nav-wrapper {
+        scrollbar-width: none; /* Firefox */
+    }
+    .scrollable-nav-wrapper::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+
+    /* 🌟 Premium Search Box Styling */
+
+  
+    
+    .btn-search {
+        background-color: rgb(252, 166, 5);
+    }
+    .btn-search:hover {
+        background-color: #ffd862;
+    }
+
+    /* Bolt animation icon */
+    .animate-bolt {
+        display: inline-block;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    /* 🌟 NAVIGATION SCROLL & ALIGNMENT FOR ALL DEVICES */
+    .custom-inline-navbar .scrollable-nav-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    /* മൊബൈൽ സ്ക്രീനുകളിൽ മാത്രം ഹൊറിസോണ്ടൽ സ്ക്രോളിംഗ് അനുവദിക്കുന്നു */
+    @media (max-width: 767.98px) {
+        .custom-inline-navbar .scrollable-nav-wrapper {
+            max-width: 72%;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-inline-navbar .scrollable-nav-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+    }
+    
+    /* വലിയ സ്ക്രോൺ ആണെങ്കിൽ സാധാരണ ലേഔട്ട് */
+    @media (min-width: 768px) {
+        .custom-inline-navbar .scrollable-nav-wrapper {
+            max-width: auto;
+            overflow: visible;
+        }
+    }
+
+    /* FLOATING DROPDOWN STYLE */
+    .custom-floating-dropdown {
+        position: absolute !important;
+        top: 100% !important;
+        right: 12px !important;
+        left: auto !important;
+        z-index: 1100 !important;
+        min-width: 180px;
+        margin-top: 8px !important;
+        background-color: #ffffff;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        border: 1px solid rgba(0,0,0,0.05) !important;
+    }
+
+    .custom-logout-item {
+        width: calc(100% - 16px);
+        transition: all 0.2s ease;
+    }
+    .custom-logout-item:hover {
+        background-color: #fff5f5 !important;
+        color: #dc3545 !important;
+        transform: translateX(3px);
+    }
+
+    .custom-dropdown-toggle:after {
+        transition: transform 0.2s ease;
+    }
+    .custom-dropdown-toggle.show:after {
+        transform: rotate(180deg);
+    }
+
+    .navbar-brand {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .custom-nav-link {
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8) !important;
+        transition: all 0.2s ease;
+        text-align: center;
+    }
+    .custom-nav-link:hover, .custom-nav-link.active:hover {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .btn-signin {
+        transition: transform 0.2s ease;
+        font-size: 0.85rem;
+    }
+    .animate-bolt {
+        animation: flash 2.5s infinite alternate;
+    }
+    @keyframes flash {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    /* Category bar alignment fixes */
+    .bg-white .container > div {
+        overflow-x: auto !important;
+        overflow-y: visible !important;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        margin-top: -8px !important;
+        margin-bottom: -8px !important;
+    }
+    .bg-white div::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    .category-sticker {
+        transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .category-sticker:hover {
+        background-color: #121212;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.12) !important;
+    }
+    /* 🌟 Premium Search Box Styling */
+    .search-box-container {
+        background-color: #f1f5f9;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        border: 1.5px solid transparent;
+    }
+    .search-box-container:focus-within {
+        border-color: #ffc107;
+        background-color: #ffffff;
+        box-shadow: 0 0 8px rgba(255, 193, 7, 0.2);
+    }
+    .search-input {
+        font-size: 0.88rem;
+        background-color: transparent;
+    }
+    .search-input:focus {
+        box-shadow: none;
+        background-color: transparent;
+    }
+    .btn-search { transition: background-color 0.2s; }
+    .btn-search:hover { background-color: #e0a800; }
+
+    /* For Laptop/Desktop View Alignment */
+    @media (min-width: 992px) {
+        .search-wrapper {
+            margin-left: 2rem !important;
+            margin-right: auto !important;
+        }
+    }
+    /* സൈറ്റ് ഡാർക്ക് മോഡിൽ ആയിരിക്കുമ്പോൾ മാത്രം മാറേണ്ട കസ്റ്റം സ്റ്റൈലുകൾ */
+    [data-bs-theme="dark"] body {
+        background-color: #121212 !important; /* പക്കാ ഫ്ലിപ്കാർട്ട് ഡാർക്ക് ലുക്ക് */
+        color: #f8f9fa !important;
+    }
+
+    [data-bs-theme="dark"] .card {
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+    }
+    /* Navbar general color override */
+    .navbar {
+        background-color: #212529 !important; /* Dark Navbar by default */
+    }
+    [data-bs-theme="dark"] .navbar {
+        background-color: #1a1a1a !important; /* Pure dark mode navbar */
+    }
+
+    /* 🌟 Attractive Nav Item Styling */
+    .custom-nav-item .nav-link {
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 6px 12px !important;
+        border-radius: 20px;
+        transition: all 0.25s ease-in-out;
+        color: rgba(255, 255, 255, 0.75) !important; /* Light text on dark navbar */
+    }
+
+    /* Hover Effect */
+    .custom-nav-item .nav-link:hover {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px);
+    }
+
+    /* Active Button Style */
+    .custom-nav-item .nav-link.active {
+        color: #ffc107 !important; /* Amber/Yellow for Active */
+        background-color: rgba(255, 193, 7, 0.1);
+        font-weight: 600;
+    }
+
+    /* Dark Mode Toggle Button Fix */
+    #darkModeToggle {
+        color: #fff;
+        padding: 6px 12px;
+        transition: all 0.2s;
+    }
+    #darkModeToggle:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    /* Navbar Background */
+    .navbar {
+        background-color: #1a1c1e !important;
+    }
+
+    /* 🌟 Responsive Grid for Navbar elements */
+    @media (max-width: 991.98px) {
+        .navbar .container-fluid {
+            display: grid !important;
+            grid-template-areas: 
+                "logo logo"
+                "menu profile"
+                "search search";
+            grid-template-columns: 1fr auto;
+            gap: 12px !important;
+        }
+        
+        .navbar-brand { grid-area: logo; justify-content: center; width: 100%; margin-bottom: 4px !important; }
+        .nav-menu-wrapper { grid-area: menu; justify-content: start !important; }
+        .profile-wrapper { grid-area: profile; }
+        .search-wrapper { grid-area: search; margin-top: 4px; }
+    }
+
+    /* 🌟 Mobile-Friendly Navigation Buttons (Circular Card Look) */
+    .custom-nav-item .nav-link, .custom-mode-btn {
+        width: 40px;
+        height: 40px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .custom-nav-item .nav-link i, .custom-mode-btn i {
+        font-size: 1.1rem;
+    }
+
+    .custom-nav-item .nav-link:hover, .custom-mode-btn:hover {
+        background: rgba(255, 255, 255, 0.18) !important;
+    }
+
+    .custom-nav-item .nav-link.active {
+        background: rgba(255, 193, 7, 0.15) !important;
+        
+    }
+
+    /* Large Screens (Desktop) Reset */
+    @media (min-width: 992px) {
+        .custom-nav-item .nav-link {
+            width: auto;
+            height: auto;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            background: transparent !important;
+        }
+        .custom-nav-item .nav-link:hover { background: rgba(255, 255, 255, 0.1) !important; }
+        .custom-nav-item .nav-link.active { background: rgba(255, 193, 7, 0.1) !important; }
+    }
+</style>
+<header class="sticky-top shadow-sm">
+    <nav class="navbar navbar-dark shadow-sm py-2 px-2 px-sm-3">
+        <div class="container-fluid align-items-center justify-content-between">
+            
+            <!-- 1. Brand Logo (Mobile-ൽ സെന്ററിലും Desktop-ൽ ഇടത്തും വരും) -->
+            <a class="navbar-brand text-warning fw-bold fs-3 m-0 d-flex align-items-center flex-shrink-0" href="/">
+                <i class="fa-solid fa-bolt me-1.5 text-warning animate-bolt"></i>RinCart
+            </a>
+
+            <!-- 2. Navigation Menu Wrapper -->
+            <div class="nav-menu-wrapper d-flex align-items-center">
+                <ul class="navbar-nav d-flex flex-row align-items-center gap-2 m-0 list-unstyled">
+                    <li class="nav-item custom-nav-item">
+                        <a class="nav-link active d-flex align-items-center justify-content-center" href="{% url 'home' %}" title="Home">
+                            <i class="fa-solid fa-house text-warning"></i>
+                            <span class="d-none d-lg-inline ms-2">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item custom-nav-item">
+                        <a class="nav-link d-flex align-items-center justify-content-center" href="{% url 'view_deals' %}" title="Deals">
+                            <i class="fa-solid fa-fire text-danger"></i>
+                            <span class="d-none d-lg-inline ms-2">Deals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item custom-nav-item">
+                        <a class="nav-link d-flex align-items-center justify-content-center" href="{% url 'cart_view' %}" title="Cart">
+                            <i class="fa-solid fa-cart-shopping text-success"></i>
+                            <span class="d-none d-lg-inline ms-2">Cart</span>
+                        </a>
+                    </li>
+                    <!-- Dark Mode Toggle -->
+                    <li class="nav-item">
+                        <button class="btn btn-link nav-link p-0 d-flex align-items-center justify-content-center custom-mode-btn" id="darkModeToggle" type="button">
+                            <i class="bi bi-moon-stars-fill text-warning" id="darkModeIcon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 3. Profile / Sign In Wrapper -->
+            <div class="profile-wrapper d-flex align-items-center">
+                <div class="border-start ps-2 border-secondary">
+                    {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <a class="d-flex align-items-center text-decoration-none dropdown-toggle text-light gap-1 small" href="#" data-bs-toggle="dropdown">
+                                <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 32px; height: 32px; font-size: 0.85rem; text-transform: uppercase;">
+                                    {{ user.username|slice:":1" }}
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
+                                <li><span class="dropdown-item-text small text-muted">Hi, {{ user.username }}</span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="fw-bold dropdown-item  small"><a href="{% url 'user_account' %}" class="text-decoration-none"><h5>{{ request.user.email }}</h5></a></li>
+                                <li><a class="dropdown-item text-danger small fw-semibold" href="/accounts/logout/">Logout</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a class="btn btn-warning btn-sm px-3 fw-bold rounded-pill text-dark" href="{% url 'sign_in' %}" style="font-size: 0.8rem;">Sign In</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- 4. Search Box -->
+            <div class="search-wrapper w-100 mx-0 mx-lg-4">
+                <form action="{% url 'search_products' %}" method="GET" class="m-0">
+                    <div class="input-group rounded-3 overflow-hidden bg-white shadow-sm" style="border: 1px solid #cbd5e1;">
+                        <input type="text" name="q" class="form-control border-0 px-3 py-2 " placeholder="Search for dresses, mobiles, brands..." required style="font-size: 0.88rem; box-shadow: none;">
+                        <button class="btn btn-warning px-3 border-0 d-flex align-items-center justify-content-center" type="submit">
+                            <i class="bi bi-search text-dark fw-bold"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+
+    <div class="mt-0 py-2 bg-dark border-bottom shadow-sm" style="overflow: visible !important; ">
+        <div class="container" style="overflow: visible !important;">
+            <div class="d-flex align-items-center flex-nowrap flex-md-wrap justify-content-start justify-content-md-center gap-2 gap-md-3" 
+                style="overflow-x: auto; overflow-y: visible !important; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none;">
+                
+                <a href="{% url 'fashion_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-danger-subtle text-danger rounded-pill border border-danger-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-shirt me-2"></i> Fashion & Dresses
+                </a>
+                <a href="{% url 'mobile_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-primary-subtle text-primary rounded-pill border border-primary-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-mobile-screen-button me-2"></i> Mobiles
+                </a>
+                <a href="{% url 'beauty_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-success-subtle text-success rounded-pill border border-success-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Beauty
+                </a>
+                <a href="{% url 'electronics_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-info-subtle text-secondary rounded-pill border border-info-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-laptop me-2"></i> Electronics
+                </a>
+                <a href="{% url 'home_appliances_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-warning-subtle text-warning rounded-pill border border-warning-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-blender me-2"></i> Home Appliances
+                </a>
+                <a href="{% url 'toys_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-secondary-subtle rounded-pill border border-secondary-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-gamepad me-2"></i> Toys
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+    
+
+        {% block content %}
+       
+
+        <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border text-center">
+            <h1 class="display-5 fw-bold text-dark">Welcome to the RinCart</h1>
+            <p class="lead">Click on any category sticker above or browse our latest collections.</p>
+        </div>
+        {% endblock %}
+    </main>
+
+    
+    <!-- 🛒 Flipkart/Amazon Style Premium Footer -->
+<footer class="bg-dark text-white pt-5 pb-4 mt-5">
+    <div class="container text-center text-md-start">
+        <div class="row text-center text-md-start">
+            
+            <!-- ബ്രാൻഡ് കോളം -->
+            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 font-weight-bold" style="color: #ff9f00;">
+                    <i class="bi bi-lightning-fill"></i> RinCart
+                </h5>
+                <p class="small text-white-50">Experience the most robust, secure, and lightning-fast shopping platform.</p>
+            </div>
+
+            <!-- ആമസോൺ സ്റ്റൈൽ ലിങ്ക് കോളം -->
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                <h6 class="text-uppercase mb-4 font-weight-bold text-white-50 small">Get to Know Us</h6>
+                <p><a href="{% url 'about' %}" class="text-white text-decoration-none small hover-underline">About Us</a></p>
+                <p><a href="{% url 'contact' %}" class="text-white text-decoration-none small hover-underline">Contact Us</a></p>
+            </div>
+
+            <!-- കെയർ കോളം -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                <h6 class="text-uppercase mb-4 font-weight-bold text-white-50 small">Let Us Help You</h6>
+                <p><a href="{% url 'user_account' %}" class="text-white text-decoration-none small">Your Account</a></p>
+                <p><a href="{% url 'return_policy' %}" class="text-white text-decoration-none small">Returns Center</a></p>
+            </div>
+            <hr>
+            <div class="container text-center">
+            <p class="mb-0">&copy; 2026 RinCart Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .hover-underline:hover {
+        text-decoration: underline !important;
+        color: #ff9f00 !important;
+    }
+</style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    const toggleBtn = document.getElementById('darkModeToggle');
+    const themeIcon = document.getElementById('darkModeIcon');
+    const themeText = document.getElementById('darkModeText');
+    const htmlElement = document.documentElement;
+
+    // മുൻപ് സെറ്റ് ചെയ്ത തീം ഉണ്ടോ എന്ന് പരിശോധിക്കുന്നു (Local Storage)
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        htmlElement.setAttribute('data-bs-theme', savedTheme);
+        updateButton(savedTheme);
+    }
+
+    toggleBtn.addEventListener('click', () => {
+        // നിലവിലെ തീം ഏതാണെന്ന് നോക്കുന്നു
+        const currentTheme = htmlElement.getAttribute('data-bs-theme');
+        let newTheme = 'light';
+
+        if (currentTheme === 'light' || !currentTheme) {
+            newTheme = 'dark';
+        }
+
+        // തീം മാറ്റുന്നു
+        htmlElement.setAttribute('data-bs-theme', newTheme);
+        localStorage.setItem('theme', newTheme); // പേജ് റീഫ്രഷ് ചെയ്താലും മാറതിരിക്കാൻ
+        updateButton(newTheme);
+    });
+
+    // തീം മാറുന്നതിനനുസരിച്ച് ബട്ടണിലെ ഐക്കണും ടെക്സ്റ്റും മാറ്റാൻ
+    function updateButton(theme) {
+    if (theme === 'dark') {
+        themeIcon.className = 'bi bi-sun-fill text-warning'; // സൂര്യന്റെ ഐക്കൺ
+    } else {
+        themeIcon.className = 'bi bi-moon-stars-fill text-warning'; // ചന്ദ്രന്റെ ഐക്കൺ (Navbar എപ്പോഴും ഡാർക്ക് ആയതുകൊണ്ട് text-warning തന്നെയാണ് ഭംഗി)
+    }
+}
+
+document.querySelectorAll('.wishlist-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault(); // കാർഡിലെ പ്രൊഡക്റ്റ് ഡീറ്റൈൽ ലിങ്ക് ഓപ്പൺ ആകുന്നത് തടയാൻ
+        
+        const itemId = this.getAttribute('data-item-id');
+        const icon = this.querySelector('i');
+        
+        // 🚀 Django വ്യൂവിലേക്ക് റിക്വസ്റ്റ് അയക്കുന്നു
+        fetch(`/toggle-wishlist/${itemId}/`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'added') {
+                // വിഷ്‌ലിസ്റ്റിൽ ആഡ് ആയാൽ ചുവന്ന ഹാർട്ട്
+                icon.className = 'bi bi-heart-fill text-danger';
+            } else if (data.status === 'removed') {
+                // ഒഴിവാക്കിയാൽ പഴയ അവസ്ഥ (വെളുത്ത/ഗ്രേ ഹാർട്ട്)
+                icon.className = 'bi bi-heart text-secondary';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+    
+</script>
+</body>
+</html>

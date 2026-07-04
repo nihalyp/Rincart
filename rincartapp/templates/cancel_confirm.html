@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}
+Confirm Cancel
+{% endblock %}
+{% block content %}
+<div class="container d-flex justify-content-center my-5">
+   <div class="card shadow-lg border-0 text-center p-4 p-sm-5 rounded-4" style="max-width: 480px; width: 100%; background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);">
+      
+      <div class="mb-4">
+         <div class="bg-danger bg-opacity-10 d-inline-block rounded-circle p-3 shadow-sm">
+            <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem; line-height: 1;"></i>
+         </div>
+      </div>
+
+      <h4 class="fw-bold text-danger mb-2">Cancellation Confirmed!</h4>
+      <p class="text-muted px-2 small">Your cancellation has been successfully completed. The amount will be processed as per policy.</p>
+      
+      <hr class="my-4 text-muted opacity-25">
+
+      <div class="d-flex align-items-center gap-3 bg-light p-3 rounded-3 text-start border border-dashed mb-4">
+         {% if product.image.url %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 70px; height: 70px; object-fit: contain;" class="bg-white p-1 rounded border shadow-sm">
+         {% else %}
+            <div class="bg-white p-1 rounded border shadow-sm d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+               <i class="bi bi-box-seam text-secondary fs-3"></i>
+            </div>
+         {% endif %}
+         <div class="flex-grow-1">
+            <h6 class="fw-bold text-dark mb-1 text-truncate" style="max-width: 250px;">{{ product.name }}</h6>
+            <small class="text-muted d-block">Quantity: {{ quantity }}</small>
+            <span class="fw-bold text-danger small">Cancelled Price: ₹{{ price|floatformat:2 }}</span>
+         </div>
+      </div>
+
+      <div class="d-grid gap-2">
+         <a href="{% url 'view_deals' %}" class="btn btn-danger py-2.5 fw-bold rounded-3 shadow-sm" style="background-color: #ef4444; border: none;">
+            <i class="bi bi-arrow-left me-1"></i> Back to Exclusive Deals
+         </a>
+      </div>
+
+   </div>
+</div>
+{% endblock %} 

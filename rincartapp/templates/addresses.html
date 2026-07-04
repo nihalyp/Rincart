@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Addresses - RinCart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {  font-family: system-ui, -apple-system, sans-serif; }
+        .address-card { border: none; border-radius: 12px; background-color: white; }
+        .badge-home { background-color: #f1f3f6; color: #717478; font-weight: 600; font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container py-5" style="max-width: 750px;">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'user_account' %}" class="text-decoration-none text-muted">Your Account</a></li>
+                <li class="breadcrumb-item active fw-medium" aria-current="page" style="color: #764ba2;">Addresses</li>
+            </ol>
+        </nav>
+
+        <h4 class="fw-bold mb-4"><i class="bi bi-geo-alt-fill text-warning me-2"></i>Manage Addresses</h4>
+
+        <!-- 🏠 അഡ്രസ്സ് ഡിസ്‌പ്ലേ കാർഡ് -->
+        <div class="card address-card shadow-sm p-4 position-relative">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="badge badge-home px-2.5 py-1.5 text-uppercase tracking-wider">Default Delivery Address</span>
+                
+                <!-- ✏️ EDIT ബട്ടൺ -->
+                <button class="btn btn-link text-primary fw-bold text-decoration-none p-0 small" data-bs-toggle="modal" data-bs-target="#editAddressModal">
+                    <i class="bi bi-pencil-square me-1"></i> EDIT
+                </button>
+            </div>
+
+            <!-- യൂസറുടെ പേര് (Buying മോഡലിൽ പേര് ഉണ്ടെങ്കിൽ അത് എടുക്കും, ഇല്ലെങ്കിൽ യൂസർനെയിം) -->
+            <h6 class="fw-bold  mb-2">
+                {% if latest_order %}{{ latest_order.customer_f_name }} {{ latest_order.customer_s_name }}{% else %}{{ request.user.username }}{% endif %}
+            </h6>
+
+            <!-- 🌍 ഡാറ്റാബേസിലെ അഡ്രസ്സ് ഇവിടെ പ്രിന്റ് ചെയ്യുന്നു -->
+            <p class="text-secondary small mb-3 lh-base" style="max-width: 500px;">
+                {% if current_address %}
+                    {{ current_address|linebreaksbr }}
+                {% else %}
+                    <span class="text-danger-emphasis bg-danger bg-opacity-10 px-2 py-1 rounded small"><i class="bi bi-exclamation-circle me-1"></i> No address saved from your past orders. Click Edit to add one.</span>
+                {% endif %}
+            </p>
+
+            <!-- ഫോണും ഇമെയിലും -->
+            <div class="text-muted small">
+                {% if latest_order %}
+                    <span class="me-3"><i class="bi bi-telephone me-1"></i> {{ latest_order.customer_phone }}</span>
+                    <span><i class="bi bi-envelope me-1"></i> {{ latest_order.customer_email }}</span>
+                {% else %}
+                    <span><i class="bi bi-envelope me-1"></i> {{ request.user.email }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 🛍️ EDIT ADDRESS MODAL POP-UP -->
+    <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold" id="editAddressModalLabel">Edit Shipping Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-secondary">Full Delivery Address</label>
+                            <textarea name="user_address" class="form-control rounded-3 text-secondary p-3 small" rows="5" placeholder="House Name, Street, City, Pincode..." required>{% if current_address %}{{ current_address }}{% endif %}</textarea>
+                        </div>
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button type="button" class="btn btn-light px-4 fw-medium rounded-3" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-dark px-4 fw-bold rounded-3 shadow-sm" style="background: #ff9f00; border: none;">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            const toggleBtn = document.getElementById('darkModeToggle');
+            const themeIcon = document.getElementById('darkModeIcon');
+            const themeText = document.getElementById('darkModeText');
+            const htmlElement = document.documentElement;
+
+            // മുൻപ് സെറ്റ് ചെയ്ത തീം ഉണ്ടോ എന്ന് പരിശോധിക്കുന്നു (Local Storage)
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                htmlElement.setAttribute('data-bs-theme', savedTheme);
+                updateButton(savedTheme);
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                // നിലവിലെ തീം ഏതാണെന്ന് നോക്കുന്നു
+                const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                let newTheme = 'light';
+
+                if (currentTheme === 'light' || !currentTheme) {
+                    newTheme = 'dark';
+                }
+
+                // തീം മാറ്റുന്നു
+                htmlElement.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme); // പേജ് റീഫ്രഷ് ചെയ്താലും മാറതിരിക്കാൻ
+                updateButton(newTheme);
+            });
+
+            // തീം മാറുന്നതിനനുസരിച്ച് ബട്ടണിലെ ഐക്കണും ടെക്സ്റ്റും മാറ്റാൻ
+            function updateButton(theme) {
+            if (theme === 'dark') {
+                themeIcon.className = 'bi bi-sun-fill text-warning'; // സൂര്യന്റെ ഐക്കൺ
+            } else {
+                themeIcon.className = 'bi bi-moon-stars-fill text-warning'; // ചന്ദ്രന്റെ ഐക്കൺ (Navbar എപ്പോഴും ഡാർക്ക് ആയതുകൊണ്ട് text-warning തന്നെയാണ് ഭംഗി)
+            }
+        }
+
+    </script>
+</body>
+</html>

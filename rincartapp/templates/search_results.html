@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% block title %} Search Results for "{{ query }}" {% endblock %}
+{% block content %}
+
+<div class="container-fluid mb-5 px-4 mt-4">
+    <h3 class="fw-bold mb-4 ">Search Results for "<span class="text-primary">{{ query }}</span>"</h3>
+    
+    <!-- 🌟 SEARCH RESULTS GRID -->
+    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 mt-2 ms-1 me-1">
+        {% for item in results %}
+        <div class="col mb-5">
+            <div class="position-relative h-100">
+                <!-- ❤️ വിഷ്‌ലിസ്റ്റ് ഹാർട്ട് ബട്ടൺ (കാർഡിന്റെ മുകളിൽ വലതുഭാഗത്ത് ഫ്ലോട്ട് ചെയ്തു നിൽക്കും) -->
+                <button class="wishlist-btn position-absolute top-0 end-0 m-3 bg-white shadow-sm rounded-circle d-flex align-items-center justify-content-center border-0" 
+                        data-item-id="{{ item.id }}"
+                        style="width: 32px; height: 32px; z-index: 15; border: 1px solid #f0f0f0;">
+                    
+                    {% if item.id in wishlist_ids %}
+                        <i class="bi bi-heart-fill text-danger" style="font-size: 0.9rem;"></i>
+                    {% else %}
+                        <i class="bi bi-heart text-secondary" style="font-size: 0.9rem;"></i>
+                    {% endif %}
+                </button>
+                
+                <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark d-block h-100">
+                    <div class="card h-100 border-0 rounded-3 overflow-hidden flipkart-card position-relative d-flex flex-column bg-white p-2">
+
+                        <div class="product-img-box d-flex align-items-center justify-content-center p-2 bg-white mt-2">
+                            <img src="{{ item.image.url }}" class="img-fluid custom-img " alt="{{ item.name }}">
+                        </div>
+                        {% if item.original_price and item.original_price > item.price %}
+                        <div class="flipkart-arrow-badge">
+                            <span>{{ item.discount_percentage }}% OFF</span>
+                        </div>
+                        {% endif %}
+                        <div class="card-body d-flex flex-column justify-content-between p-2 pt-1">
+                            
+                            <div class="mb-1">
+                                <h6 class="card-title fw-medium text-secondary mb-1 text-truncate-2" title="{{ item.name }}">
+                                    {{ item.name }}
+                                </h6>
+                                <p class="text-muted mb-0" style="font-size: 0.75rem;">Premium Quality</p>
+                            </div>
+                            
+                            <div class="mt-2">
+                                <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                                    {% if item.original_price and item.original_price > item.price %}
+                                    
+                                    <span class="flipkart-green-discount">
+                                        {{ item.discount_percentage }}% <i class="bi bi-arrow-down"></i>
+                                    </span>
+                                    
+                                    <span class="text-muted text-decoration-line-through " style="font-size: 0.8rem;">
+                                        ₹{{ item.original_price  }} 
+                                    </span>
+                                    
+                                    {% endif %}
+                                    <span class="fs-5 fw-bold ms-1">₹{{ item.price }}</span>
+                                    
+                                </div>
+
+                                <div class="mt-1">
+                                    <small class="text-muted" style="font-size: 0.7rem; font-weight: 500;">Free Delivery</small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5 w-100">
+            <i class="bi bi-search text-muted display-4"></i>
+            <p class="text-muted mt-2">No products found matching your search.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* 🌟 CARD FIXED ALIGNMENTS */
+    .product-card {
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+        background: #ffffff;
+    }
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.08) !important;
+    }
+
+    .flipkart-card {
+        border: 1px solid #f0f0f0 !important;
+        transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+    }
+    
+    /* Hover Effect: ബോർഡറിന് പകരം ചെറുതായൊരു നിഴൽ വരും */
+    .flipkart-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Fixed Image Wrapper */
+    .product-img-box {
+        height: 180px;
+        width: 100%;
+        overflow: hidden;
+    }
+    .custom-img {
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    /* Text Clamping to exactly 2 Lines */
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 38px;
+        font-size: 0.88rem;
+        line-height: 1.3;
+    }
+    body { background-color: #f8fafc; }  
+        .flipkart-arrow-badge {
+        position: absolute;
+        top: 12px;
+        left: 0;
+        background-color: #c62828; /* നല്ല ബ്രൈറ്റ് ഫ്ലിപ്കാർട്ട് റെഡ് നിറം */
+        color: #ffffff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 3px 8px 3px 6px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.3px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+        
+        /* 🏹 ഈ clip-path ആണ് വലതുവശത്ത് ആ അമ്പിന്റെ ആകൃതി (Arrow Shape) നൽകുന്നത് */
+        clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);
+    }
+
+    /* കാർഡിന് മുകളിൽ മൗസ് വെക്കുമ്പോൾ ബാഡ്ജ് ചെറുതായി ഒന്ന് തിളങ്ങാൻ (Optional) */
+    .flipkart-card:hover .flipkart-arrow-badge {
+        background-color: #e53935;
+        transition: background 0.2s ease;
+    }
+    .flipkart-green-discount {
+        color: #388e3c; /* ഫ്ലിപ്കാർട്ടിന്റെ കൃത്യമായ പച്ച നിറം */
+        font-weight: 600;
+        font-size: 0.82rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 2px; /* ടെക്സ്റ്റും അമ്പും തമ്മിലുള്ള അകലം */
+    }
+</style>
+
+    <!-- 🌟 SIMILAR PRODUCTS SECTION -->
+    {% if similar_products %}
+    <div class="mt-5 pt-4 border-top">
+        <h4 class="fw-bold mb-4 "><i class="bi bi-sparkles text-primary me-2"></i>You May Also Like (Similar Products)</h4>
+            <div class="container-sm my-5">
+                <!-- Horizontal Scroll Wrapper -->
+                <div class="d-flex flex-nowrap overflow-auto pb-3 scrollbar-hidden" style="gap: 1rem; scroll-behavior: smooth;">
+                    
+                    {% for sim_product in similar_products %}
+                    <div class="card flex-shrink-0 position-relative shadow-sm" style="width: 18rem; border-radius: 12px; overflow: hidden;">
+                        
+                        <!-- Wishlist Button -->
+                        <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
+                            <button class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm" style="width: 36px; height: 36px;">
+                                {% if sim_product.id in wishlist_ids %}
+                                    <!-- Filled Heart for Wishlisted -->
+                                    <i class="bi bi-heart-fill text-danger"></i>
+                                {% else %}
+                                    <!-- Empty Heart -->
+                                    <i class="bi bi-heart text-secondary"></i>
+                                {% endif %}
+                            </button>
+                        </div>
+
+                        <!-- Product Image -->
+                        <a href="{% url 'product_detail' sim_product.id %}" class="text-decoration-none">
+                            {% if sim_product.image %}
+                            <div class="product-img-box d-flex align-items-center justify-content-center p-2 bg-white mt-2">
+                                <img src="{{ sim_product.image.url }}" class="img-fluid custom-img" alt="{{ sim_product.name }}">
+                            </div>                    {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                    <i class="bi bi-image text-muted fs-1"></i>
+                                </div>
+                            {% endif %}
+                        </a>
+
+                        <!-- Card Body -->
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <!-- Product Title -->
+                                <a href="{% url 'product_detail' sim_product.id %}" class="text-decoration-none ">
+                                    <h6 class="card-title text-truncate fw-semibold mb-1">{{ sim_product.name }}</h6>
+                                </a>
+                                <p class="text-muted small mb-2">{{ sim_product.category.name }}</p>
+                            </div>
+
+                            <!-- Price and Add to Cart -->
+                            
+                            <div class="mt-2">
+                                <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                                    {% if sim_product.original_price and sim_product.original_price > sim_product.price %}
+                                    <span class="flipkart-green-discount">
+                                        {{ sim_product.discount_percentage }}% <i class="bi bi-arrow-down"></i>
+                                    </span>
+                                    <span class="text-muted text-decoration-line-through" style="font-size: 0.8rem;">
+                                        ₹{{ sim_product.original_price }} 
+                                    </span>
+                                    {% endif %}
+                                    <span class="fs-5 fw-bold ms-1">₹{{ sim_product.price }}</span>
+                                </div>
+
+                                <div class="mt-1">
+                                    <small class="text-muted" style="font-size: 0.7rem; font-weight: 500;">Free Delivery</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="w-100 text-center py-4 text-muted">
+                        <p>No similar products found.</p>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

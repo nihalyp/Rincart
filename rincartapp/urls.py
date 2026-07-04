@@ -1,0 +1,35 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home_page, name='home'),
+    path('add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/', views.cart_view, name='cart_view'),
+    path('fashion/', views.fashion_page, name='fashion_page'),
+    path('mobiles/', views.mobile_page, name='mobile_page'),
+    path('beauty/', views.beauty_page, name='beauty_page'),
+    path('electronics/', views.electronics_page, name='electronics_page'),
+    path('home_appliances/', views.home_appliances_page, name='home_appliances_page'),
+    path('toys/', views.toys_page, name='toys_page'),
+    path('product/<int:product_id>/', views.product_detail_page, name='product_detail'),
+    path('return-policy/', views.return_policy_view, name='return_policy'),
+    path('cart/remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('sign_in/',views.sign_in,name="sign_in"),
+    path('sign_up/', views.sign_up, name='sign_up'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('auth/continue-setup/', views.setup_view, name='continue-setup'),
+    path('deals/', views.deals_page_view, name='view_deals'),
+    path('order-tracking/<int:buying_id>/', views.order_tracking_page, name='order_tracking_page'),
+    path('cancel-order/<int:buying_id>/', views.cancel_order_view, name='cancel_order_view'),
+    path('checkout/', views.checkout_view, name='checkout'),
+    path('cancelation/<int:buying_id>/', views.cancellation, name='cancellation'),
+    path('checkout/<int:product_id>/', views.checkout_view, name='checkout_single'),  # ഹോം/Buy Now ബട്ടണുകൾക്ക് വേണ്ടി
+    path('search/', views.search_products, name='search_products'),
+    path('about/', views.about_view, name='about'),
+    path('contact/', views.contact_view, name='contact'),
+    path('account/', views.account_view, name='user_account'),
+    path('address_update/', views.addresses_view, name='address_edit'),
+    path('account/payments/', views.payments_view, name='payments'),
+    path('account/wishlist/', views.wishlist_view, name='wishlist'),
+    path('toggle-wishlist/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
+]
