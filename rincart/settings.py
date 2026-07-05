@@ -16,6 +16,28 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import os
+import environ
+
+# 1. ഇവ എപ്പോഴും ഏറ്റവും മുകളിൽ ഉണ്ടായിരിക്കണം
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# 2. ഇനി നിങ്ങളുടെ ബാക്കി കോഡുകൾ താഴെ നൽകാം
+SECRET_KEY = env('SECRET_KEY')
+
+DATABASES = {
+    'default': env.db(),
+}
+
+# 3. സ്റ്റാറ്റിക് സെറ്റിങ്സ് ഇതിന് താഴേക്ക് മാറ്റുക
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -104,6 +126,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ]
 
 ROOT_URLCONF = 'rincart.urls'
@@ -131,29 +154,7 @@ WSGI_APPLICATION = 'rincart.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 
-import os
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# ⚡ വൈറ്റ്നോയ്‌സ് വഴി ഫയലുകൾ കംപ്രസ്സ് ചെയ്ത് സ്പീഡിൽ ലോഡ് ചെയ്യാൻ ഇത് സഹായിക്കും
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-import environ
-
-# environ ഇൻഷിയലൈസ് ചെയ്യുന്നു
-env = environ.Env()
-# .env ഫയൽ റീഡ് ചെയ്യുന്നു
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-DATABASES = {
-    'default': env.db(),
-}
-
-SECRET_KEY = env('SECRET_KEY')
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -202,11 +203,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'myproooo123@gmail.com'  # നിങ്ങളുടെ ജിമെയിൽ ഐഡി ഇവിടെ നൽകുക
-
-# ⚠️ ശ്രദ്ധിക്കുക: ഇത് നിങ്ങളുടെ സാധാരണ പാസ്‌വേഡ് അല്ല! 
-# Google Account -> Security -> 2-Step Verification -> App Passwords വഴി ഉണ്ടാക്കുന്ന 16 അക്ഷരമുള്ള കോഡ് ആണ്.
-EMAIL_HOST_PASSWORD = 'clfpuwkmygemrdre' 
-
-# ഇമെയിൽ അയക്കുമ്പോൾ ആരുടെ പേരിൽ പോകണം എന്ന് സെറ്റ് ചെയ്യാം
-DEFAULT_FROM_EMAIL = 'RinCart <myproooo123@gmail.com>'
+# ഇവ .env ഫയലിൽ നിന്ന് എടുക്കാൻ പാകത്തിന് സെറ്റ് ചെയ്യാം
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
