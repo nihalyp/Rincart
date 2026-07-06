@@ -199,9 +199,17 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
-DEFAULT_FROM_EMAIL = "RinCart <myproooo123@gmail.com>" # 👈 നിങ്ങളുടെ ഇമെയിൽ
+<<<<<<< HEAD
+DEFAULT_FROM_EMAIL = "RinCart <rincartofficial@gmail.com>" # 👈 നിങ്ങളുടെ ഇമെയിൽ
 
 ANYMAIL = {
     "BREVO_API_KEY": env("BREVO_API_KEY"),
 }
 
+=======
+DEFAULT_FROM_EMAIL = "RinCart Official <rincartofficial@gmail.com>" # 👈 നിങ്ങളുടെ ഇമെയിൽ
+
+ANYMAIL = {
+    "BREVO_API_KEY": env("BREVO_API_KEY"),
+}
+>>>>>>> b2cca16bd8353e3c63e001af4510a936e75f32e5
