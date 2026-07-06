@@ -24,14 +24,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('rincartapp.urls')),
     path('accounts/', include('allauth.urls')), # This handles Google URLs automatically
-    # 1. ഇമെയിൽ ടൈപ്പ് ചെയ്യാനുള്ള പേജ്
-    path('password-reset/', 
-     auth_views.PasswordResetView.as_view(
-         template_name='registration/password_reset_form.html',
-         # 👈 ഈ താഴെ കാണുന്ന ലൈൻ കൂടി കൃത്യമായി ചേർക്കുക
-         html_email_template_name='registration/password_reset_email.html' 
-     ), 
-     name='password_reset'),
+    # 1. ഇമെയിലിൽ ടെക്സ്റ്റ് ചെയ്യാനുള്ള പേജ്
+    path('password-reset/',
+        auth_views.PasswordResetView.as_view(
+            template_name='registration/password_reset_form.html',
+            html_email_template_name='registration/password_reset_email.html'
+        ),
+        name='password_reset'),
          
     # 2. ഇമെയിൽ അയച്ചു കഴിഞ്ഞു എന്ന് കാണിക്കുന്ന പേജ്
     path('password-reset/done/', 
