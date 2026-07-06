@@ -25,6 +25,7 @@ urlpatterns = [
     path('',include('rincartapp.urls')),
     path('accounts/', include('allauth.urls')), # This handles Google URLs automatically
     # 1. ഇമെയിലിൽ ടെക്സ്റ്റ് ചെയ്യാനുള്ള പേജ്
+    # 1. ഇമെയിലിൽ ടെക്സ്റ്റ് ചെയ്യാനുള്ള പേജ്
     path('password-reset/',
         auth_views.PasswordResetView.as_view(
             template_name='registration/password_reset_form.html',
