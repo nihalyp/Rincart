@@ -98,7 +98,7 @@
                             </label>
                             </div>
                             {% load socialaccount %}
-                            <a href="{{ password_reset_url }}" class="btn-reset text-decoration-none small fw-semibold" style="color: #764ba2;">Reset Password</a>
+                            <a href="{% url 'account_reset_password' %}" class="btn-reset text-decoration-none small fw-semibold" style="color: #764ba2;">Forgot Password?</a>
                         </div>
 
                         <button class="btn btn-custom w-100 py-3 mb-4 fw-bold rounded-3 shadow-sm" type="submit">Sign In</button>
