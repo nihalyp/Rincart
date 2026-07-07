@@ -24,29 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('rincartapp.urls')),
     path('accounts/', include('allauth.urls')), # This handles Google URLs automatically
-    # 1. ഇമെയിലിൽ ടെക്സ്റ്റ് ചെയ്യാനുള്ള പേജ്
-    # 1. ഇമെയിലിൽ ടെക്സ്റ്റ് ചെയ്യാനുള്ള പേജ്
-    path('password-reset/',
-        auth_views.PasswordResetView.as_view(
-            template_name='registration/password_reset_form.html',
-            html_email_template_name='registration/password_reset_email.html'
-        ),
-        name='password_reset'),
-         
-    # 2. ഇമെയിൽ അയച്ചു കഴിഞ്ഞു എന്ന് കാണിക്കുന്ന പേജ്
-    path('password-reset/done/', 
-         auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), 
-         name='password_reset_done'),
-         
-    # 3. യൂസർ ഇമെയിലിലെ ലിങ്കിൽ ക്ലിക്ക് ചെയ്യുമ്പോൾ എത്തുന്ന പേജ് (Secure Link കൊണ്ട് വരുന്നത്)
-    path('password-reset-confirm/<uidb64>/<token>/', 
-         auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), 
-         name='password_reset_confirm'),
-         
-    # 4. പാസ്‌വേഡ് വിജയകരമായി മാറി എന്ന് കാണിക്കുന്ന പേജ്
-    path('password-reset-complete/', 
-         auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), 
-         name='password_reset_complete'),
 ]
 
 if settings.DEBUG:
