@@ -20,3 +20,5 @@ tzdata==2026.2
 urllib3==2.7.0
 whitenoise==6.12.0
 django-anymail[brevo]
+cloudinary
+django-cloudinary-storage
