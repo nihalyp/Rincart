@@ -334,9 +334,9 @@ def sign_up(request):
     if request.method == 'POST':
         email_input = request.POST.get('email')
         password_input = request.POST.get('password')
-        retype_password_input = request.POST.get('retype_password') # പുതിയ ഇൻപുട്ട് വാല്യൂ എടുക്കുന്നു
+        retype_password_input = request.POST.get('retype_password') 
         
-        # 🔍 രണ്ടു പാസ്‌വേഡും ഒന്നുതന്നെയാണോ എന്ന് പരിശോധിക്കുന്നു
+        # രണ്ടു പാസ്‌വേഡും ഒന്നുതന്നെയാണോ എന്ന് പരിശോധിക്കുന്നു
         if password_input != retype_password_input:
             messages.error(request, "Passwords do not match! Please try again.")
             return render(request, 'sign_up.html')
@@ -358,9 +358,14 @@ def sign_up(request):
             password=password_input
         )
         
+        # ലോഗിൻ ചെയ്യിപ്പിക്കുന്നു
         login(request, new_user, backend='django.contrib.auth.backends.ModelBackend')
-        messages.success(request, "Account created successfully! Welcome to RinCart.")
-        return redirect('home')
+        
+        # 🔔 ഇവിടെ നമ്മൾ ജനറേറ്റ് ചെയ്ത യൂസർനെയിം കാണിച്ച് അലേർട്ട് സെറ്റ് ചെയ്യുന്നു
+        messages.success(request, f"Welcome {new_user.username}! Account created successfully. Please complete your profile.")
+        
+        # 🚀 നേരെ 'home'-ലേക്ക് പോകുന്നതിന് പകരം 'continue-setup' പേജിലേക്ക് റീഡയറക്ട് ചെയ്യുന്നു
+        return redirect('continue-setup')
         
     return render(request, 'sign_up.html')
 
