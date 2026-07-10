@@ -82,6 +82,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 # Google OAuth specific settings
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -96,30 +102,31 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 # Automatically log the user in without showing intermediate "Are you sure you want to sign in?" pages
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-# Skips the extra signup form for social accounts if Google already gives us their email/username
-SOCIALACCOUNT_AUTO_SIGNUP = True
-
+SOCIALACCOUNT_ADAPTER = 'rincartapp.adapters.MySocialAccountAdapter'
 # 1. Skip the "Are you sure you want to sign out?" ugly page
 ACCOUNT_LOGOUT_ON_GET = True
 
 # 2. Where to send them immediately after logging out (the home page)
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
+# സോഷ്യൽ ലോഗിൻ ചെയ്യുമ്പോൾ യൂസർനെയിം ഓട്ടോമാറ്റിക് ആയി ജനറേറ്റ് ചെയ്യാൻ (Email-ൽ നിന്ന്)
+SOCIALACCOUNT_AUTO_SIGNUP = True
 # Crucial Workflow Redirects
-# 1. If it's a completely new user, django-allauth can send them to a signup/onboarding step
-ACCOUNT_SIGNUP_REDIRECT_URL = '/auth/continue-setup/'
+# 1. പുതിയ യൂസർ ഗൂഗിൾ വഴി വരുമ്പോൾ നേരെ OTP വെരിഫിക്കേഷൻ പേജിലേക്ക് വിടുക
+ACCOUNT_SIGNUP_REDIRECT_URL = '/verify-otp/'  # (നിങ്ങളുടെ OTP യുആർഎൽ എന്താണോ അത് നൽകുക)
 
-# 2. If they are an existing user just logging back in
-LOGIN_REDIRECT_URL = '/'
+# 2. പഴയ യൂസർ വീണ്ടും ലോഗിൻ ചെയ്യുമ്പോഴും സുരക്ഷയ്ക്ക് വേണ്ടി OTP പേജിലേക്ക് തന്നെ വിടുക
+LOGIN_REDIRECT_URL = '/verify-otp/'
 
-
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
