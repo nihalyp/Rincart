@@ -32,4 +32,5 @@ urlpatterns = [
     path('account/payments/', views.payments_view, name='payments'),
     path('account/wishlist/', views.wishlist_view, name='wishlist'),
     path('toggle-wishlist/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
+    path('verify-otp/', views.verify_otp_view, name='verify_otp'),
 ]
