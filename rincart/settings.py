@@ -207,16 +207,12 @@ MEDIA_URL = '/media/'
 
 # Render-ൽ റൺ ചെയ്യുമ്പോൾ Cloudinary ഉപയോഗിക്കും
 # വരി 209-ൽ ഇത് മാറ്റുക:
-if os.environ.get('RENDER_EXTERNAL_URL'):
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-    }
-# നിങ്ങളുടെ ലാപ്ടോപ്പിൽ (Local System) റൺ ചെയ്യുമ്പോൾ പഴയ പോലെ media ഫോൾഡർ ഉപയോഗിക്കും
-else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
 
 
 
