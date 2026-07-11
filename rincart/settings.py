@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
     'rincartapp',
     # Required for allauth
     'django.contrib.sites',
@@ -71,7 +72,7 @@ INSTALLED_APPS = [
     # The Google provider
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
-    'cloudinary',
+    
 ]
 
 SITE_ID = 1
@@ -122,7 +123,7 @@ ACCOUNT_SIGNUP_REDIRECT_URL = '/verify-otp/'  # (നിങ്ങളുടെ OTP
 # 2. പഴയ യൂസർ വീണ്ടും ലോഗിൻ ചെയ്യുമ്പോഴും സുരക്ഷയ്ക്ക് വേണ്ടി OTP പേജിലേക്ക് തന്നെ വിടുക
 LOGIN_REDIRECT_URL = '/verify-otp/'
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
