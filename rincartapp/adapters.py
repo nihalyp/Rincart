@@ -1,12 +1,17 @@
 import uuid
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib.auth import get_user_model
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 User = get_user_model()
 
+
+
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
-    def is_auto_signup_allowed(self, request, sociallogin):
+    def is_open_for_signup(self, request, sociallogin):
         return True
+
+    # pre_social_login ഫങ്ഷൻ ഇതിന് താഴെ നിങ്ങളുടെ പഴയതുപോലെ തന്നെ തുടരട്ടെ...
     
     def pre_social_login(self, request, sociallogin):
         user = sociallogin.user
