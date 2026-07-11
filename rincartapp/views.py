@@ -7,7 +7,52 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+import random
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
 
+@login_required
+def verify_otp_view(request):
+    # 1. യൂസർ ഓൾറെഡി ഒടിപി വെരിഫൈ ചെയ്തതാണെങ്കിൽ ഹോം പേജിലേക്ക് വിടുക
+    if request.session.get('otp_verified'):
+        return redirect('home')  # നിങ്ങളുടെ ഹോം പേജിന്റെ url name നൽകുക
+
+    # 2. യൂസർക്ക് സെഷനിൽ ഒടിപി ഇല്ലെങ്കിൽ പുതിയ ഒടിപി ഉണ്ടാക്കി മെയിൽ അയക്കുക
+    if 'generated_otp' not in request.session:
+        # 4 അക്ക റാൻഡം നമ്പർ ഉണ്ടാക്കുന്നു
+        otp = str(random.randint(1000, 9999))
+        request.session['generated_otp'] = otp
+        
+        # യൂസറുടെ ഗൂഗിൾ ഇമെയിലിലേക്ക് ഒടിപി അയക്കുന്നു
+        subject = 'Rincart - Your OTP Verification Code'
+        message = f'Hi {request.user.username},\n\nYour OTP for secure login is: {otp}\n\nThank you for shopping with us!'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [request.user.email]
+        
+        try:
+            send_mail(subject, message, email_from, recipient_list)
+            messages.success(request, 'A 4-digit OTP has been sent to your Google Email.')
+        except Exception as e:
+            messages.error(request, 'Failed to send OTP. Please try again.')
+
+    # 3. യൂസർ OTP ടൈപ്പ് ചെയ്ത് ഫോം സബ്മിറ്റ് ചെയ്യുമ്പോൾ
+    if request.method == 'POST':
+        user_otp = request.POST.get('full_otp')  # നമ്മൾ എഴുതിയ JS വഴി കിട്ടുന്ന 4 അക്ക OTP
+        generated_otp = request.session.get('generated_otp')
+
+        if user_otp == generated_otp:
+            # ഒടിപി മാച്ചായാൽ സെഷൻ ട്രൂ ആക്കുക
+            request.session['otp_verified'] = True
+            # താത്കാലിക ഒടിപി സെഷനിൽ നിന്ന് കളയുക
+            del request.session['generated_otp']
+            
+            messages.success(request, 'Verification successful! Welcome back.')
+            return redirect('home')  # ഹോം പേജിലേക്ക് റീഡയറക്ട് ചെയ്യുക
+        else:
+            messages.error(request, 'Invalid OTP! Please try again.')
+
+    return render(request, 'verify_otp.html')
 # ================= 1. PAGE VIEWS (FILTERS BY CATEGORY) =================
 
 # Home / All Products Page
