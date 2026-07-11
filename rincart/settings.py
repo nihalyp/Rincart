@@ -54,6 +54,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost','rincart.onrender.com']  # 👈 render
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -70,7 +71,6 @@ INSTALLED_APPS = [
     # The Google provider
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
-    'cloudinary_storage',
     'cloudinary',
 ]
 
