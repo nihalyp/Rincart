@@ -54,12 +54,12 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost','rincart.onrender.com']  # 👈 render
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
     'rincartapp',
