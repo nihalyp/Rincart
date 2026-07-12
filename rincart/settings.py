@@ -222,4 +222,4 @@ DEFAULT_FROM_EMAIL = "RinCart Official <rincartofficial@gmail.com>" # 👈 ന�
 ANYMAIL = {
     "BREVO_API_KEY": env("BREVO_API_KEY"),
 }
-
+PRINT_TEST = "NEW_BUILD_WORKING"
