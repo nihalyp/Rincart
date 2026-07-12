@@ -26,5 +26,5 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')), # This handles Google URLs automatically
 ]
 
-if settings.DEBUG:
+if settings.DEBUG or os.environ.get('RENDER_EXTERNAL_URL'):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
