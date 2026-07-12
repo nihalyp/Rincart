@@ -210,9 +210,9 @@ MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME':'iskzc8vd',
-    'API_KEY':'962581395445832',
-    'API_SECRET': 'XZbX_Y00ZvC1jjlL1jCu1NEdlyo',
+    'CLOUD_NAME':'odmzdqtb',
+    'API_KEY':'621758957527618',
+    'API_SECRET': 'mPFKmYvXioCdRaNqZMhZwa1Scnc',
 }
 
 
@@ -222,4 +222,3 @@ DEFAULT_FROM_EMAIL = "RinCart Official <rincartofficial@gmail.com>" # 👈 ന�
 ANYMAIL = {
     "BREVO_API_KEY": env("BREVO_API_KEY"),
 }
-PRINT_TEST = "NEW_BUILD_WORKING"
