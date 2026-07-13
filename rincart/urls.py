@@ -20,12 +20,12 @@ from rincartapp import urls
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-import os
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('rincartapp.urls')),
     path('accounts/', include('allauth.urls')), # This handles Google URLs automatically
 ]
 
-if settings.DEBUG or os.environ.get('RENDER_EXTERNAL_URL'):
+if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
