@@ -27,8 +27,12 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 DATABASES = {
-    'default': env.db(),
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600
+    )
 }
+
 
 # 3. സ്റ്റാറ്റിക് സെറ്റിങ്സ് ഇതിന് താഴേക്ക് മാറ്റുക
 STATIC_URL = '/static/'
@@ -203,11 +207,12 @@ USE_TZ = True
 
 CSRF_COOKIE_SECURE = False  # ഡെവലപ്‌മെന്റിൽ ഇത് False ആയിരിക്കണം
 SESSION_COOKIE_SECURE = False # ഡെവലപ്‌മെന്റിൽ ഇത് False ആയിരിക്കണം
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME':'odmzdqtb',
