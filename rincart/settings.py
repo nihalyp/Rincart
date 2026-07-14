@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 import os
 import environ
+import dj_database_url
 
 # 1. ഇവ എപ്പോഴും ഏറ്റവും മുകളിൽ ഉണ്ടായിരിക്കണം
 env = environ.Env()
