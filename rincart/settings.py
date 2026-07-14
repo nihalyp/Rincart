@@ -104,19 +104,21 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript)
-# പഴയ Storages/Staticfiles Storage കമാൻഡുകൾ എല്ലാം മാറ്റി ഇത് മാത്രം നൽകുക:
+# 1. പഴയ STORAGES ഡിക്ഷ്ണറിയും STATICFILES_STORAGE-ഉം പൂർണ്ണമായി ഒഴിവാക്കി ഇത് മാത്രം നൽകുക:
 STORAGES = {
-    # 1. CSS/JS ഫയലുകൾ വൈറ്റ്നോയിസ് വഴി കാണിക്കാൻ
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
-    # 2. മീഡിയ ഇമേജുകൾ ക്ലൗഡിനറി വഴി കാണിക്കാൻ (ഇതാണ് നിങ്ങളുടെ ഇമേജ് പ്രോബ്ലം മാറ്റുന്നത്)
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    }
 }
 
-# ബാക്കി താഴെയുള്ള വരികൾ ഇതുപോലെ തന്നെ നിർത്തുക
+# 2. 'cloudinary_storage' പാക്കേജിന് വേണ്ടി ഈ ഒരു വരി നിർബന്ധമായും ചേർക്കുക:
+# ഇത് ചേർക്കുമ്പോഴാണ് അപ്ലിക്കേഷൻ ക്രാഷ് ആകാതിരിക്കുന്നത്
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+
+# 3. ബാക്കി മീഡിയ സെറ്റിങ്സ് താഴെ പറയുന്ന രീതിയിൽ നിലനിർത്തുക
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
