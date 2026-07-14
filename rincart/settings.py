@@ -103,31 +103,7 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript)
-# പഴയ STORAGES ഡിക്ഷ്ണറി പൂർണ്ണമായി മാറ്റി പകരം ഇത് പേസ്റ്റ് ചെയ്യുക:
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    # കംപ്രഷൻ ഇല്ലാത്ത സാധാരണ വൈറ്റ്നോയിസ് സ്റ്റോറേജ് (ഇത് എറർ വരുത്തില്ല)
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.StaticFilesStorage", 
-    },
-}
 
-# ഈ വരിയും താഴെ ഉണ്ടെന്ന് ഉറപ്പാക്കുക
-WHITENOISE_MANIFEST_STRICT = False
-
-# 2. 'cloudinary_storage' പാക്കേജിന് വേണ്ടി ഈ ഒരു വരി നിർബന്ധമായും ചേർക്കുക:
-# ഇത് ചേർക്കുമ്പോഴാണ് അപ്ലിക്കേഷൻ ക്രാഷ് ആകാതിരിക്കുന്നത്
-STATICFILES_STORAGE = "whitenoise.storage.StaticFilesStorage"
-# 3. ബാക്കി മീഡിയ സെറ്റിങ്സ് താഴെ പറയുന്ന രീതിയിൽ നിലനിർത്തുക
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'odmzdqtb',
@@ -163,4 +139,28 @@ EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 DEFAULT_FROM_EMAIL = "RinCart Official <rincartofficial@gmail.com>"
 ANYMAIL = {
     "BREVO_API_KEY": env("BREVO_API_KEY"),
+}# settings.py-ൽ ഏറ്റവും താഴെ ഇത് മാത്രം നിർത്തുക:
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.StaticFilesStorage",
+    },
 }
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Django-യോട് അഡ്മിൻ ഫയലുകൾ കൃത്യമായി കണ്ടുപിടിക്കാൻ പറയാൻ ഇത് ചേർക്കുക:
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
