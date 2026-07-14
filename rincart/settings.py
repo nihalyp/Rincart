@@ -104,25 +104,23 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript)
-# 1. പഴയ STORAGES ഡിക്ഷ്ണറിയും STATICFILES_STORAGE-ഉം പൂർണ്ണമായി ഒഴിവാക്കി ഇത് മാത്രം നൽകുക:
+# പഴയ STORAGES ഡിക്ഷ്ണറി പൂർണ്ണമായി മാറ്റി പകരം ഇത് പേസ്റ്റ് ചെയ്യുക:
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
-    # WhiteNoise-ൽ വരാവുന്ന ഫയൽ മിസ്സിങ് എററുകൾ ഒഴിവാക്കാൻ ഇതാണ് കറക്റ്റ് വഴി:
+    # കംപ്രഷൻ ഇല്ലാത്ത സാധാരണ വൈറ്റ്നോയിസ് സ്റ്റോറേജ് (ഇത് എറർ വരുത്തില്ല)
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.StaticFilesStorage", 
     },
 }
 
-# 👈 ഈ വരി നിർബന്ധമായും തൊട്ടുതാഴെ ചേർക്കുക (ഇതാണ് മെയിൻ സൊല്യൂഷൻ)
+# ഈ വരിയും താഴെ ഉണ്ടെന്ന് ഉറപ്പാക്കുക
 WHITENOISE_MANIFEST_STRICT = False
-
 
 # 2. 'cloudinary_storage' പാക്കേജിന് വേണ്ടി ഈ ഒരു വരി നിർബന്ധമായും ചേർക്കുക:
 # ഇത് ചേർക്കുമ്പോഴാണ് അപ്ലിക്കേഷൻ ക്രാഷ് ആകാതിരിക്കുന്നത്
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
-
+STATICFILES_STORAGE = "whitenoise.storage.StaticFilesStorage"
 # 3. ബാക്കി മീഡിയ സെറ്റിങ്സ് താഴെ പറയുന്ന രീതിയിൽ നിലനിർത്തുക
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
