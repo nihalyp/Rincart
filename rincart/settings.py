@@ -27,12 +27,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
-    
-    # 👈 കൃത്യമായ ഓർഡർ: staticfiles-ന് മുകളിലായിരിക്കണം ഇത്!
-    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
     'cloudinary',
-    
     'rincartapp',
     'django.contrib.sites',
     'allauth',
