@@ -109,10 +109,15 @@ STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
+    # WhiteNoise-ൽ വരാവുന്ന ഫയൽ മിസ്സിങ് എററുകൾ ഒഴിവാക്കാൻ ഇതാണ് കറക്റ്റ് വഴി:
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
+
+# 👈 ഈ വരി നിർബന്ധമായും തൊട്ടുതാഴെ ചേർക്കുക (ഇതാണ് മെയിൻ സൊല്യൂഷൻ)
+WHITENOISE_MANIFEST_STRICT = False
+
 
 # 2. 'cloudinary_storage' പാക്കേജിന് വേണ്ടി ഈ ഒരു വരി നിർബന്ധമായും ചേർക്കുക:
 # ഇത് ചേർക്കുമ്പോഴാണ് അപ്ലിക്കേഷൻ ക്രാഷ് ആകാതിരിക്കുന്നത്
