@@ -104,14 +104,23 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript)
+# പഴയ Storages/Staticfiles Storage കമാൻഡുകൾ എല്ലാം മാറ്റി ഇത് മാത്രം നൽകുക:
+STORAGES = {
+    # 1. CSS/JS ഫയലുകൾ വൈറ്റ്നോയിസ് വഴി കാണിക്കാൻ
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+    # 2. മീഡിയ ഇമേജുകൾ ക്ലൗഡിനറി വഴി കാണിക്കാൻ (ഇതാണ് നിങ്ങളുടെ ഇമേജ് പ്രോബ്ലം മാറ്റുന്നത്)
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    }
+}
+
+# ബാക്കി താഴെയുള്ള വരികൾ ഇതുപോലെ തന്നെ നിർത്തുക
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
-
-# Media Cloudinary configuration
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -120,6 +129,7 @@ CLOUDINARY_STORAGE = {
     'API_KEY': '621758957527618',
     'API_SECRET': 'mPFKmYvXioCdRaNqZMhZwa1Scnc',
 }
+
 
 # Social Account configurations
 SOCIALACCOUNT_PROVIDERS = {
