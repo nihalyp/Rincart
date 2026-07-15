@@ -103,11 +103,10 @@ USE_TZ = True
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'odmzdqtb',
-    'API_KEY': '621758957527618',
-    'API_SECRET': 'mPFKmYvXioCdRaNqZMhZwa1Scnc',
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': env('CLOUDINARY_API_KEY'),
+    'API_SECRET': env('CLOUDINARY_API_SECRET'),
 }
-
 
 # Social Account configurations
 SOCIALACCOUNT_PROVIDERS = {
