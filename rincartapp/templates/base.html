@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} {% endblock %}</title>
+    <title>{% block title %} RinCart {% endblock %}</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     {% load static %}
-    
 </head>
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
 <style>
     @media (min-width: 992px) {
         .navbar .container-fluid {
@@ -31,10 +30,6 @@
         display: none; /* Chrome, Safari, Opera */
     }
 
-    /* 🌟 Premium Search Box Styling */
-
-  
-    
     .btn-search {
         background-color: rgb(252, 166, 5);
     }
@@ -59,7 +54,7 @@
         justify-content: flex-end;
     }
 
-    /* മൊബൈൽ സ്ക്രീനുകളിൽ മാത്രം ഹൊറിസോണ്ടൽ സ്ക്രോളിംഗ് അനുവദിക്കുന്നു */
+    /* Mobile scroll optimization */
     @media (max-width: 767.98px) {
         .custom-inline-navbar .scrollable-nav-wrapper {
             max-width: 72%;
@@ -72,7 +67,6 @@
         }
     }
     
-    /* വലിയ സ്ക്രോൺ ആണെങ്കിൽ സാധാരണ ലേഔട്ട് */
     @media (min-width: 768px) {
         .custom-inline-navbar .scrollable-nav-wrapper {
             max-width: auto;
@@ -134,8 +128,9 @@
         animation: flash 2.5s infinite alternate;
     }
     @keyframes flash {
-        0%, 100% { opacity: 1; transform: scale(1); }
+        0% { opacity: 1; transform: scale(1); }
         50% { opacity: 0.7; transform: scale(1.1); }
+        100% { opacity: 1; transform: scale(1); }
     }
 
     /* Category bar alignment fixes */
@@ -163,6 +158,7 @@
         background-color: #121212;
         box-shadow: 0 6px 12px rgba(0,0,0,0.12) !important;
     }
+
     /* 🌟 Premium Search Box Styling */
     .search-box-container {
         background-color: #f1f5f9;
@@ -194,9 +190,9 @@
             margin-right: auto !important;
         }
     }
-    /* സൈറ്റ് ഡാർക്ക് മോഡിൽ ആയിരിക്കുമ്പോൾ മാത്രം മാറേണ്ട കസ്റ്റം സ്റ്റൈലുകൾ */
+
     [data-bs-theme="dark"] body {
-        background-color: #121212 !important; /* പക്കാ ഫ്ലിപ്കാർട്ട് ഡാർക്ക് ലുക്ക് */
+        background-color: #121212 !important;
         color: #f8f9fa !important;
     }
 
@@ -204,7 +200,7 @@
         background-color: #1e1e1e !important;
         border-color: #333 !important;
     }
-    /* Navbar general color override */
+
     .navbar {
         background-color: #212529 !important; /* Dark Navbar by default */
     }
@@ -219,7 +215,7 @@
         padding: 6px 12px !important;
         border-radius: 20px;
         transition: all 0.25s ease-in-out;
-        color: rgba(255, 255, 255, 0.75) !important; /* Light text on dark navbar */
+        color: rgba(255, 255, 255, 0.75) !important;
     }
 
     /* Hover Effect */
@@ -231,7 +227,7 @@
 
     /* Active Button Style */
     .custom-nav-item .nav-link.active {
-        color: #ffc107 !important; /* Amber/Yellow for Active */
+        color: #ffc107 !important;
         background-color: rgba(255, 193, 7, 0.1);
         font-weight: 600;
     }
@@ -245,7 +241,7 @@
     #darkModeToggle:hover {
         background-color: rgba(255, 255, 255, 0.1);
     }
-    /* Navbar Background */
+    
     .navbar {
         background-color: #1a1c1e !important;
     }
@@ -291,7 +287,6 @@
 
     .custom-nav-item .nav-link.active {
         background: rgba(255, 193, 7, 0.15) !important;
-        
     }
 
     /* Large Screens (Desktop) Reset */
@@ -306,12 +301,21 @@
         .custom-nav-item .nav-link:hover { background: rgba(255, 255, 255, 0.1) !important; }
         .custom-nav-item .nav-link.active { background: rgba(255, 193, 7, 0.1) !important; }
     }
+
+    /* ⚡ Footer Accent Styling */
+    .hover-underline {
+        transition: color 0.2s ease;
+    }
+    .hover-underline:hover {
+        text-decoration: underline !important;
+        color: #ff9f00 !important;
+    }
 </style>
 
     <nav class="navbar navbar-dark shadow-sm py-2 px-2 px-sm-3">
         <div class="container-fluid align-items-center justify-content-between">
             
-            <!-- 1. Brand Logo (Mobile-ൽ സെന്ററിലും Desktop-ൽ ഇടത്തും വരും) -->
+            <!-- 1. Brand Logo -->
             <a class="navbar-brand text-warning fw-bold fs-3 m-0 d-flex align-items-center flex-shrink-0" href="/">
                 <i class="fa-solid fa-bolt me-1.5 text-warning animate-bolt"></i>RinCart
             </a>
@@ -359,7 +363,7 @@
                             <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
                                 <li><span class="dropdown-item-text small text-muted">Hi, {{ user.first_name }}</span></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li class="fw-bold dropdown-item  small"><a href="{% url 'user_account' %}" class="text-decoration-none"><h5>{{ request.user.email }}</h5></a></li>
+                                <li class="fw-bold dropdown-item small"><a href="{% url 'user_account' %}" class="text-decoration-none"><h5>{{ request.user.email }}</h5></a></li>
                                 <li><a class="dropdown-item text-danger small fw-semibold" href="/accounts/logout/">Logout</a></li>
                             </ul>
                         </div>
@@ -383,11 +387,8 @@
         </div>
     </nav>
 
-
-
-
-
-    <div class="sticky-top mt-0 py-2 bg-dark border-bottom shadow-sm" style="overflow: visible !important; ">
+    <!-- Sub-Navbar Category Stickers -->
+    <div class="sticky-top mt-0 py-2 bg-dark border-bottom shadow-sm" style="overflow: visible !important;">
         <div class="container" style="overflow: visible !important;">
             <div class="d-flex align-items-center flex-nowrap flex-md-wrap justify-content-start justify-content-md-center gap-2 gap-md-3" 
                 style="overflow-x: auto; overflow-y: visible !important; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none;">
@@ -414,68 +415,69 @@
         </div>
     </div>
 
-    
-
+    <!-- main dynamic wrapper -->
+    <main class="flex-grow-1">
         {% block content %}
-       
-
-        <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border text-center">
-            <h1 class="display-5 fw-bold text-dark">Welcome to the RinCart</h1>
-            <p class="lead">Click on any category sticker above or browse our latest collections.</p>
+        <div class="container my-5">
+            <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border text-center">
+                <h1 class="display-5 fw-bold text-dark">Welcome to RinCart</h1>
+                <p class="lead">Click on any category sticker above or browse our latest collections.</p>
+            </div>
         </div>
         {% endblock %}
     </main>
 
-    
-    <!-- 🛒 Flipkart/Amazon Style Premium Footer -->
-<footer class="bg-dark text-white pt-5 pb-4 mt-5">
-    <div class="container text-center text-md-start">
-        <div class="row text-center text-md-start">
+    <!-- 🛒 Flipkart/Amazon Style Premium Footer (FIXED) -->
+    <footer class="bg-dark text-white pt-5 pb-4 mt-auto">
+        <div class="container">
+            <div class="row g-4 justify-content-between text-center text-md-start">
+                
+                <!-- Brand Column -->
+                <div class="col-md-4 col-lg-4">
+                    <h5 class="text-uppercase mb-3 font-weight-bold" style="color: #ff9f00;">
+                        <i class="bi bi-lightning-fill text-warning"></i> RinCart
+                    </h5>
+                    <p class="small text-white-50" style="max-width: 320px;">
+                        Experience a fast, secure, and intuitive modern shopping platform built to bring premium products right to your doorstep.
+                    </p>
+                </div>
+
+                <!-- Link Column 1 -->
+                <div class="col-6 col-md-3 col-lg-2 offset-lg-1">
+                    <h6 class="text-uppercase mb-3 font-weight-bold text-white-50 small tracking-wider">Get to Know Us</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 m-0">
+                        <li><a href="{% url 'about' %}" class="text-white-50 text-decoration-none small hover-underline">About Us</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-white-50 text-decoration-none small hover-underline">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Link Column 2 -->
+                <div class="col-6 col-md-3 col-lg-2">
+                    <h6 class="text-uppercase mb-3 font-weight-bold text-white-50 small tracking-wider">Let Us Help You</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 m-0">
+                        <li><a href="{% url 'user_account' %}" class="text-white-50 text-decoration-none small hover-underline">Your Account</a></li>
+                        <li><a href="{% url 'return_policy' %}" class="text-white-50 text-decoration-none small hover-underline">Returns Center</a></li>
+                    </ul>
+                </div>
+                
+            </div>
             
-            <!-- ബ്രാൻഡ് കോളം -->
-            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-                <h5 class="text-uppercase mb-4 font-weight-bold" style="color: #ff9f00;">
-                    <i class="bi bi-lightning-fill"></i> RinCart
-                </h5>
-                <p class="small text-white-50">Experience the most robust, secure, and lightning-fast shopping platform.</p>
-            </div>
-
-            <!-- ആമസോൺ സ്റ്റൈൽ ലിങ്ക് കോളം -->
-            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-                <h6 class="text-uppercase mb-4 font-weight-bold text-white-50 small">Get to Know Us</h6>
-                <p><a href="{% url 'about' %}" class="text-white text-decoration-none small hover-underline">About Us</a></p>
-                <p><a href="{% url 'contact' %}" class="text-white text-decoration-none small hover-underline">Contact Us</a></p>
-            </div>
-
-            <!-- കെയർ കോളം -->
-            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-                <h6 class="text-uppercase mb-4 font-weight-bold text-white-50 small">Let Us Help You</h6>
-                <p><a href="{% url 'user_account' %}" class="text-white text-decoration-none small">Your Account</a></p>
-                <p><a href="{% url 'return_policy' %}" class="text-white text-decoration-none small">Returns Center</a></p>
-            </div>
-            <hr>
-            <div class="container text-center">
-            <p class="mb-0">&copy; 2026 RinCart Inc. All rights reserved.</p>
+            <hr class="my-4 border-secondary opacity-25">
+            
+            <div class="row">
+                <div class="col text-center">
+                    <p class="mb-0 text-white-50 small">&copy; 2026 RinCart Inc. All rights reserved.</p>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
-
-<style>
-    .hover-underline:hover {
-        text-decoration: underline !important;
-        color: #ff9f00 !important;
-    }
-</style>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     const toggleBtn = document.getElementById('darkModeToggle');
     const themeIcon = document.getElementById('darkModeIcon');
-    const themeText = document.getElementById('darkModeText');
     const htmlElement = document.documentElement;
 
-    // മുൻപ് സെറ്റ് ചെയ്ത തീം ഉണ്ടോ എന്ന് പരിശോധിക്കുന്നു (Local Storage)
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         htmlElement.setAttribute('data-bs-theme', savedTheme);
@@ -483,7 +485,6 @@
     }
 
     toggleBtn.addEventListener('click', () => {
-        // നിലവിലെ തീം ഏതാണെന്ന് നോക്കുന്നു
         const currentTheme = htmlElement.getAttribute('data-bs-theme');
         let newTheme = 'light';
 
@@ -491,50 +492,43 @@
             newTheme = 'dark';
         }
 
-        // തീം മാറ്റുന്നു
         htmlElement.setAttribute('data-bs-theme', newTheme);
-        localStorage.setItem('theme', newTheme); // പേജ് റീഫ്രഷ് ചെയ്താലും മാറതിരിക്കാൻ
+        localStorage.setItem('theme', newTheme);
         updateButton(newTheme);
     });
 
-    // തീം മാറുന്നതിനനുസരിച്ച് ബട്ടണിലെ ഐക്കണും ടെക്സ്റ്റും മാറ്റാൻ
     function updateButton(theme) {
-    if (theme === 'dark') {
-        themeIcon.className = 'bi bi-sun-fill text-warning'; // സൂര്യന്റെ ഐക്കൺ
-    } else {
-        themeIcon.className = 'bi bi-moon-stars-fill text-warning'; // ചന്ദ്രന്റെ ഐക്കൺ (Navbar എപ്പോഴും ഡാർക്ക് ആയതുകൊണ്ട് text-warning തന്നെയാണ് ഭംഗി)
+        if (theme === 'dark') {
+            themeIcon.className = 'bi bi-sun-fill text-warning';
+        } else {
+            themeIcon.className = 'bi bi-moon-stars-fill text-warning';
+        }
     }
-}
 
-document.querySelectorAll('.wishlist-btn').forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault(); // കാർഡിലെ പ്രൊഡക്റ്റ് ഡീറ്റൈൽ ലിങ്ക് ഓപ്പൺ ആകുന്നത് തടയാൻ
-        
-        const itemId = this.getAttribute('data-item-id');
-        const icon = this.querySelector('i');
-        
-        // 🚀 Django വ്യൂവിലേക്ക് റിക്വസ്റ്റ് അയക്കുന്നു
-        fetch(`/toggle-wishlist/${itemId}/`, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'added') {
-                // വിഷ്‌ലിസ്റ്റിൽ ആഡ് ആയാൽ ചുവന്ന ഹാർട്ട്
-                icon.className = 'bi bi-heart-fill text-danger';
-            } else if (data.status === 'removed') {
-                // ഒഴിവാക്കിയാൽ പഴയ അവസ്ഥ (വെളുത്ത/ഗ്രേ ഹാർട്ട്)
-                icon.className = 'bi bi-heart text-secondary';
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    document.querySelectorAll('.wishlist-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const itemId = this.getAttribute('data-item-id');
+            const icon = this.querySelector('i');
+            
+            fetch(`/toggle-wishlist/${itemId}/`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'added') {
+                    icon.className = 'bi bi-heart-fill text-danger';
+                } else if (data.status === 'removed') {
+                    icon.className = 'bi bi-heart text-secondary';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
     });
-});
-
-    
-</script>
+    </script>
 </body>
 </html>
