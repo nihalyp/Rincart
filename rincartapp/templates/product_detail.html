@@ -100,7 +100,7 @@
     }
 
     .btn-flipkart {
-        width: 100% !important;
+        flex: 1;
         height: 100% !important;
         display: flex !important;
         align-items: center !important;
@@ -244,7 +244,7 @@
             </div>
         </div>
 
-        <!-- 🏷️ Right Column: Product Details (FIXED: Added missing col-md-6) -->
+        <!-- 🏷️ Right Column: Product Details -->
         <div class="col-md-6">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-2 text-uppercase small fw-semibold">
@@ -294,13 +294,13 @@
             
             <hr class="text-muted opacity-25">
 
-            <!-- Price Section (FIXED: Repaired broken arrow tag and original price formatting) -->
+            <!-- Price Section (FIXED: Fixed visual formatting when there's no discount) -->
             <div class="d-flex align-items-baseline gap-2.5 my-3 flex-wrap">
                 <span id="discount-wrapper" class="flipkart-premium-discount" {% if not product.original_price or product.original_price <= product.price %}style="display:none;"{% endif %}>
                     <span id="discount-percent">{{ discount_percentage }}</span>%<i class="bi bi-arrow-down-short fs-1"></i>
                 </span>
                 
-                <span class="text-muted text-decoration-line-through fs-4 ms-2">
+                <span id="original-price-wrapper" class="text-muted text-decoration-line-through fs-4 ms-2" {% if not product.original_price or product.original_price <= product.price %}style="display:none;"{% endif %}>
                     ₹<span id="original-price">{{ product.original_price|default:"" }}</span>
                 </span>
 
@@ -311,7 +311,7 @@
             <div class="card border-0 bg-light rounded-4 p-4 mb-4 shadow-sm">
                 <div class="d-flex align-items-center gap-3 mb-3">
                     <div class="bg-white p-2 rounded-3 text-success shadow-sm" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fa-solid fa-truck-fast fs-5"></i>
+                        <i class="bi bi-truck fs-5"></i>
                     </div>
                     <div>
                         <span class="d-block fw-bold">FREE Delivery</span>
@@ -321,7 +321,7 @@
 
                 <div class="d-flex align-items-center gap-3 mb-3">
                     <div class="bg-white p-2 rounded-3 text-primary shadow-sm" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fa-solid fa-calendar-check fs-5"></i>
+                        <i class="bi bi-calendar-check fs-5"></i>
                     </div>
                     <div>
                         <span>Arriving by <strong class="text-primary">{{ delivery_date }}</strong></span>
@@ -332,7 +332,7 @@
                 <div class="d-flex align-items-center gap-3 mb-3">
                     {% if product.is_cod_available %}
                         <div class="bg-white p-2 rounded-3 text-success shadow-sm" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(25, 135, 84, 0.15);">
-                            <i class="fa-solid fa-hand-holding-dollar fs-5"></i>
+                            <i class="bi bi-cash-coin fs-5"></i>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
@@ -343,21 +343,21 @@
                         </div>
                     {% else %}
                         <div class="bg-white p-2 rounded-3 text-danger shadow-sm" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(220, 53, 69, 0.15);">
-                            <i class="fa-solid fa-ban fs-5"></i>
+                            <i class="bi bi-slash-circle fs-5"></i>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
                                 <span class="text-dark fw-bold text-opacity-75">Cash on Delivery</span>
                                 <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 small fw-semibold" style="font-size: 0.75rem;">Not Available</span>
                             </div>
-                            <small class="text-danger small fw-medium"><i class="fa-solid fa-circle-exclamation me-1"></i>Requires online payment during checkout</small>
+                            <small class="text-danger small fw-medium"><i class="bi bi-exclamation-circle-fill me-1"></i>Requires online payment during checkout</small>
                         </div>
                     {% endif %}
                 </div>
 
                 <div class="d-flex align-items-start pt-2 border-top border-2 border-white mt-2">
                     <div class="bg-white p-2 rounded-3 text-warning shadow-sm me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fa-solid fa-rotate-left fs-5"></i>
+                        <i class="bi bi-arrow-counterclockwise fs-5"></i>
                     </div>
                     <div class="policy-text">
                         <span class="d-block fw-bold mb-0.5">10-Day Return & Exchange Policy</span>
@@ -371,43 +371,39 @@
 
             <!-- Desktop Buttons -->
             <div class="d-none d-md-flex gap-3 mb-4">
-                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline btn-lg py-3 px-4 flex-grow-1 fw-bold dynamic-btn" style="border-radius: 12px; font-size: 1rem;">
-                    <i class="fa-solid fa-cart-shopping me-2"></i>ADD TO CART
+                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-dark btn-lg py-3 px-4 flex-grow-1 fw-bold dynamic-btn" style="border-radius: 12px; font-size: 1rem;">
+                    <i class="bi bi-cart3 me-2"></i>ADD TO CART
                 </a>
                 <a href="{% url 'checkout_single' product.id %}" class="btn btn-warning btn-lg py-3 px-4 flex-grow-1 text-white fw-bold dynamic-btn" style="background-color: #ff9f00; border: none; border-radius: 12px; font-size: 1rem;">
-                    <i class="fa-solid fa-bolt me-2"></i>BUY NOW
+                    <i class="bi bi-lightning-charge me-2"></i>BUY NOW
                 </a>
             </div>
 
-            <!-- Mobile Sticky Bottom Bar -->
+            <!-- Mobile Sticky Bottom Bar (FIXED: Overflow & structural rendering layout issues) -->
             <div class="flipkart-bottom-bar fixed-bottom bg-white border-top d-block d-md-none">
-                <div class="row g-0 w-100 h-100 m-0 p-0">
-                    <div class="col-6 p-0 m-0 h-100">
-                        <a href="{% url 'add_to_cart' product.id %}" class="btn-flipkart text-dark bg-white">
-                            <i class="fa-solid fa-cart-shopping me-1.5 text-secondary"></i>ADD TO CART
-                        </a>
-                    </div>
-                    <div class="col-6 p-0 m-0 h-100">
-                        <a href="{% url 'checkout_single' product.id %}" class="btn-flipkart text-white bg-orange">
-                            <i class="fa-solid fa-bolt me-1.5"></i>BUY NOW
-                        </a>
-                    </div>
+                <div class="d-flex w-100 h-100 m-0 p-0">
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn-flipkart text-dark bg-white">
+                        <i class="bi bi-cart3 me-2 text-secondary"></i>ADD TO CART
+                    </a>
+                    <a href="{% url 'checkout_single' product.id %}" class="btn-flipkart text-white bg-orange">
+                        <i class="bi bi-lightning-charge me-2"></i>BUY NOW
+                    </a>
                 </div>
             </div>
-        </div> <!-- End of Right Column Details wrapper -->
+        </div>
     </div>
 
     <!-- Technical Specifications -->
     {% if product.mobile_specs %}
     <div class="mt-5 pt-4">
         <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-microchip text-warning"></i> Technical Specifications
+            <i class="bi bi-cpu text-warning"></i> Technical Specifications
         </h4>
         
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden spec-card mx-auto">
             <div class="row g-0">
                 <div class="col-md-4 bg-dark text-white p-4 d-flex flex-column justify-content-center align-items-center text-center">
-                    <i class="fa-solid fa-mobile-screen-button display-4 text-warning mb-3"></i>
+                    <i class="bi bi-phone display-4 text-warning mb-3"></i>
                     <h5 class="fw-bold m-0">{{ product.name }}</h5>
                     <p class="text-muted small mt-1 mb-0">Full hardware summary verification configuration</p>
                 </div>
@@ -416,36 +412,36 @@
                         <table class="table table-borderless m-0 custom-spec-table">
                             <tbody>
                                 <tr>
-                                    <td class="spec-label"><i class="bi bi-cpu bold me-2"></i> Processor</td>
+                                    <td class="spec-label"><i class="bi bi-cpu me-2"></i> Processor</td>
                                     <td class="spec-value">{{ product.mobile_specs.processor }}</td>
                                 </tr>
                                 {% if product.mobile_specs.chipset %}
                                 <tr>
-                                    <td class="spec-label"><i class="fa-solid fa-gear me-2"></i> Architecture</td>
+                                    <td class="spec-label"><i class="bi bi-gear me-2"></i> Architecture</td>
                                     <td class="spec-value">{{ product.mobile_specs.chipset }}</td>
                                 </tr>
                                 {% endif %}
                                 <tr>
-                                    <td class="spec-label"><i class="fa-solid fa-memory me-2"></i> Memory (RAM)</td>
+                                    <td class="spec-label"><i class="bi bi-memory me-2"></i> Memory (RAM)</td>
                                     <td class="spec-value"><span class="badge bg-light text-dark border px-2.5 py-1.5">{{ product.mobile_specs.ram }}</span></td>
                                 </tr>
                                 <tr>
-                                    <td class="spec-label"><i class="fa-solid fa-hard-drive me-2"></i> Internal Storage</td>
+                                    <td class="spec-label"><i class="bi bi-database me-2"></i> Internal Storage</td>
                                     <td class="spec-value">{{ product.mobile_specs.storage }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="spec-label"><i class="fa-solid fa-battery-three-quarters me-2"></i> Battery & Charging</td>
+                                    <td class="spec-label"><i class="bi bi-battery-charging me-2"></i> Battery & Charging</td>
                                     <td class="spec-value">{{ product.mobile_specs.battery }}</td>
                                 </tr>
                                 {% if product.mobile_specs.display %}
                                 <tr>
-                                    <td class="spec-label"><i class="fa-solid fa-bezier-curve me-2"></i> Display Layout</td>
+                                    <td class="spec-label"><i class="bi bi-aspect-ratio me-2"></i> Display Layout</td>
                                     <td class="spec-value">{{ product.mobile_specs.display }}</td>
                                 </tr>
                                 {% endif %}
                                 {% if product.mobile_specs.camera %}
                                 <tr>
-                                    <td class="spec-label"><i class="fa-solid fa-camera me-2"></i> Optics Setup</td>
+                                    <td class="spec-label"><i class="bi bi-camera me-2"></i> Optics Setup</td>
                                     <td class="spec-value text-muted">{{ product.mobile_specs.camera }}</td>
                                 </tr>
                                 {% endif %}
@@ -552,13 +548,16 @@
 
             document.getElementById('product-price').innerText = newPrice;
             const discountWrapper = document.getElementById('discount-wrapper');
+            const originalPriceWrapper = document.getElementById('original-price-wrapper');
             
             if (newOriginalPrice && parseInt(newOriginalPrice) > parseInt(newPrice)) {
                 document.getElementById('original-price').innerText = newOriginalPrice;
                 document.getElementById('discount-percent').innerText = newDiscount;
                 discountWrapper.style.display = 'inline-flex';
+                originalPriceWrapper.style.display = 'inline-flex';
             } else {
                 discountWrapper.style.display = 'none';
+                originalPriceWrapper.style.display = 'none';
             }
         });
     });
