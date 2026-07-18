@@ -837,7 +837,7 @@ def seller_dashboard(request):
     seller = get_object_or_404(SellerProfile, user=request.user)
     
     # ആ സെല്ലറുടെ പ്രോഡക്റ്റുകൾ മാത്രം എടുക്കുന്നു
-    my_products = Products.objects.filter(seller=seller)
+    my_products = Product.objects.filter(seller=seller)
     
     # --- 📊 വരുമാനവും ഗ്രാഫും സെറ്റ് ചെയ്യുന്ന ഭാഗം ---
     # തൽക്കാലം ഡെമോ ഡാറ്റ നൽകുന്നു. നിങ്ങളുടെ പർച്ചേസ്/ഓർഡർ മോഡൽ അനുസരിച്ച് ഇത് പിന്നീട് മാറ്റാം
