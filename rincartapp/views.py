@@ -1,16 +1,73 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product  ,Buying ,Wishlist,CustomerQuery
+from django.shortcuts import render, redirect, get_object_or_404, get_object_or_400_wrapper
+from .models import Product ,SellerProfile ,Buying ,Wishlist,CustomerQuery
 import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login,get_user_model
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 import random
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
+
+# 1. സെല്ലർ ആകാൻ അപേക്ഷിക്കാനുള്ള വ്യൂ
+@login_required
+def become_seller(request):
+    # ഓൾറെഡി സെല്ലർ പ്രൊഫൈൽ ഉണ്ടോ എന്ന് നോക്കുന്നു
+    try:
+        profile = request.user.seller_profile
+        if profile.is_approved:
+            return redirect('seller_dashboard')
+        else:
+            return redirect('seller_requested')
+    except SellerProfile.DoesNotExist:
+        pass
+
+    if request.method == 'POST':
+        shop_name = request.POST.get('shop_name')
+        phone_number = request.POST.get('phone_number')
+        gst_number = request.POST.get('gst_number', '')
+
+        # പുതിയ പ്രൊഫൈൽ ഉണ്ടാക്കുന്നു (is_approved=False ആയിരിക്കും)
+        SellerProfile.objects.create(
+            user=request.user,
+            shop_name=shop_name,
+            phone_number=phone_number,
+            gst_number=gst_number
+        )
+        return redirect('seller_requested')
+
+    return render(request, 'become_seller.html')
+
+
+# 2. അപേക്ഷിച്ച ശേഷം അപ്രൂവലിനായി കാത്തിരിക്കുന്ന പേജ്
+@login_required
+def seller_requested(request):
+    return render(request, 'seller_requested.html')
+
+
+# 3. സെല്ലർ ഡാഷ്‌ബോർഡ് വ്യൂ (യഥാർത്ഥ ഡാറ്റ കാണിക്കാൻ)
+@login_required
+def seller_dashboard(request):
+    # സെല്ലർ അപ്രൂവ്ഡ് ആണോ എന്ന് ഉറപ്പാക്കുന്നു
+    try:
+        seller = request.user.seller_profile
+        if not seller.is_approved:
+            return redirect('seller_requested')
+    except SellerProfile.DoesNotExist:
+        return redirect('become_seller')
+
+    # ആ സെല്ലറുടെ പ്രോഡക്റ്റുകൾ മാത്രം എടുക്കുന്നു
+    my_products = Product.objects.filter(seller=seller)
+    product_count = my_products.count()
+
+    context = {
+        'seller': seller,
+        'products': my_products,
+        'product_count': product_count,
+    }
+    return render(request, 'seller_dashboard.html', context)
 
 @login_required
 def verify_otp_view(request):
