@@ -3,6 +3,19 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 
+# 🌟 1. പുതിയ സെല്ലർ പ്രൊഫൈൽ മോഡൽ (യൂസർമാർക്ക് സെല്ലർ ആകാൻ)
+class SellerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='seller_profile')
+    shop_name = models.CharField(max_length=255, unique=True)
+    phone_number = models.CharField(max_length=15)
+    gst_number = models.CharField(max_length=15, blank=True, null=True, help_text="Optional")
+    is_approved = models.BooleanField(default=False, help_text="അഡ്മിൻ അപ്രൂവ് ചെയ്ത ശേഷം മാത്രം വിൽക്കാൻ")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.shop_name} ({self.user.username})"
+
+
 class Product(models.Model):
     CATEGORY_CHOICES = [
         ('fashion', 'Fashion & Dresses'),
@@ -13,6 +26,10 @@ class Product(models.Model):
         ('toy', 'Toys'),
     ]
 
+    # 🌟 2. പ്രൊഡക്റ്റിനെ സെല്ലറുമായി ലിങ്ക് ചെയ്യുന്നു
+    # (null=True, blank=True കൊടുത്തതു കൊണ്ട് പഴയ പ്രൊഡക്റ്റുകൾ ഡിലീറ്റ് ആകില്ല, അവ അഡ്മിന്റെ സ്വന്തമായിരിക്കും)
+    seller = models.ForeignKey(SellerProfile, on_delete=models.CASCADE, null=True, blank=True, related_name='products')
+    
     name = models.CharField(max_length=200)
     price = models.IntegerField() 
     original_price = models.IntegerField(null=True, blank=True)
@@ -22,13 +39,13 @@ class Product(models.Model):
     users_bought = models.ManyToManyField(User, blank=True)
     is_cod_available = models.BooleanField(default=True, verbose_name="COD Available?")
     tax_rate = models.DecimalField(
-        max_digits=5,        # ആകെ വരാവുന്ന അക്കങ്ങളുടെ എണ്ണം (ഉദാഹരണത്തിന്: 100.00 - ആകെ 5 അക്കങ്ങൾ)
-        decimal_places=2,    # ദശാംശത്തിന് ശേഷം വരാവുന്ന അക്കങ്ങൾ (e.g., 1.20, 0.30)
+        max_digits=5,        
+        decimal_places=2,    
         default=Decimal('0.00'),
         validators=[MinValueValidator(Decimal('0.00')), MaxValueValidator(Decimal('100.00'))],
         help_text="Enter GST/Tax percentage (e.g., 1.2 for 1.2%, 0.3 for 0.3%)"
     )
-    # 🌟 Parent-Child Color Variations ഫീൽഡുകൾ
+    
     parent_product = models.ForeignKey(
         'self', 
         on_delete=models.SET_NULL, 
@@ -58,13 +75,11 @@ class Product(models.Model):
         return 0
 
 
-# ഓരോ സൈസും അതിന്റെ വിലയും സൂക്ഷിക്കാൻ
 class ProductSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variant')
-    size = models.CharField(max_length=10) # S, M, L, XL
-    price = models.IntegerField() # ഈ സൈസിന്റെ വില
+    size = models.CharField(max_length=10) 
+    price = models.IntegerField() 
     original_price = models.IntegerField(null=True, blank=True)
-    
     
     @property
     def Discount_percentage(self):
@@ -75,6 +90,7 @@ class ProductSize(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.size} ({self.price})"
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='extra_images')
@@ -97,13 +113,13 @@ class MobileSpecification(models.Model):
     def __str__(self):
         return f"Specs for {self.product.name}"
 
+
 class Buying(models.Model):
     STATUS_CHOICES = [
         ('Active', 'Active'),
         ('Cancelled', 'Cancelled'),
     ]
 
-    # 🌟 പേയ്‌മെന്റ് ഓപ്ഷനുകൾക്കായുള്ള ചോയ്‌സ്
     PAYMENT_CHOICES = [
         ('card', 'Credit / Debit Card'),
         ('paypal', 'PayPal'),
@@ -127,22 +143,24 @@ class Buying(models.Model):
     def __str__(self):
         return f"{self.customer_f_name} - {self.product.name} ({self.status})"
     
+
 class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlist')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     added_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'product') # ഒരു പ്രൊഡക്റ്റ് ഒരു തവണയേ വിഷ്‌ലിസ്റ്റിൽ വരാവൂ
+        unique_together = ('user', 'product')
 
     def __str__(self):
         return f"{self.user.username} - {self.product.name}"
     
+
 class CustomerQuery(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True) # മെസ്സേജ് വന്ന സമയം ഓട്ടോമാറ്റിക് ആയി എടുക്കും
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Message from {self.name} ({self.email})"
@@ -150,4 +168,3 @@ class CustomerQuery(models.Model):
     class Meta:
         verbose_name = "Customer Query"
         verbose_name_plural = "Customer Queries"
-
