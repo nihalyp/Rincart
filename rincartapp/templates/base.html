@@ -319,10 +319,16 @@
             <a class="navbar-brand text-warning fw-bold fs-3 m-0 d-flex align-items-center flex-shrink-0" href="/">
                 <i class="fa-solid fa-bolt me-1.5 text-warning animate-bolt"></i>RinCart
             </a>
+            <li class="nav-item ms-lg-3">
+                <a class="nav-link px-3 py-2 rounded-pill bg-primary-subtle text-primary fw-bold d-inline-flex align-items-center border border-primary-subtle shadow-sm transition" href="{% url 'become_seller' %}" style="font-size: 0.9rem;">
+                   <i class="bi bi-shop me-2"></i> Become a Seller
+                </a>
+            </li>
 
             <!-- 2. Navigation Menu Wrapper -->
             <div class="nav-menu-wrapper d-flex align-items-center">
                 <ul class="navbar-nav d-flex flex-row align-items-center gap-2 m-0 list-unstyled">
+   
                     <li class="nav-item custom-nav-item">
                         <a class="nav-link active d-flex align-items-center justify-content-center" href="{% url 'home' %}" title="Home">
                             <i class="fa-solid fa-house text-warning"></i>
