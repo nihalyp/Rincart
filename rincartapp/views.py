@@ -829,3 +829,55 @@ def toggle_wishlist(request, product_id):
         
     # മറ്റ് പേജുകളിൽ നിന്നാണെങ്കിൽ അതേ പേജിലേക്ക് തന്നെ റീഫ്രഷ് ചെയ്യുന്നു
     return redirect(request.META.get('HTTP_REFERER', 'home'))
+import json
+
+@login_required(login_url='sign_in')
+def seller_dashboard(request):
+    # ലോഗിൻ ചെയ്ത യൂസർക്ക് സെല്ലർ പ്രൊഫൈൽ ഉണ്ടോ എന്ന് നോക്കുന്നു
+    seller = get_object_or_404(SellerProfile, user=request.user)
+    
+    # ആ സെല്ലറുടെ പ്രോഡക്റ്റുകൾ മാത്രം എടുക്കുന്നു
+    my_products = Products.objects.filter(seller=seller)
+    
+    # --- 📊 വരുമാനവും ഗ്രാഫും സെറ്റ് ചെയ്യുന്ന ഭാഗം ---
+    # തൽക്കാലം ഡെമോ ഡാറ്റ നൽകുന്നു. നിങ്ങളുടെ പർച്ചേസ്/ഓർഡർ മോഡൽ അനുസരിച്ച് ഇത് പിന്നീട് മാറ്റാം
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]
+    earnings = [12000, 15000, 18000, 14000, 22000, 26000, 32000] # ഒറിജിനൽ തുക ഇവിടെ വരും
+    
+    total_earnings = sum(earnings)
+    total_sales = len(earnings) * 3 # ഒരു ഏകദേശ കണക്ക്
+    
+    context = {
+        'seller': seller,
+        'products': my_products,
+        'total_earnings': total_earnings,
+        'total_sales': total_sales,
+        'months_json': json.dumps(months),
+        'earnings_json': json.dumps(earnings),
+    }
+    return render(request, 'seller/dashboard.html', context)
+    
+@login_required(login_url='sign_in')
+def add_product(request):
+    seller = get_object_or_404(SellerProfile, user=request.user)
+    
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
+        image = request.FILES.get('image')
+        category = request.POST.get('category')
+        
+        # പുതിയ പ്രോഡക്റ്റ് നിർമ്മിക്കുന്നു
+        Products.objects.create(
+            seller=seller,
+            name=name,
+            price=price,
+            description=description,
+            image=image,
+            category=category
+        )
+        messages.success(request, "Product added successfully!")
+        return redirect('seller_dashboard')
+        
+    return render(request, 'seller/add_product.html')
