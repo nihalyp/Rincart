@@ -869,7 +869,7 @@ def add_product(request):
         category = request.POST.get('category')
         
         # പുതിയ പ്രോഡക്റ്റ് നിർമ്മിക്കുന്നു
-        Products.objects.create(
+        Product.objects.create(
             seller=seller,
             name=name,
             price=price,
