@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404, get_object_or_400_wrapper
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product ,SellerProfile ,Buying ,Wishlist,CustomerQuery
 import datetime
 from django.contrib.auth.decorators import login_required
