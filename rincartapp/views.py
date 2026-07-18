@@ -114,7 +114,7 @@ def verify_otp_view(request):
 
 # Home / All Products Page
 def home_page(request):
-    all_products = Product.objects.all()
+    all_products = Product.objects.all().order_by('-id')
     wishlist_ids = []
     
     if request.user.is_authenticated:
@@ -128,7 +128,7 @@ from .models import Product, Wishlist
 
 def fashion_page(request):
     # category 'fashion' ഉള്ള പ്രൊഡക്റ്റുകൾ എടുക്കുന്നു, ഒപ്പം സൈസ് വേരിയന്റുകളും പ്രീഫെച്ച് ചെയ്യുന്നു
-    products = Product.objects.filter(category='fashion').prefetch_related('variant')
+    products = Product.objects.filter(category='fashion').prefetch_related('variant').order_by('-id')
     
     selected_size = request.GET.get('size', None)
     selected_price = request.GET.get('price', None)
@@ -164,7 +164,7 @@ def fashion_page(request):
 
 # Mobiles Page Only
 def mobile_page(request):
-    mobile_items = Product.objects.filter(category='mobile')
+    mobile_items = Product.objects.filter(category='mobile').order_by('-id')
     selected_price = request.GET.get('price', None)
     
     # 🌟 ആദ്യമേ ഡിഫോൾട്ട് ആയി എല്ലാ മൊബൈലുകളും ഈ വേരിയബിളിലേക്ക് വെക്കുക
@@ -199,7 +199,7 @@ def mobile_page(request):
 
 # Beauty Page Only
 def beauty_page(request):
-    beauty_items = Product.objects.filter(category='beauty')
+    beauty_items = Product.objects.filter(category='beauty').order_by('-id')
     selected_price = request.GET.get('price', None)
     products=beauty_items
 
@@ -228,9 +228,9 @@ def beauty_page(request):
 
 # Electronics Page Only
 def electronics_page(request):
-    electronic_items = Product.objects.filter(category='electronic')
+    electronic_items = Product.objects.filter(category='electronic').order_by('-id')
     selected_price = request.GET.get('price', None)
-
+    products = electronic_items
     if selected_price:
         if selected_price == 'under_500':
             products = electronic_items.filter(price__lt=500) # ₹500-ൽ താഴെ മാത്രം
@@ -244,19 +244,19 @@ def electronics_page(request):
     
     if request.user.is_authenticated:
         # യൂസറുടെ വിഷ്‌ലിസ്റ്റിലുള്ള പ്രൊഡക്റ്റ് ഐഡികൾ മാത്രം എടുക്കുന്നു
-        wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
+        wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True).order_by('-id')
     context={
         'selected_price': selected_price,
-        'productss': electronic_items,
+        'productss': products,
         'wishlist_ids': wishlist_ids
     }
     return render(request,'electronics.html',context)
 
 # Home Appliances Page
 def home_appliances_page(request):
-    home_appliance_items = Product.objects.filter(category='home_appliance')
+    home_appliance_items = Product.objects.filter(category='home_appliance').order_by('-id')
     selected_price = request.GET.get('price', None)
-
+    products = home_appliance_items
     if selected_price:
         if selected_price == 'under_500':
             products = home_appliance_items.filter(price__lt=500) # ₹500-ൽ താഴെ മാത്രം
@@ -273,16 +273,16 @@ def home_appliances_page(request):
         wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
     context={
         'selected_price': selected_price,
-        'productss': home_appliance_items,
+        'productss': products,
         'wishlist_ids': wishlist_ids
     }
     return render(request,'home_appliances.html',context)
 
 # Toys Page
 def toys_page(request):
-    toy_items = Product.objects.filter(category='toy')
+    toy_items = Product.objects.filter(category='toy').order_by('-id')
     selected_price = request.GET.get('price', None)
-
+    products = toy_items
     if selected_price:
         if selected_price == 'under_500':
             products = toy_items.filter(price__lt=500) # ₹500-ൽ താഴെ മാത്രം
@@ -299,7 +299,7 @@ def toys_page(request):
         wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
     context={
         'selected_price': selected_price,
-        'productss': toy_items,
+        'productss': products,
         'wishlist_ids': wishlist_ids
     }
     return render(request,'toys.html',context)
