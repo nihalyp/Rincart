@@ -12,7 +12,7 @@ from django.conf import settings
 from django.contrib import messages
 
 # 1. സെല്ലർ ആകാൻ അപേക്ഷിക്കാനുള്ള വ്യൂ
-@login_required
+@login_required(login_url='sign_in') 
 def become_seller(request):
     # ഓൾറെഡി സെല്ലർ പ്രൊഫൈൽ ഉണ്ടോ എന്ന് നോക്കുന്നു
     try:
@@ -42,13 +42,13 @@ def become_seller(request):
 
 
 # 2. അപേക്ഷിച്ച ശേഷം അപ്രൂവലിനായി കാത്തിരിക്കുന്ന പേജ്
-@login_required
+@login_required(login_url='sign_in') 
 def seller_requested(request):
     return render(request, 'seller_requested.html')
 
 
 # 3. സെല്ലർ ഡാഷ്‌ബോർഡ് വ്യൂ (യഥാർത്ഥ ഡാറ്റ കാണിക്കാൻ)
-@login_required
+@login_required(login_url='sign_in') 
 def seller_dashboard(request):
     # സെല്ലർ അപ്രൂവ്ഡ് ആണോ എന്ന് ഉറപ്പാക്കുന്നു
     try:
@@ -68,8 +68,8 @@ def seller_dashboard(request):
         'product_count': product_count,
     }
     return render(request, 'seller_dashboard.html', context)
+@login_required(login_url='sign_in') 
 
-@login_required
 def verify_otp_view(request):
     # 1. യൂസർ ഓൾറെഡി ഒടിപി വെരിഫൈ ചെയ്തതാണെങ്കിൽ ഹോം പേജിലേക്ക് വിടുക
     if request.session.get('otp_verified'):
