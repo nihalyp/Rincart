@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %} Add Product - RinCart {% endblock %}
+
+{% block content %}
+<div class="container my-5" style="max-width: 600px;">
+    <div class="card border-0 shadow p-4 p-sm-5 bg-white" style="border-radius: 16px;">
+        <h3 class="fw-bold text-dark mb-4 text-center"><i class="bi bi-plus-circle text-warning me-2"></i>Add New Product</h3>
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-muted small">Product Name</label>
+                <input type="text" name="name" class="form-control py-2.5 rounded-3" placeholder="e.g., Slim Fit Cotton Shirt" required>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label fw-semibold text-muted small">Price (₹)</label>
+                    <input type="number" name="price" class="form-control py-2.5 rounded-3" placeholder="599" required>
+                </div>
+                <div class="col">
+                    <label class="form-label fw-semibold text-muted small">Category</label>
+                    <select name="category" class="form-select py-2.5 rounded-3" required>
+                        <option value="Fashion">Fashion</option>
+                        <option value="Mobiles">Mobiles</option>
+                        <option value="Beauty">Beauty</option>
+                        <option value="Electronics">Electronics</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-muted small">Product Image</label>
+                <input type="file" name="image" class="form-control py-2.5 rounded-3" accept="image/*" required>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-semibold text-muted small">Description</label>
+                <textarea name="description" class="form-control rounded-3" rows="4" placeholder="Tell buyers more about your product..." required></textarea>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-warning fw-bold py-2.5 rounded-pill shadow-sm">Publish Product</button>
+                <a href="{% url 'seller_dashboard' %}" class="btn btn-light text-muted fw-bold py-2.5 rounded-pill">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
