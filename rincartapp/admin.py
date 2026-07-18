@@ -3,7 +3,7 @@ from . models import Product,ProductImage,MobileSpecification, Buying,CustomerQu
 
 @admin.register(SellerProfile)
 class SellerProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'store_name', 'is_approved', 'created_at','phone_number','gst_number') # നിങ്ങളുടെ മോഡലിലെ ഫീൽഡ് പേരുകൾ നൽകുക
+    list_display = ('user', 'shop_name', 'is_approved', 'created_at','phone_number','gst_number') # നിങ്ങളുടെ മോഡലിലെ ഫീൽഡ് പേരുകൾ നൽകുക
     list_filter = ('is_approved',)
     search_fields = ('store_name', 'user__username')
 
