@@ -33,4 +33,8 @@ urlpatterns = [
     path('account/wishlist/', views.wishlist_view, name='wishlist'),
     path('toggle-wishlist/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
     path('verify-otp/', views.verify_otp_view, name='verify_otp'),
+    path('become-seller/', views.become_seller, name='become_seller'),
+    path('seller-requested/', views.seller_requested, name='seller_requested'),
+    path('seller/dashboard/', views.seller_dashboard, name='seller_dashboard'),
+
 ]
