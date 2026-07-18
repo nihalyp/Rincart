@@ -1,7 +1,7 @@
 from django.contrib import admin
 from . models import Product,ProductImage,MobileSpecification, Buying,CustomerQuery,ProductSize,SellerProfile
 
-
+@admin.register(SellerProfile)
 class SellerProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'store_name', 'is_approved', 'created_at','phone_number','gst_number') # നിങ്ങളുടെ മോഡലിലെ ഫീൽഡ് പേരുകൾ നൽകുക
     list_filter = ('is_approved',)
@@ -27,7 +27,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['category', 'parent_product']
     search_fields = ['name']
     
-admin.site.register(Product, ProductAdmin,SellerProfile)
+admin.site.register(Product, ProductAdmin)
 
 @admin.register(Buying)
 class BookingAdmin(admin.ModelAdmin):
