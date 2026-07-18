@@ -86,5 +86,5 @@ python manage.py runserver
 ## The application will now be accessible locally at http://127.0.0.1:8000/.
 
 ## 🌐 Live Demo
-**Experience the live application hosted on Render here:** 'rincart.onrender.com'
+**Experience the live application hosted on Render here:** RinCart Live Site
 
