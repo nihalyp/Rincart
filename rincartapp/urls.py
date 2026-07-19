@@ -37,4 +37,6 @@ urlpatterns = [
     path('seller-requested/', views.seller_requested, name='seller_requested'),
     path('seller/dashboard/', views.seller_dashboard, name='seller_dashboard'),
     path('seller/add-product/', views.add_product, name='add_product'),
+    path('ping/', views.ping_view, name='ping'),
+
 ]
