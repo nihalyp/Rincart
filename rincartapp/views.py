@@ -10,6 +10,10 @@ import random
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpResponse
+
+def ping_view(request):
+    return HttpResponse("pong", content_type="text/plain")
 
 # 1. സെല്ലർ ആകാൻ അപേക്ഷിക്കാനുള്ള വ്യൂ
 @login_required(login_url='sign_in') 
