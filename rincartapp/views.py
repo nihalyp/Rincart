@@ -116,28 +116,25 @@ def verify_otp_view(request):
     return render(request, 'verify_otp.html')
 # ================= 1. PAGE VIEWS (FILTERS BY CATEGORY) =================
 
-# Home / All Products Page
+# 1. Home Page View
 def home_page(request):
     all_products = Product.objects.all().order_by('-id')
-    wishlist_ids = []
     
+    wishlist_ids = []
     if request.user.is_authenticated:
-        # യൂസറുടെ വിഷ്‌ലിസ്റ്റിലുള്ള പ്രൊഡക്റ്റ് ഐഡികൾ മാത്രം എടുക്കുന്നു
         wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
+        
     return render(request, 'home.html', {'products': all_products, 'wishlist_ids': wishlist_ids})
 
-# Fashion Page Only
-from django.shortcuts import render
-from .models import Product, Wishlist
 
+# 2. Fashion Page Only
 def fashion_page(request):
-    # category 'fashion' ഉള്ള പ്രൊഡക്റ്റുകൾ എടുക്കുന്നു, ഒപ്പം സൈസ് വേരിയന്റുകളും പ്രീഫെച്ച് ചെയ്യുന്നു
     products = Product.objects.filter(category='fashion').prefetch_related('variant').order_by('-id')
     
     selected_size = request.GET.get('size', None)
     selected_price = request.GET.get('price', None)
 
-    # 1. Budget Range Filter
+    # Price Filter
     if selected_price:
         if selected_price == 'under_500':
             products = products.filter(price__lt=500)
@@ -148,12 +145,10 @@ def fashion_page(request):
         elif selected_price == 'above_2000':
             products = products.filter(price__gt=2000)
 
-    # 2. Size Filter (Django ORM വഴി മാറ്റിയത്)
+    # Size Filter
     if selected_size:
-        # ProductSize മോഡലിലെ size ഫീൽഡ് കേസ് ഇൻസെൻസിറ്റീവ് ആയി ഫിൽട്ടർ ചെയ്യുന്നു
         products = products.filter(variant__size__iexact=selected_size)
 
-    # 3. Wishlist Logic
     wishlist_ids = []
     if request.user.is_authenticated:
         wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
@@ -166,15 +161,12 @@ def fashion_page(request):
     }
     return render(request, 'fashion.html', context)
 
-# Mobiles Page Only
+
+# 3. Mobiles Page Only
 def mobile_page(request):
     mobile_items = Product.objects.filter(category='mobile').order_by('-id')
     selected_price = request.GET.get('price', None)
-    
-    # 🌟 ആദ്യമേ ഡിഫോൾട്ട് ആയി എല്ലാ മൊബൈലുകളും ഈ വേരിയബിളിലേക്ക് വെക്കുക
-    
     products = mobile_items 
-    
 
     if selected_price:
         if selected_price == 'under_2000':
@@ -189,125 +181,129 @@ def mobile_page(request):
             products = mobile_items.filter(price__gte=30000, price__lte=40000)
         elif selected_price == 'above_40000':
             products = mobile_items.filter(price__gt=40000)
+
     wishlist_ids = []
-    
     if request.user.is_authenticated:
-        # യൂസറുടെ വിഷ്‌ലിസ്റ്റിലുള്ള പ്രൊഡക്റ്റ് ഐഡികൾ മാത്രം എടുക്കുന്നു
         wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
+        
     context = {                       
         'selected_price': selected_price,
-        'productss': products,  # 🌟 ഇവിടെ ഫിൽട്ടർ ചെയ്ത 'products' തന്നെ കൊടുക്കുക!
+        'productss': products, 
         'wishlist_ids': wishlist_ids
     }
     return render(request, 'mobile.html', context)
 
-# Beauty Page Only
+
+# 4. Beauty Page Only
 def beauty_page(request):
     beauty_items = Product.objects.filter(category='beauty').order_by('-id')
     selected_price = request.GET.get('price', None)
-    products=beauty_items
+    products = beauty_items
 
     if selected_price:
         if selected_price == 'under_500':
-            products = beauty_items.filter(price__lt=500) # ₹500-ൽ താഴെ മാത്രം
+            products = beauty_items.filter(price__lt=500)
         elif selected_price == '500_1000':
-            products = beauty_items.filter(price__gte=500, price__lte=1000) # ₹500 നും ₹1000 നും ഇടയിൽ
+            products = beauty_items.filter(price__gte=500, price__lte=1000)
         elif selected_price == '1000_2000':
-            products = beauty_items.filter(price__gte=1000, price__lte=2000) # ₹1000 നും ₹2000 നും ഇടയിൽ
+            products = beauty_items.filter(price__gte=1000, price__lte=2000)
         elif selected_price == 'above_2000':
             products = beauty_items.filter(price__gt=2000)
+
     wishlist_ids = []
-    
     if request.user.is_authenticated:
-        # യൂസറുടെ വിഷ്‌ലിസ്റ്റിലുള്ള പ്രൊഡക്റ്റ് ഐഡികൾ മാത്രം എടുക്കുന്നു
         wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
 
-    context={
+    context = {
         'selected_price': selected_price,
         'productss': products,
         'wishlist_ids': wishlist_ids
-
     }
-    return render(request,'beauty.html',context)
+    return render(request, 'beauty.html', context)
 
-# Electronics Page Only
+
+# 5. Electronics Page Only
 def electronics_page(request):
     electronic_items = Product.objects.filter(category='electronic').order_by('-id')
     selected_price = request.GET.get('price', None)
     products = electronic_items
+    
     if selected_price:
         if selected_price == 'under_500':
-            products = electronic_items.filter(price__lt=500) # ₹500-ൽ താഴെ മാത്രം
+            products = electronic_items.filter(price__lt=500)
         elif selected_price == '500_1000':
-            products = electronic_items.filter(price__gte=500, price__lte=1000) # ₹500 നും ₹1000 നും ഇടയിൽ
+            products = electronic_items.filter(price__gte=500, price__lte=1000)
         elif selected_price == '1000_2000':
-            products = electronic_items.filter(price__gte=1000, price__lte=2000) # ₹1000 നും ₹2000 നും ഇടയിൽ
+            products = electronic_items.filter(price__gte=1000, price__lte=2000)
         elif selected_price == 'above_2000':
             products = electronic_items.filter(price__gt=2000)
+
     wishlist_ids = []
-    
     if request.user.is_authenticated:
-        # യൂസറുടെ വിഷ്‌ലിസ്റ്റിലുള്ള പ്രൊഡക്റ്റ് ഐഡികൾ മാത്രം എടുക്കുന്നു
-        wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True).order_by('-id')
-    context={
+        wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
+        
+    context = {
         'selected_price': selected_price,
         'productss': products,
         'wishlist_ids': wishlist_ids
     }
-    return render(request,'electronics.html',context)
+    return render(request, 'electronics.html', context)
 
-# Home Appliances Page
+
+# 6. Home Appliances Page
 def home_appliances_page(request):
     home_appliance_items = Product.objects.filter(category='home_appliance').order_by('-id')
     selected_price = request.GET.get('price', None)
     products = home_appliance_items
+    
     if selected_price:
         if selected_price == 'under_500':
-            products = home_appliance_items.filter(price__lt=500) # ₹500-ൽ താഴെ മാത്രം
+            products = home_appliance_items.filter(price__lt=500)
         elif selected_price == '500_1000':
-            products = home_appliance_items.filter(price__gte=500, price__lte=1000) # ₹500 നും ₹1000 നും ഇടയിൽ
+            products = home_appliance_items.filter(price__gte=500, price__lte=1000)
         elif selected_price == '1000_2000':
-            products = home_appliance_items.filter(price__gte=1000, price__lte=2000) # ₹1000 നും ₹2000 നും ഇടയിൽ
+            products = home_appliance_items.filter(price__gte=1000, price__lte=2000)
         elif selected_price == 'above_2000':
             products = home_appliance_items.filter(price__gt=2000)
+
     wishlist_ids = []
-    
     if request.user.is_authenticated:
-        # യൂസറുടെ വിഷ്‌ലിസ്റ്റിലുള്ള പ്രൊഡക്റ്റ് ഐഡികൾ മാത്രം എടുക്കുന്നു
         wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
-    context={
+        
+    context = {
         'selected_price': selected_price,
         'productss': products,
         'wishlist_ids': wishlist_ids
     }
-    return render(request,'home_appliances.html',context)
+    return render(request, 'home_appliances.html', context)
 
-# Toys Page
+
+# 7. Toys Page
 def toys_page(request):
     toy_items = Product.objects.filter(category='toy').order_by('-id')
     selected_price = request.GET.get('price', None)
     products = toy_items
+    
     if selected_price:
         if selected_price == 'under_500':
-            products = toy_items.filter(price__lt=500) # ₹500-ൽ താഴെ മാത്രം
+            products = toy_items.filter(price__lt=500)
         elif selected_price == '500_1000':
-            products = toy_items.filter(price__gte=500, price__lte=1000) # ₹500 നും ₹1000 നും ഇടയിൽ
+            products = toy_items.filter(price__gte=500, price__lte=1000)
         elif selected_price == '1000_2000':
-            products = toy_items.filter(price__gte=1000, price__lte=2000) # ₹1000 നും ₹2000 നും ഇടയിൽ
+            products = toy_items.filter(price__gte=1000, price__lte=2000)
         elif selected_price == 'above_2000':
             products = toy_items.filter(price__gt=2000)
+
     wishlist_ids = []
-    
     if request.user.is_authenticated:
-        # യൂസറുടെ വിഷ്‌ലിസ്റ്റിലുള്ള പ്രൊഡക്റ്റ് ഐഡികൾ മാത്രം എടുക്കുന്നു
         wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
-    context={
+        
+    context = {
         'selected_price': selected_price,
         'productss': products,
         'wishlist_ids': wishlist_ids
     }
-    return render(request,'toys.html',context)
-# ================= 2. UNIFIED CART SYSTEM =================
+    return render(request, 'toys.html', context)
 
 # Since all items are now in the 'Product' model, we only need ONE clean cart function!
 def add_to_cart(request, product_id):
