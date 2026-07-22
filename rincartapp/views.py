@@ -864,15 +864,26 @@ def add_product(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         price = request.POST.get('price')
+        
+        # 🌟 1. HTML ഫോമിൽ നിന്ന് original_price എടുക്കുന്നു
+        original_price = request.POST.get('original_price') 
+        
         description = request.POST.get('description')
         image = request.FILES.get('image')
         category = request.POST.get('category')
         
+        # 🌟 2. original_price ടൈപ്പ് ചെയ്തിട്ടുണ്ടെങ്കിൽ മാത്രം വാല്യൂ എടുക്കുക, ഇല്ലെങ്കിൽ None ആക്കുക
+        if original_price and original_price.strip():
+            original_price = float(original_price)
+        else:
+            original_price = None
+
         # പുതിയ പ്രോഡക്റ്റ് നിർമ്മിക്കുന്നു
         Product.objects.create(
             seller=seller,
             name=name,
             price=price,
+            original_price=original_price, # 🌟 3. ഡാറ്റാബേസിലേക്ക് ഒറിജിനൽ പ്രൈസ് സേവ് ചെയ്യുന്നു
             description=description,
             image=image,
             category=category
