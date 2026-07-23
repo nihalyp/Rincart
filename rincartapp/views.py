@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product ,SellerProfile ,Buying ,Wishlist,CustomerQuery
+from .models import Product ,SellerProfile ,Buying ,Wishlist,CustomerQuery,ProductImage 
 import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login,get_user_model
@@ -864,31 +864,38 @@ def add_product(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         price = request.POST.get('price')
-        
-        # 🌟 1. HTML ഫോമിൽ നിന്ന് original_price എടുക്കുന്നു
         original_price = request.POST.get('original_price') 
-        
         description = request.POST.get('description')
-        image = request.FILES.get('image')
+        image = request.FILES.get('image') # Main Image
         category = request.POST.get('category')
         
-        # 🌟 2. original_price ടൈപ്പ് ചെയ്തിട്ടുണ്ടെങ്കിൽ മാത്രം വാല്യൂ എടുക്കുക, ഇല്ലെങ്കിൽ None ആക്കുക
+        # 🌟 മൾട്ടിപ്പിൾ അഡീഷണൽ ചിത്രങ്ങൾ എടുക്കുന്നു
+        additional_images = request.FILES.getlist('additional_images')
+        
         if original_price and original_price.strip():
             original_price = float(original_price)
         else:
             original_price = None
 
-        # പുതിയ പ്രോഡക്റ്റ് നിർമ്മിക്കുന്നു
-        Product.objects.create(
+        # 1. പ്രൊഡക്റ്റ് ക്രിയേറ്റ് ചെയ്യുന്നു
+        product = Product.objects.create(
             seller=seller,
             name=name,
             price=price,
-            original_price=original_price, # 🌟 3. ഡാറ്റാബേസിലേക്ക് ഒറിജിനൽ പ്രൈസ് സേവ് ചെയ്യുന്നു
+            original_price=original_price,
             description=description,
             image=image,
             category=category
         )
-        messages.success(request, "Product added successfully!")
+
+        # 🌟 2. നിങ്ങളുടെ ProductImage മോഡലിലേക്ക് അഡീഷണൽ ചിത്രങ്ങൾ സേവ് ചെയ്യുന്നു
+        for img in additional_images:
+            ProductImage.objects.create(
+                product=product,
+                additional_image=img  # നിങ്ങളുടെ മോഡലിലെ അതേ ഫീൽഡ് നെയിം (additional_image)
+            )
+
+        messages.success(request, "Product added successfully with extra images!")
         return redirect('seller_dashboard')
         
     return render(request, 'seller/add_product.html')
