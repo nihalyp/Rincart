@@ -71,7 +71,7 @@ def seller_dashboard(request):
         'products': my_products,
         'product_count': product_count,
     }
-    return render(request, 'seller_dashboard.html', context)
+    return render(request, 'seller/dashboard.html', context)
 @login_required(login_url='sign_in') 
 
 def verify_otp_view(request):
