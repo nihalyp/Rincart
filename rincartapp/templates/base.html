@@ -376,7 +376,7 @@
                                 <li><span class="dropdown-item-text small text-muted">Hi, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li class="fw-bold dropdown-item small">
-                                    <a href="{% url 'user_account' %}" class="text-decoration-none text-dark">
+                                    <a href="{% url 'user_account' %}" class="text-decoration-none">
                                         <span class="d-block text-truncate" style="max-width: 150px;">{{ request.user.email }}</span>
                                     </a>
                                 </li>
