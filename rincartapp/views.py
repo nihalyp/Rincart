@@ -832,32 +832,6 @@ def toggle_wishlist(request, product_id):
 import json
 
 @login_required(login_url='sign_in')
-def seller_dashboard(request):
-    # ലോഗിൻ ചെയ്ത യൂസർക്ക് സെല്ലർ പ്രൊഫൈൽ ഉണ്ടോ എന്ന് നോക്കുന്നു
-    seller = get_object_or_404(SellerProfile, user=request.user)
-    
-    # ആ സെല്ലറുടെ പ്രോഡക്റ്റുകൾ മാത്രം എടുക്കുന്നു
-    my_products = Product.objects.filter(seller=seller)
-    
-    # --- 📊 വരുമാനവും ഗ്രാഫും സെറ്റ് ചെയ്യുന്ന ഭാഗം ---
-    # തൽക്കാലം ഡെമോ ഡാറ്റ നൽകുന്നു. നിങ്ങളുടെ പർച്ചേസ്/ഓർഡർ മോഡൽ അനുസരിച്ച് ഇത് പിന്നീട് മാറ്റാം
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]
-    earnings = [12000, 15000, 18000, 14000, 22000, 26000, 32000] # ഒറിജിനൽ തുക ഇവിടെ വരും
-    
-    total_earnings = sum(earnings)
-    total_sales = len(earnings) * 3 # ഒരു ഏകദേശ കണക്ക്
-    
-    context = {
-        'seller': seller,
-        'products': my_products,
-        'total_earnings': total_earnings,
-        'total_sales': total_sales,
-        'months_json': json.dumps(months),
-        'earnings_json': json.dumps(earnings),
-    }
-    return render(request, 'seller/dashboard.html', context)
-    
-@login_required(login_url='sign_in')
 def add_product(request):
     seller = get_object_or_404(SellerProfile, user=request.user)
     
@@ -866,10 +840,10 @@ def add_product(request):
         price = request.POST.get('price')
         original_price = request.POST.get('original_price') 
         description = request.POST.get('description')
-        image = request.FILES.get('image') # Main Image
+        image = request.FILES.get('image')  # Main Image
         category = request.POST.get('category')
         
-        # 🌟 മൾട്ടിപ്പിൾ അഡീഷണൽ ചിത്രങ്ങൾ എടുക്കുന്നു
+        # Multiple additional images
         additional_images = request.FILES.getlist('additional_images')
         
         if original_price and original_price.strip():
@@ -877,7 +851,7 @@ def add_product(request):
         else:
             original_price = None
 
-        # 1. പ്രൊഡക്റ്റ് ക്രിയേറ്റ് ചെയ്യുന്നു
+        # 1. Create product
         product = Product.objects.create(
             seller=seller,
             name=name,
@@ -888,14 +862,74 @@ def add_product(request):
             category=category
         )
 
-        # 🌟 2. നിങ്ങളുടെ ProductImage മോഡലിലേക്ക് അഡീഷണൽ ചിത്രങ്ങൾ സേവ് ചെയ്യുന്നു
+        # 2. Save additional images
         for img in additional_images:
             ProductImage.objects.create(
                 product=product,
-                additional_image=img  # നിങ്ങളുടെ മോഡലിലെ അതേ ഫീൽഡ് നെയിം (additional_image)
+                additional_image=img
             )
 
         messages.success(request, "Product added successfully with extra images!")
         return redirect('seller_dashboard')
         
     return render(request, 'seller/add_product.html')
+
+login_required(login_url='sign_in')
+def edit_product(request, product_id):
+    seller = get_object_or_404(SellerProfile, user=request.user)
+    # Ensure only the product owner can edit it
+    product = get_object_or_404(Product, id=product_id, seller=seller)
+
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        product.price = request.POST.get('price')
+        product.description = request.POST.get('description')
+        product.category = request.POST.get('category')
+
+        original_price = request.POST.get('original_price')
+        if original_price and original_price.strip():
+            product.original_price = float(original_price)
+        else:
+            product.original_price = None
+
+        # Update main image if a new one is uploaded
+        if request.FILES.get('image'):
+            product.image = request.FILES.get('image')
+
+        product.save()
+
+        # Handle removing selected existing additional images
+        delete_image_ids = request.POST.getlist('delete_images')
+        if delete_image_ids:
+            ProductImage.objects.filter(id__in=delete_image_ids, product=product).delete()
+
+        # Append newly uploaded additional images
+        new_additional_images = request.FILES.getlist('additional_images')
+        for img in new_additional_images:
+            ProductImage.objects.create(
+                product=product,
+                additional_image=img
+            )
+
+        messages.success(request, "Product updated successfully!")
+        return redirect('seller_dashboard')
+
+    context = {
+        'product': product,
+        'additional_images': product.images.all()  # Or ProductImage.objects.filter(product=product)
+    }
+    return render(request, 'seller/add_product.html', context)
+@login_required(login_url='sign_in')
+def delete_product(request, product_id):
+    seller = get_object_or_404(SellerProfile, user=request.user)
+    # Ensure only the product owner can delete it
+    product = get_object_or_404(Product, id=product_id, seller=seller)
+
+    if request.method == 'POST':
+        product.delete()  # Deletes product and associated extra images from database
+        messages.success(request, f'"{product.name}" was deleted successfully!')
+        return redirect('seller_dashboard')
+
+    # GET request shows the confirmation page
+    return render(request, 'seller/delete_product.html', {'product': product})
+
