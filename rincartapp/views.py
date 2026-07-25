@@ -874,49 +874,50 @@ def add_product(request):
         
     return render(request, 'seller/add_product.html')
 
-login_required(login_url='sign_in')
+@login_required(login_url='sign_in')
 def edit_product(request, product_id):
     seller = get_object_or_404(SellerProfile, user=request.user)
-    # Ensure only the product owner can edit it
     product = get_object_or_404(Product, id=product_id, seller=seller)
 
     if request.method == 'POST':
         product.name = request.POST.get('name')
-        product.price = request.POST.get('price')
-        product.description = request.POST.get('description')
         product.category = request.POST.get('category')
+        product.price = request.POST.get('price')
+        
+        orig_price = request.POST.get('original_price')
+        product.original_price = float(orig_price) if orig_price and orig_price.strip() else None
+        
+        tax_rate = request.POST.get('tax_rate')
+        product.tax_rate = float(tax_rate) if tax_rate and tax_rate.strip() else 0.00
+        
+        product.parent_product_id = request.POST.get('parent_product') or None
+        product.color_name = request.POST.get('color_name')
+        product.color_code = request.POST.get('color_code')
+        product.is_cod_available = request.POST.get('is_cod_available') == 'on'
+        product.description = request.POST.get('description')
 
-        original_price = request.POST.get('original_price')
-        if original_price and original_price.strip():
-            product.original_price = float(original_price)
-        else:
-            product.original_price = None
-
-        # Update main image if a new one is uploaded
+        # Replace main image only if a new one is picked
         if request.FILES.get('image'):
             product.image = request.FILES.get('image')
 
         product.save()
 
-        # Handle removing selected existing additional images
-        delete_image_ids = request.POST.getlist('delete_images')
-        if delete_image_ids:
-            ProductImage.objects.filter(id__in=delete_image_ids, product=product).delete()
+        # Delete selected extra images
+        delete_ids = request.POST.getlist('delete_images')
+        if delete_ids:
+            ProductImage.objects.filter(id__in=delete_ids, product=product).delete()
 
-        # Append newly uploaded additional images
-        new_additional_images = request.FILES.getlist('additional_images')
-        for img in new_additional_images:
-            ProductImage.objects.create(
-                product=product,
-                additional_image=img
-            )
+        # Upload new extra images
+        for img in request.FILES.getlist('additional_images'):
+            ProductImage.objects.create(product=product, additional_image=img)
 
         messages.success(request, "Product updated successfully!")
         return redirect('seller_dashboard')
 
     context = {
         'product': product,
-        'additional_images': product.images.all()  # Or ProductImage.objects.filter(product=product)
+        'additional_images': ProductImage.objects.filter(product=product),
+        'all_products': Product.objects.filter(seller=seller).exclude(id=product.id)
     }
     return render(request, 'seller/add_product.html', context)
 @login_required(login_url='sign_in')
