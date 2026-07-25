@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %} Seller Dashboard - RinCart {% endblock %}
+{% block title %} {{ seller.shop_name }}  Dashboard - RinCart {% endblock %}
 
 {% block content %}
 <div class="container my-4">
@@ -62,7 +62,7 @@
                         <!-- Product Image -->
                         <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                             {% if product.image %}
-                                <img src="{{ product.image.url }}" class="card-img-top h-100 w-100" style="object-fit: cover;" alt="{{ product.name }}">
+                                <img src="{{ product.image.url }}" class="card-img-top h-100 w-100" style="object-fit: contain;" alt="{{ product.name }}">
                             {% else %}
                                 <i class="bi bi-image text-muted fs-1"></i>
                             {% endif %}
