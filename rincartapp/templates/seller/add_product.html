@@ -164,6 +164,20 @@
 
 <!-- Color Picker & Text Input Synchronization Script -->
 <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+    const fileInput = document.querySelector('input[type="file"]');
+    if (!fileInput || !fileInput.files[0]) return;
+
+    const file = fileInput.files[0];
+    if (file.size > 2 * 1024 * 1024) { // If larger than 2MB
+        // Disable button & show loader so user knows it's working
+        const btn = document.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Uploading...';
+    }
+});
+
+    
     const colorPicker = document.getElementById('colorPicker');
     const colorHex = document.getElementById('colorHex');
 
