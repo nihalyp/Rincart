@@ -56,7 +56,7 @@ def seller_requested(request):
 # 3. സെല്ലർ ഡാഷ്‌ബോർഡ് വ്യൂ (യഥാർത്ഥ ഡാറ്റ കാണിക്കാൻ)
 @login_required(login_url='sign_in')
 def seller_dashboard(request):
-    # 1. Check seller approval and registration
+    # 1. Check seller registration and approval
     try:
         seller = request.user.seller_profile
         if not seller.is_approved:
@@ -68,28 +68,26 @@ def seller_dashboard(request):
     my_products = Product.objects.filter(seller=seller)
     product_count = my_products.count()
 
-    # 3. Calculate Analytics (Earnings & Items Sold)
-    # Get all order items linked to this seller's products
-    seller_order_items = OrderItem.objects.filter(product__seller=seller)
+    # 3. Fetch all bookings for this seller's products
+    seller_bookings = Buying.objects.filter(product__seller=seller)
 
-    # Exclude cancelled orders from metrics
-    active_order_items = seller_order_items.exclude(order__status='Cancelled')
+    # Exclude cancelled bookings for earnings & sales metrics
+    active_bookings = seller_bookings.filter(status='Active')
 
-    # Calculate Total Items Sold
-    total_items_sold = active_order_items.aggregate(total=Sum('quantity'))['total'] or 0
+    # Calculate Total Items Sold (Sum of 'quantity' field)
+    total_items_sold = active_bookings.aggregate(total=Sum('quantity'))['total'] or 0
 
-    # Calculate Total Earnings
-    # Adjust 'price' field name if your OrderItem uses 'total_price' or 'price'
-    total_earnings = active_order_items.aggregate(total=Sum('price'))['total'] or 0
+    # Calculate Total Earnings (Sum of 'total_amount' field)
+    total_earnings = active_bookings.aggregate(total=Sum('total_amount'))['total'] or 0
 
-    # 4. Prepare Chart Data (Daily Earnings Trend)
-    daily_sales = active_order_items.annotate(
-        date=TruncDate('order__created_at')
+    # 4. Prepare Chart Data (Daily Sales Trend)
+    daily_sales = active_bookings.annotate(
+        date=TruncDate('booking_date')
     ).values('date').annotate(
-        daily_total=Sum('price')
+        daily_total=Sum('total_amount')
     ).order_by('date')
 
-    # Format dates and amounts into lists for Chart.js
+    # Format dates and earnings into JSON lists for Chart.js
     chart_dates = [item['date'].strftime('%b %d') for item in daily_sales]
     chart_values = [float(item['daily_total']) for item in daily_sales]
 
@@ -103,6 +101,7 @@ def seller_dashboard(request):
         'chart_dates': json.dumps(chart_dates),
         'chart_values': json.dumps(chart_values),
     }
+    
     return render(request, 'seller/dashboard.html', context)
     
 @login_required(login_url='sign_in')
