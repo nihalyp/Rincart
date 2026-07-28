@@ -164,6 +164,36 @@
 
 <!-- Color Picker & Text Input Synchronization Script -->
 <script>
+    document.querySelector('input[name="additional_images"]').addEventListener('change', function(e) {
+    const files = e.target.files;
+    for (let i = 0; i < files.length; i++) {
+        if (files[i].size > 5 * 1024 * 1024) { // 5MB limit check
+            alert(`File ${files[i].name} is too large! Please select images smaller than 5MB.`);
+            this.value = ''; // Reset input
+            break;
+        }
+    }
+});
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector('form');
+    const publishBtn = document.getElementById('publishBtn'); // Make sure your button has id="publishBtn"
+
+    if (form && publishBtn) {
+        form.addEventListener('submit', function () {
+            // Disable button to prevent double-clicks
+            publishBtn.disabled = true;
+            
+            // Show loading spinner inside button
+            publishBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Uploading & Publishing...
+            `;
+        });
+    }
+});
+</script>
+
     document.querySelector('form').addEventListener('submit', function(e) {
     const fileInput = document.querySelector('input[type="file"]');
     if (!fileInput || !fileInput.files[0]) return;
