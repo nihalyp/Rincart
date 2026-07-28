@@ -1,5 +1,5 @@
 {% extends 'seller/seller_base.html' %}
-{% block title %} {{ seller.shop_name }}  Dashboard - RinCart {% endblock %}
+{% block title %} {{ seller.shop_name }} Dashboard - RinCart {% endblock %}
 
 {% block content %}
 <div class="container my-4">
@@ -18,40 +18,44 @@
     <div class="row g-4 mb-5">
         <!-- Card 1: Total Earnings -->
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-4 bg-gradient" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); border-radius: 16px;">
+            <div class="card border-0 shadow-sm p-4 text-white" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); border-radius: 16px;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class=" text-uppercase fw-bold small">Total Earnings</h6>
-                        <h3 class="fw-bold my-2">₹{{ total_earnings }}</h3>
-                        <span class=" small"><i class="bi bi-arrow-up-right me-1"></i>+12% This Month</span>
+                        <h6 class="text-uppercase fw-bold small opacity-75">Total Earnings</h6>
+                        <h3 class="fw-bold my-2">₹{{ total_earnings|floatformat:2|default:"0.00" }}</h3>
+                        <span class="small"><i class="bi bi-graph-up-arrow me-1"></i>Live calculated</span>
                     </div>
-                    <i class="bi bi-currency-rupee fs-1 text-white-50"></i>
+                    <i class="bi bi-currency-rupee fs-1 opacity-50"></i>
                 </div>
             </div>
         </div>
-        <!-- Card 2: Total Orders -->
+
+        <!-- Card 2: Total Items Sold -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm p-4 bg-white text-dark" style="border-radius: 16px;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-muted text-uppercase fw-bold small">Total Sales</h6>
-                        <h3 class="fw-bold my-2 text-muted">{{ total_sales }} Items</h3>
+                        <h3 class="fw-bold my-2 text-dark">{{ total_items_sold|default:0 }} <span class="fs-6 text-muted fw-normal">Items</span></h3>
                         <span class="text-success small"><i class="bi bi-bag-check-fill me-1"></i>Active store</span>
                     </div>
                     <i class="bi bi-cart-check fs-1 text-primary opacity-50"></i>
                 </div>
             </div>
         </div>
-        <!-- Live Earning Graph -->
+
+        <!-- Card 3: Live Earnings Analytics Graph -->
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-3 bg-white" style="border-radius: 16px;">
+            <div class="card border-0 shadow-sm p-3 bg-white h-100 d-flex flex-column justify-content-between" style="border-radius: 16px;">
                 <h6 class="text-muted fw-bold small mb-2 text-uppercase">Earnings Analytics</h6>
-                <canvas id="earningsChart" style="max-height: 100px;"></canvas>
+                <div style="height: 110px; position: relative;">
+                    <canvas id="earningsChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 🛍️ My Products Stylish Section -->
+    <!-- 🛍️ My Products Section -->
     <h4 class="fw-bold mb-3"><i class="bi bi-grid-3x3-gap-fill text-warning me-2"></i>My Products</h4>
     
     {% if products %}
@@ -76,7 +80,7 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <a href="{% url 'edit_product' product.id %}" class="btn text-decoration-none btn-outline-secondary btn-sm w-100 rounded-pill"><i class="bi bi-pencil-square"></i> Edit</a>
-                                <a href="{% url 'delete_product' product.id %}"  class="btn btn-outline-danger text-decoration-none btn-sm px-3 rounded-pill"><i class="bi bi-trash"></i></a>
+                                <a href="{% url 'delete_product' product.id %}" class="btn btn-outline-danger text-decoration-none btn-sm px-3 rounded-pill"><i class="bi bi-trash"></i></a>
                             </div>
                         </div>
                     </div>
@@ -84,7 +88,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <!-- വസ്‌തുക്കൾ ഒന്നും ഇല്ലെങ്കിൽ കാണിക്കാൻ -->
+        <!-- Empty State -->
         <div class="text-center p-5 bg-white rounded-3 shadow-sm border">
             <i class="bi bi-box-seam text-muted display-1"></i>
             <h5 class="mt-3 fw-bold text-dark">No Products Added Yet</h5>
@@ -94,7 +98,7 @@
     {% endif %}
 </div>
 
-<!-- Extra Styling for Hover Effect -->
+<!-- Styling for Hover Effect -->
 <style>
     .product-card:hover {
         transform: translateY(-5px);
@@ -102,29 +106,61 @@
     }
 </style>
 
-<!-- Chart.js Script for Live Earning Graph -->
+<!-- Chart.js Engine -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
+document.addEventListener("DOMContentLoaded", function() {
     const ctx = document.getElementById('earningsChart').getContext('2d');
+    
+    // Safety check to parse JSON arrays from context safely
+    const dates = {{ chart_dates|safe|default:"[]" }};
+    const values = {{ chart_values|safe|default:"[]" }};
+
+    // Gradient styling for the line graph
+    const gradient = ctx.createLinearGradient(0, 0, 0, 100);
+    gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
+    gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: {{ months_json|safe }},
+            labels: dates.length ? dates : ['No Sales'],
             datasets: [{
                 label: 'Earnings (₹)',
-                data: {{ earnings_json|safe }},
+                data: values.length ? values : [0],
                 borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                backgroundColor: gradient,
                 borderWidth: 2,
                 fill: true,
-                tension: 0.4,
-                pointRadius: 0
+                tension: 0.3,
+                pointRadius: 3,
+                pointBackgroundColor: '#1e3a8a'
             }]
         },
         options: {
-            plugins: { legend: { display: false } },
-            scales: { x: { display: false }, y: { display: false } }
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 10 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f1f5f9' },
+                    ticks: {
+                        font: { size: 10 },
+                        callback: function(val) { return '₹' + val; }
+                    }
+                }
+            }
         }
     });
+});
 </script>
 {% endblock %}
+
