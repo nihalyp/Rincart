@@ -11,7 +11,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
-
+from django.db.models import Sum
+from django.db.models.functions import TruncDate
+import json
 def ping_view(request):
     return HttpResponse("pong", content_type="text/plain")
 
@@ -52,9 +54,9 @@ def seller_requested(request):
 
 
 # 3. സെല്ലർ ഡാഷ്‌ബോർഡ് വ്യൂ (യഥാർത്ഥ ഡാറ്റ കാണിക്കാൻ)
-@login_required(login_url='sign_in') 
+@login_required(login_url='sign_in')
 def seller_dashboard(request):
-    # സെല്ലർ അപ്രൂവ്ഡ് ആണോ എന്ന് ഉറപ്പാക്കുന്നു
+    # 1. Check seller approval and registration
     try:
         seller = request.user.seller_profile
         if not seller.is_approved:
@@ -62,18 +64,48 @@ def seller_dashboard(request):
     except SellerProfile.DoesNotExist:
         return redirect('become_seller')
 
-    # ആ സെല്ലറുടെ പ്രോഡക്റ്റുകൾ മാത്രം എടുക്കുന്നു
+    # 2. Get seller's products
     my_products = Product.objects.filter(seller=seller)
     product_count = my_products.count()
 
+    # 3. Calculate Analytics (Earnings & Items Sold)
+    # Get all order items linked to this seller's products
+    seller_order_items = OrderItem.objects.filter(product__seller=seller)
+
+    # Exclude cancelled orders from metrics
+    active_order_items = seller_order_items.exclude(order__status='Cancelled')
+
+    # Calculate Total Items Sold
+    total_items_sold = active_order_items.aggregate(total=Sum('quantity'))['total'] or 0
+
+    # Calculate Total Earnings
+    # Adjust 'price' field name if your OrderItem uses 'total_price' or 'price'
+    total_earnings = active_order_items.aggregate(total=Sum('price'))['total'] or 0
+
+    # 4. Prepare Chart Data (Daily Earnings Trend)
+    daily_sales = active_order_items.annotate(
+        date=TruncDate('order__created_at')
+    ).values('date').annotate(
+        daily_total=Sum('price')
+    ).order_by('date')
+
+    # Format dates and amounts into lists for Chart.js
+    chart_dates = [item['date'].strftime('%b %d') for item in daily_sales]
+    chart_values = [float(item['daily_total']) for item in daily_sales]
+
+    # 5. Pass everything into context
     context = {
         'seller': seller,
         'products': my_products,
         'product_count': product_count,
+        'total_items_sold': total_items_sold,
+        'total_earnings': total_earnings,
+        'chart_dates': json.dumps(chart_dates),
+        'chart_values': json.dumps(chart_values),
     }
     return render(request, 'seller/dashboard.html', context)
-@login_required(login_url='sign_in') 
-
+    
+@login_required(login_url='sign_in')
 def verify_otp_view(request):
     # 1. യൂസർ ഓൾറെഡി ഒടിപി വെരിഫൈ ചെയ്തതാണെങ്കിൽ ഹോം പേജിലേക്ക് വിടുക
     if request.session.get('otp_verified'):
@@ -829,7 +861,7 @@ def toggle_wishlist(request, product_id):
         
     # മറ്റ് പേജുകളിൽ നിന്നാണെങ്കിൽ അതേ പേജിലേക്ക് തന്നെ റീഫ്രഷ് ചെയ്യുന്നു
     return redirect(request.META.get('HTTP_REFERER', 'home'))
-import json
+
 
 @login_required(login_url='sign_in')
 def add_product(request):
