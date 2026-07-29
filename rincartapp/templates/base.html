@@ -1,451 +1,550 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} RinCart — Premium Shopping {% endblock %}</title>
+    <title>{% block title %} RinCart {% endblock %}</title>
     
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Framework & Icon Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     {% load static %}
-
-    <style>
-        :root {
-            --brand-primary: #f59e0b;
-            --brand-primary-hover: #d97706;
-            --brand-gradient: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            --nav-bg-light: #ffffff;
-            --nav-bg-dark: #0f172a;
-            --card-bg-dark: #1e293b;
-            --border-color-light: #e2e8f0;
-            --border-color-dark: #334155;
-            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            letter-spacing: -0.01em;
-            background-color: #f8fafc;
-            color: #0f172a;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        [data-bs-theme="dark"] body {
-            background-color: #0b0f17 !important;
-            color: #f8fafc !important;
-        }
-
-        /* Navbar Enhancements */
-        .main-navbar {
-            background-color: var(--nav-bg-dark) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-        }
-
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.5rem;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #fef08a 0%, #f59e0b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Pulsing Bolt */
-        .animate-bolt {
-            display: inline-block;
-            animation: pulse-glow 2s infinite;
-            color: #f59e0b;
-        }
-        @keyframes pulse-glow {
-            0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.5)); }
-            50% { transform: scale(1.15); opacity: 0.85; filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.8)); }
-            100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.5)); }
-        }
-
-        /* Nav Link Buttons */
-        .custom-nav-item .nav-link {
-            font-weight: 500;
-            font-size: 0.875rem;
-            padding: 0.5rem 0.85rem !important;
-            border-radius: 9999px;
-            transition: var(--transition-smooth);
-            color: rgba(255, 255, 255, 0.75) !important;
-        }
-        .custom-nav-item .nav-link:hover {
-            color: #ffffff !important;
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-1px);
-        }
-        .custom-nav-item .nav-link.active {
-            color: #f59e0b !important;
-            background-color: rgba(245, 158, 11, 0.12);
-            font-weight: 600;
-        }
-
-        /* Dark Mode Button */
-        .custom-mode-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            transition: var(--transition-smooth);
-            color: #f59e0b;
-        }
-        .custom-mode-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-            transform: rotate(15deg);
-        }
-
-        /* Search Bar */
-        .search-box-group {
-            border-radius: 9999px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.95);
-            border: 2px solid transparent;
-            transition: var(--transition-smooth);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-        .search-box-group:focus-within {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25);
-            background: #ffffff;
-        }
-        .search-input {
-            font-size: 0.875rem;
-            font-weight: 400;
-        }
-        .search-input::placeholder {
-            color: #94a3b8;
-        }
-        .btn-search {
-            background: var(--brand-gradient);
-            border: none;
-            color: #0f172a;
-            font-weight: 600;
-            padding-left: 1.25rem;
-            padding-right: 1.25rem;
-            transition: var(--transition-smooth);
-        }
-        .btn-search:hover {
-            opacity: 0.92;
-            filter: brightness(1.05);
-        }
-
-        /* Category Bar Pill Badges */
-        .category-bar {
-            background: #0f172a !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .category-sticker {
-            font-size: 0.825rem;
-            font-weight: 500;
-            padding: 0.5rem 1rem !important;
-            border-radius: 9999px;
-            transition: var(--transition-smooth);
-            text-decoration: none !important;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        }
-        .category-sticker:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.3) !important;
-            filter: brightness(1.15);
-        }
-
-        /* Dropdown Enhancements */
-        .dropdown-menu {
-            border-radius: 12px;
-            border: 1px solid var(--border-color-light);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        }
-        [data-bs-theme="dark"] .dropdown-menu {
-            background-color: var(--card-bg-dark);
-            border-color: var(--border-color-dark);
-        }
-        .dropdown-item {
-            border-radius: 6px;
-            padding: 0.5rem 0.85rem;
-            font-size: 0.85rem;
-            transition: var(--transition-smooth);
-        }
-
-        /* Mobile Layout Optimizations */
-        @media (max-width: 991.98px) {
-            .navbar .container-fluid {
-                display: grid !important;
-                grid-template-areas: 
-                    "logo profile"
-                    "menu menu"
-                    "search search";
-                grid-template-columns: 1fr auto;
-                gap: 12px !important;
-            }
-            .navbar-brand { grid-area: logo; }
-            .profile-wrapper { grid-area: profile; justify-self: end; }
-            .nav-menu-wrapper { grid-area: menu; justify-content: center; width: 100%; }
-            .search-wrapper { grid-area: search; width: 100%; }
-        }
-
-        /* Footer */
-        footer {
-            background-color: #090d16 !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .footer-link {
-            color: #94a3b8 !important;
-            transition: var(--transition-smooth);
-            font-size: 0.875rem;
-        }
-        .footer-link:hover {
-            color: #f59e0b !important;
-            transform: translateX(2px);
-        }
-    </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="bg-light d-flex flex-column min-vh-100">
+<style>
+    @media (min-width: 992px) {
+        .navbar .container-fluid {
+            flex-direction: row !important; /* Forces it to stay inline on large screens */
+        }
+    }
+    
+    /* Active Link Touch */
+    .navbar .nav-link:hover {
+        color: #ffc107 !important;
+    }
+    .scrollable-nav-wrapper {
+        scrollbar-width: none; /* Firefox */
+    }
+    .scrollable-nav-wrapper::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
 
-    <!-- 🌟 Main Navigation Bar -->
-    <nav class="navbar main-navbar navbar-dark sticky-top py-2.5 px-3">
-        <div class="container-fluid align-items-center">
+    .btn-search {
+        background-color: rgb(252, 166, 5);
+    }
+    .btn-search:hover {
+        background-color: #ffd862;
+    }
+
+    /* Bolt animation icon */
+    .animate-bolt {
+        display: inline-block;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    /* 🌟 NAVIGATION SCROLL & ALIGNMENT FOR ALL DEVICES */
+    .custom-inline-navbar .scrollable-nav-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    /* Mobile scroll optimization */
+    @media (max-width: 767.98px) {
+        .custom-inline-navbar .scrollable-nav-wrapper {
+            max-width: 72%;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .custom-inline-navbar .scrollable-nav-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+    }
+    
+    @media (min-width: 768px) {
+        .custom-inline-navbar .scrollable-nav-wrapper {
+            max-width: auto;
+            overflow: visible;
+        }
+    }
+
+    /* FLOATING DROPDOWN STYLE */
+    .custom-floating-dropdown {
+        position: absolute !important;
+        top: 100% !important;
+        right: 12px !important;
+        left: auto !important;
+        z-index: 1100 !important;
+        min-width: 180px;
+        margin-top: 8px !important;
+        background-color: #ffffff;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        border: 1px solid rgba(0,0,0,0.05) !important;
+    }
+
+    .custom-logout-item {
+        width: calc(100% - 16px);
+        transition: all 0.2s ease;
+    }
+    .custom-logout-item:hover {
+        background-color: #fff5f5 !important;
+        color: #dc3545 !important;
+        transform: translateX(3px);
+    }
+
+    .custom-dropdown-toggle:after {
+        transition: transform 0.2s ease;
+    }
+    .custom-dropdown-toggle.show:after {
+        transform: rotate(180deg);
+    }
+
+    .navbar-brand {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .custom-nav-link {
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8) !important;
+        transition: all 0.2s ease;
+        text-align: center;
+    }
+    .custom-nav-link:hover, .custom-nav-link.active:hover {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .btn-signin {
+        transition: transform 0.2s ease;
+        font-size: 0.85rem;
+    }
+    .animate-bolt {
+        animation: flash 2.5s infinite alternate;
+    }
+    @keyframes flash {
+        0% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Category bar alignment fixes */
+    .bg-white .container > div {
+        overflow-x: auto !important;
+        overflow-y: visible !important;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        margin-top: -8px !important;
+        margin-bottom: -8px !important;
+    }
+    .bg-white div::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    .category-sticker {
+        transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .category-sticker:hover {
+        background-color: #121212;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.12) !important;
+    }
+
+    /* 🌟 Premium Search Box Styling */
+    .search-box-container {
+        background-color: #f1f5f9;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        border: 1.5px solid transparent;
+    }
+    .search-box-container:focus-within {
+        border-color: #ffc107;
+        background-color: #ffffff;
+        box-shadow: 0 0 8px rgba(255, 193, 7, 0.2);
+    }
+    .search-input {
+        font-size: 0.88rem;
+        background-color: transparent;
+    }
+    .search-input:focus {
+        box-shadow: none;
+        background-color: transparent;
+    }
+    .btn-search { transition: background-color 0.2s; }
+    .btn-search:hover { background-color: #e0a800; }
+
+    /* For Laptop/Desktop View Alignment */
+    @media (min-width: 992px) {
+        .search-wrapper {
+            margin-left: 2rem !important;
+            margin-right: auto !important;
+        }
+    }
+
+    [data-bs-theme="dark"] body {
+        background-color: #121212 !important;
+        color: #f8f9fa !important;
+    }
+
+    [data-bs-theme="dark"] .card {
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+    }
+
+    .navbar {
+        background-color: #212529 !important; /* Dark Navbar by default */
+    }
+    [data-bs-theme="dark"] .navbar {
+        background-color: #1a1a1a !important; /* Pure dark mode navbar */
+    }
+
+    /* 🌟 Attractive Nav Item Styling */
+    .custom-nav-item .nav-link {
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 6px 12px !important;
+        border-radius: 20px;
+        transition: all 0.25s ease-in-out;
+        color: rgba(255, 255, 255, 0.75) !important;
+    }
+
+    /* Hover Effect */
+    .custom-nav-item .nav-link:hover {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px);
+    }
+
+    /* Active Button Style */
+    .custom-nav-item .nav-link.active {
+        color: #ffc107 !important;
+        background-color: rgba(255, 193, 7, 0.1);
+        font-weight: 600;
+    }
+
+    /* Dark Mode Toggle Button Fix */
+    #darkModeToggle {
+        color: #fff;
+        padding: 6px 12px;
+        transition: all 0.2s;
+    }
+    #darkModeToggle:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .navbar {
+        background-color: #1a1c1e !important;
+    }
+
+    /* 🌟 Responsive Grid for Navbar elements */
+    @media (max-width: 991.98px) {
+        .navbar .container-fluid {
+            display: grid !important;
+            grid-template-areas: 
+                "logo logo"
+                "menu profile"
+                "search search";
+            grid-template-columns: 1fr auto;
+            gap: 12px !important;
+        }
+        
+        .navbar-brand { grid-area: logo; justify-content: center; width: 100%; margin-bottom: 4px !important; }
+        .nav-menu-wrapper { grid-area: menu; justify-content: start !important; }
+        .profile-wrapper { grid-area: profile; }
+        .search-wrapper { grid-area: search; margin-top: 4px; }
+    }
+
+    /* 🌟 Mobile-Friendly Navigation Buttons (Circular Card Look) */
+    .custom-nav-item .nav-link, .custom-mode-btn {
+        width: 40px;
+        height: 40px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .custom-nav-item .nav-link i, .custom-mode-btn i {
+        font-size: 1.1rem;
+    }
+
+    .custom-nav-item .nav-link:hover, .custom-mode-btn:hover {
+        background: rgba(255, 255, 255, 0.18) !important;
+    }
+
+    .custom-nav-item .nav-link.active {
+        background: rgba(255, 193, 7, 0.15) !important;
+    }
+
+    /* Large Screens (Desktop) Reset */
+    @media (min-width: 992px) {
+        .custom-nav-item .nav-link {
+            width: auto;
+            height: auto;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            background: transparent !important;
+        }
+        .custom-nav-item .nav-link:hover { background: rgba(255, 255, 255, 0.1) !important; }
+        .custom-nav-item .nav-link.active { background: rgba(255, 193, 7, 0.1) !important; }
+    }
+
+    /* ⚡ Footer Accent Styling */
+    .hover-underline {
+        transition: color 0.2s ease;
+    }
+    .hover-underline:hover {
+        text-decoration: underline !important;
+        color: #ff9f00 !important;
+    }
+</style>
+
+    <nav class="navbar navbar-dark shadow-sm py-2 px-2 px-sm-3">
+        <div class="container-fluid align-items-center justify-content-between">
             
             <!-- 1. Brand Logo -->
-            <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
-                <i class="fa-solid fa-bolt animate-bolt"></i>
-                <span>RinCart</span>
+            <a class="navbar-brand text-warning fw-bold fs-3 m-0 d-flex align-items-center flex-shrink-0" href="/">
+                <i class="fa-solid fa-bolt me-1.5 text-warning animate-bolt"></i>RinCart
             </a>
+            
 
-            <!-- 2. Profile / Sign In Dropdown Wrapper -->
-            <div class="profile-wrapper d-flex align-items-center">
-                {% if user.is_authenticated %}
-                    <div class="dropdown">
-                        <a class="d-flex align-items-center text-decoration-none dropdown-toggle gap-2 text-light" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 36px; height: 36px; font-size: 0.875rem; background: var(--brand-gradient); color: #0f172a;">
-                                {% if user.first_name %}{{ user.first_name|slice:":1" }}{% else %}{{ user.username|slice:":1" }}{% endif %}
-                            </div>
-                        </a>
-                        
-                        <ul class="dropdown-menu dropdown-menu-end p-2 mt-2" style="min-width: 200px;">
-                            <li class="px-2 py-1">
-                                <span class="d-block small text-muted">Signed in as</span>
-                                <span class="fw-semibold text-truncate d-block" style="max-width: 160px;">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span>
-                            </li>
-                            <li><hr class="dropdown-divider my-1"></li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'user_account' %}">
-                                    <i class="bi bi-person text-muted"></i> Account Settings
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider my-1"></li>
-                            <li>
-                                <a class="dropdown-item text-danger d-flex align-items-center gap-2" href="/accounts/logout/">
-                                    <i class="bi bi-box-arrow-right"></i> Sign Out
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a class="btn btn-sm px-3.5 py-1.5 fw-bold rounded-pill text-dark shadow-sm" href="{% url 'sign_in' %}" style="background: var(--brand-gradient); font-size: 0.825rem;">
-                        Sign In
-                    </a>
-                {% endif %}
-            </div>
-
-            <!-- 3. Dynamic Navigation Links -->
-            <div class="nav-menu-wrapper">
-                <ul class="navbar-nav d-flex flex-row align-items-center gap-1.5 m-0 list-unstyled">
+            <!-- 2. Navigation Menu Wrapper -->
+            <div class="nav-menu-wrapper d-flex align-items-center">
+                <ul class="navbar-nav d-flex flex-row align-items-center gap-2 m-0 list-unstyled">
+   
                     <li class="nav-item custom-nav-item">
-                        <a class="nav-link active d-flex align-items-center gap-1.5" href="{% url 'home' %}" title="Home">
-                            <i class="fa-solid fa-house"></i>
-                            <span class="d-none d-lg-inline">Home</span>
+                        <a class="nav-link active d-flex align-items-center justify-content-center" href="{% url 'home' %}" title="Home">
+                            <i class="fa-solid fa-house text-warning"></i>
+                            <span class="d-none d-lg-inline ms-2">Home</span>
                         </a>
                     </li>
                     <li class="nav-item custom-nav-item">
-                        <a class="nav-link d-flex align-items-center gap-1.5" href="{% url 'view_deals' %}" title="Deals">
+                        <a class="nav-link d-flex align-items-center justify-content-center" href="{% url 'view_deals' %}" title="Deals">
                             <i class="fa-solid fa-fire text-danger"></i>
-                            <span class="d-none d-lg-inline">Deals</span>
+                            <span class="d-none d-lg-inline ms-2">Deals</span>
                         </a>
                     </li>
                     <li class="nav-item custom-nav-item">
-                        <a class="nav-link d-flex align-items-center gap-1.5" href="{% url 'cart_view' %}" title="Cart">
-                            <i class="fa-solid fa-cart-shopping text-emerald-400"></i>
-                            <span class="d-none d-lg-inline">Cart</span>
+                        <a class="nav-link d-flex align-items-center justify-content-center" href="{% url 'cart_view' %}" title="Cart">
+                            <i class="fa-solid fa-cart-shopping text-success"></i>
+                            <span class="d-none d-lg-inline ms-2">Cart</span>
                         </a>
                     </li>
                     <li class="nav-item custom-nav-item">
-                        <a class="nav-link d-flex align-items-center gap-1.5" href="{% url 'become_seller' %}" title="Become a Seller">
-                            <i class="bi bi-shop"></i>
-                            <span class="d-none d-lg-inline">Seller Hub</span>
+                        <a class="nav-link d-flex align-items-center justify-content-center" href="{% url 'become_seller' %}" title="Become a Seller">
+                            <i class="bi bi-shop text-white"></i>
+                            <span class="d-none d-lg-inline ms-2">Become a Seller</span>
                         </a>
                     </li>
-                    <!-- Theme Mode Toggle -->
-                    <li class="nav-item ms-1">
-                        <button class="custom-mode-btn" id="darkModeToggle" type="button" aria-label="Toggle theme">
-                            <i class="bi bi-moon-stars-fill" id="darkModeIcon"></i>
+                    <!-- Dark Mode Toggle -->
+                    <li class="nav-item">
+                        <button class="btn btn-link nav-link p-0 d-flex align-items-center justify-content-center custom-mode-btn" id="darkModeToggle" type="button">
+                            <i class="bi bi-moon-stars-fill text-warning" id="darkModeIcon"></i>
                         </button>
                     </li>
                 </ul>
             </div>
 
-            <!-- 4. Global Search Input -->
-            <div class="search-wrapper flex-grow-1 mx-lg-4">
+            <!-- 3. Profile / Sign In Wrapper -->
+            <div class="profile-wrapper d-flex align-items-center" style="position: relative;">
+                <div class="border-start ps-2 border-secondary">
+                    {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <a class="d-flex align-items-center text-decoration-none dropdown-toggle text-light gap-1 small" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                <!-- ഫസ്റ്റ് നെയിം ഇല്ലെങ്കിൽ യൂസർനെയിമിന്റെ ആദ്യ അക്ഷരം കാണിക്കും -->
+                                <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 32px; height: 32px; font-size: 0.85rem; text-transform: uppercase;">
+                                    {% if user.first_name %}{{ user.first_name|slice:":1" }}{% else %}{{ user.username|slice:":1" }}{% endif %}
+                                </div>
+                            </a>
+                            
+                            <!-- 🌟 ഇവിടെയാണ് Z-INDEX & POSITION ഫിക്സ് ചെയ്തത് 🌟 -->
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3" style="z-index: 99999 !important; position: absolute !important; right: 0; left: auto;">
+                                <!-- ഫസ്റ്റ് നെയിം ഉണ്ടെങ്കിൽ അത്, ഇല്ലെങ്കിൽ യൂസർനെയിം കാണിക്കും -->
+                                <li><span class="dropdown-item-text small text-muted">Hi, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="fw-bold dropdown-item small">
+                                    <a href="{% url 'user_account' %}" class="text-decoration-none">
+                                        <span class="d-block text-truncate" style="max-width: 150px;">{{ request.user.email }}</span>
+                                    </a>
+                                </li>
+                                <li><a class="dropdown-item text-danger small fw-semibold" href="/accounts/logout/">Logout</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a class="btn btn-warning btn-sm px-3 fw-bold rounded-pill text-dark" href="{% url 'sign_in' %}" style="font-size: 0.8rem;">Sign In</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- 4. Search Box -->
+            <div class="search-wrapper w-100 mx-0 mx-lg-4">
                 <form action="{% url 'search_products' %}" method="GET" class="m-0">
-                    <div class="input-group search-box-group">
-                        <input type="text" name="q" class="form-control border-0 px-3 py-2 search-input" placeholder="Search products, brands, essentials..." required>
-                        <button class="btn btn-search" type="submit">
-                            <i class="bi bi-search"></i>
+                    <div class="input-group rounded-3 overflow-hidden bg-white shadow-sm" style="border: 1px solid #cbd5e1;">
+                        <input type="text" name="q" class="form-control border-0 px-3 py-2 " placeholder="Search for dresses, mobiles, brands..." required style="font-size: 0.88rem; box-shadow: none;">
+                        <button class="btn btn-warning px-3 border-0 d-flex align-items-center justify-content-center" type="submit">
+                            <i class="bi bi-search text-dark fw-bold"></i>
                         </button>
                     </div>
                 </form>
             </div>
-
         </div>
     </nav>
 
-    <!-- ⚡ Category Ribbon -->
-    <div class="category-bar py-2">
-        <div class="container-fluid px-3">
-            <div class="d-flex align-items-center gap-2 overflow-x-auto justify-content-start justify-content-lg-center text-nowrap pb-1 pt-1" style="scrollbar-width: none;">
+    <!-- Sub-Navbar Category Stickers -->
+    <div class="sticky-top mt-0 py-2 bg-dark border-bottom shadow-sm" style="overflow: visible !important;">
+        <div class="container-fluid px-1" style="overflow: visible !important;">
+            <div class="d-flex align-items-center flex-nowrap justify-content-start justify-content-md-center gap-2 gap-md-3" 
+                style="overflow-x: auto; overflow-y: visible !important; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none;">
                 
-                <a href="{% url 'fashion_page' %}" class="category-sticker bg-danger-subtle text-danger">
-                    <i class="fa-solid fa-shirt me-1.5"></i> Fashion
+                <a href="{% url 'fashion_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-danger-subtle text-danger rounded-pill border border-danger-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-shirt me-2"></i> Fashion & Dresses
                 </a>
-                <a href="{% url 'mobile_page' %}" class="category-sticker bg-primary-subtle text-primary">
-                    <i class="fa-solid fa-mobile-screen-button me-1.5"></i> Mobiles
+                <a href="{% url 'mobile_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-primary-subtle text-primary rounded-pill border border-primary-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-mobile-screen-button me-2"></i> Mobiles
                 </a>
-                <a href="{% url 'beauty_page' %}" class="category-sticker bg-success-subtle text-success">
-                    <i class="fa-solid fa-wand-magic-sparkles me-1.5"></i> Beauty
+                <a href="{% url 'beauty_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-success-subtle text-success rounded-pill border border-success-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Beauty
                 </a>
-                <a href="{% url 'electronics_page' %}" class="category-sticker bg-info-subtle text-info">
-                    <i class="fa-solid fa-laptop me-1.5"></i> Electronics
+                <a href="{% url 'electronics_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-info-subtle text-secondary rounded-pill border border-info-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-laptop me-2"></i> Electronics
                 </a>
-                <a href="{% url 'home_appliances_page' %}" class="category-sticker bg-warning-subtle text-warning">
-                    <i class="fa-solid fa-blender me-1.5"></i> Appliances
+                <a href="{% url 'home_appliances_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-warning-subtle text-warning rounded-pill border border-warning-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-blender me-2"></i> Home Appliances
                 </a>
-                <a href="{% url 'toys_page' %}" class="category-sticker bg-secondary-subtle text-secondary">
-                    <i class="fa-solid fa-gamepad me-1.5"></i> Toys & Games
+                <a href="{% url 'toys_page' %}" class="category-sticker badge d-inline-flex align-items-center p-2 px-3 bg-secondary-subtle rounded-pill border border-secondary-subtle fs-6 flex-md-shrink-1 flex-shrink-0">
+                    <i class="fa-solid fa-gamepad me-2"></i> Toys
                 </a>
-
             </div>
         </div>
     </div>
 
-    <!-- 📦 Main Dynamic Page Body -->
+    <!-- main dynamic wrapper -->
     <main class="flex-grow-1">
         {% block content %}
         <div class="container my-5">
-            <div class="p-5 bg-body-tertiary rounded-4 shadow-sm text-center border">
-                <h1 class="display-5 fw-bold">Welcome to RinCart</h1>
-                <p class="lead text-muted">Explore top-rated products across categories with unmatched speed and reliability.</p>
+            <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border text-center">
+                <h1 class="display-5 fw-bold text-dark">Welcome to RinCart</h1>
+                <p class="lead">Click on any category sticker above or browse our latest collections.</p>
             </div>
         </div>
         {% endblock %}
     </main>
 
-    <!-- 🌐 Premium Modern Footer -->
-    <footer class="text-white pt-5 pb-4 mt-auto">
+    <!-- 🛒 Flipkart/Amazon Style Premium Footer (FIXED) -->
+    <footer class="bg-dark text-white pt-5 pb-4 mt-auto">
         <div class="container">
-            <div class="row g-4 justify-content-between">
+            <div class="row g-4 justify-content-between text-center text-md-start">
                 
-                <!-- Brand Info Column -->
-                <div class="col-12 col-md-4">
-                    <a class="navbar-brand d-inline-flex align-items-center gap-2 mb-3" href="/">
-                        <i class="fa-solid fa-bolt animate-bolt"></i>
-                        <span>RinCart</span>
-                    </a>
-                    <p class="small text-slate-400 mb-0" style="color: #94a3b8; max-width: 320px; line-height: 1.6;">
-                        Your next-generation shopping experience. Fast, reliable, and tailored to fulfill all your lifestyle requirements.
+                <!-- Brand Column -->
+                <div class="col-md-4 col-lg-4">
+                    <h5 class="text-uppercase mb-3 font-weight-bold" style="color: #ff9f00;">
+                        <i class="bi bi-lightning-fill text-warning"></i> RinCart
+                    </h5>
+                    <p class="small text-white-50" style="max-width: 320px;">
+                        Experience a fast, secure, and intuitive modern shopping platform built to bring premium products right to your doorstep.
                     </p>
                 </div>
 
-                <!-- Navigation Columns -->
-                <div class="col-6 col-md-3 col-lg-2">
-                    <h6 class="text-uppercase fw-bold text-white mb-3 small tracking-wider" style="letter-spacing: 0.05em;">Company</h6>
+                <!-- Link Column 1 -->
+                <div class="col-6 col-md-3 col-lg-2 offset-lg-1">
+                    <h6 class="text-uppercase mb-3 font-weight-bold text-white-50 small tracking-wider">Get to Know Us</h6>
                     <ul class="list-unstyled d-flex flex-column gap-2 m-0">
-                        <li><a href="{% url 'about' %}" class="text-decoration-none footer-link d-inline-block">About Us</a></li>
-                        <li><a href="{% url 'contact' %}" class="text-decoration-none footer-link d-inline-block">Contact Us</a></li>
+                        <li><a href="{% url 'about' %}" class="text-white-50 text-decoration-none small hover-underline">About Us</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-white-50 text-decoration-none small hover-underline">Contact Us</a></li>
                     </ul>
                 </div>
 
+                <!-- Link Column 2 -->
                 <div class="col-6 col-md-3 col-lg-2">
-                    <h6 class="text-uppercase fw-bold text-white mb-3 small tracking-wider" style="letter-spacing: 0.05em;">Support</h6>
+                    <h6 class="text-uppercase mb-3 font-weight-bold text-white-50 small tracking-wider">Let Us Help You</h6>
                     <ul class="list-unstyled d-flex flex-column gap-2 m-0">
-                        <li><a href="{% url 'user_account' %}" class="text-decoration-none footer-link d-inline-block">Your Account</a></li>
-                        <li><a href="{% url 'return_policy' %}" class="text-decoration-none footer-link d-inline-block">Returns Center</a></li>
+                        <li><a href="{% url 'user_account' %}" class="text-white-50 text-decoration-none small hover-underline">Your Account</a></li>
+                        <li><a href="{% url 'return_policy' %}" class="text-white-50 text-decoration-none small hover-underline">Returns Center</a></li>
                     </ul>
                 </div>
                 
             </div>
             
-            <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.08);">
+            <hr class="my-4 border-secondary opacity-25">
             
-            <div class="row align-items-center">
+            <div class="row">
                 <div class="col text-center">
-                    <p class="mb-0 small" style="color: #64748b;">&copy; 2026 RinCart Inc. All rights reserved.</p>
+                    <p class="mb-0 text-white-50 small">&copy; 2026 RinCart Inc. All rights reserved.</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Dark Mode Controller
-        const toggleBtn = document.getElementById('darkModeToggle');
-        const themeIcon = document.getElementById('darkModeIcon');
-        const htmlElement = document.documentElement;
+    const toggleBtn = document.getElementById('darkModeToggle');
+    const themeIcon = document.getElementById('darkModeIcon');
+    const htmlElement = document.documentElement;
 
-        const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
         htmlElement.setAttribute('data-bs-theme', savedTheme);
         updateButton(savedTheme);
+    }
 
-        toggleBtn.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-bs-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    toggleBtn.addEventListener('click', () => {
+        const currentTheme = htmlElement.getAttribute('data-bs-theme');
+        let newTheme = 'light';
 
-            htmlElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateButton(newTheme);
-        });
-
-        function updateButton(theme) {
-            themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+        if (currentTheme === 'light' || !currentTheme) {
+            newTheme = 'dark';
         }
 
-        // Wishlist AJAX Interactor
-        document.querySelectorAll('.wishlist-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const itemId = this.getAttribute('data-item-id');
-                const icon = this.querySelector('i');
-                
-                fetch(`/toggle-wishlist/${itemId}/`, {
-                    method: 'GET',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'added') {
-                        icon.className = 'bi bi-heart-fill text-danger';
-                    } else if (data.status === 'removed') {
-                        icon.className = 'bi bi-heart text-secondary';
-                    }
-                })
-                .catch(err => console.error('Wishlist error:', err));
-            });
+        htmlElement.setAttribute('data-bs-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateButton(newTheme);
+    });
+
+    function updateButton(theme) {
+        if (theme === 'dark') {
+            themeIcon.className = 'bi bi-sun-fill text-warning';
+        } else {
+            themeIcon.className = 'bi bi-moon-stars-fill text-warning';
+        }
+    }
+
+    document.querySelectorAll('.wishlist-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const itemId = this.getAttribute('data-item-id');
+            const icon = this.querySelector('i');
+            
+            fetch(`/toggle-wishlist/${itemId}/`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'added') {
+                    icon.className = 'bi bi-heart-fill text-danger';
+                } else if (data.status === 'removed') {
+                    icon.className = 'bi bi-heart text-secondary';
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
+    });
     </script>
 </body>
 </html>
