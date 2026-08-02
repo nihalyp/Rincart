@@ -1,101 +1,194 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Create Account — RinCart</title>
+
+    <!-- 🔤 Google Fonts & Bootstrap Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <style>
+        :root {
+            --brand-purple: #a855f7;
+            --brand-indigo: #6366f1;
+            --brand-gradient: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --transition-base: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 50% -20%, #3b0764 0%, #0f172a 60%, #020617 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #f8fafc;
+            overflow-x: hidden;
+            padding: 1.5rem 1rem;
         }
 
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* 💎 Glowing Ambient Background Rings */
+        .ambient-glow {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: var(--brand-purple);
+            filter: blur(140px);
+            opacity: 0.25;
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 📦 Premium Glass Container Card */
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            max-width: 420px;
+            position: relative;
+            z-index: 10;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 2.75rem 2.25rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 440px;
             width: 100%;
         }
 
+        /* 🛡️ Brand Icon Container */
         .brand-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            width: 58px;
+            height: 58px;
+            background: var(--brand-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
-            margin: 0 auto 1.5rem auto;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+            border-radius: 18px;
+            margin: 0 auto 1.25rem auto;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.35);
+            transition: var(--transition-base);
         }
 
+        .glass-card:hover .brand-icon {
+            transform: scale(1.05) rotate(-3deg);
+        }
+
+        /* ✏️ Custom Floating Inputs */
         .form-floating {
             position: relative;
         }
 
-        /* Styling the dark mode floating inputs */
         .form-control-dark {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.04) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
             color: #ffffff !important;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            border-radius: 14px;
+            transition: var(--transition-base);
+            padding-left: 44px !important;
+            height: 58px;
         }
 
         .form-control-dark:focus {
             background-color: rgba(255, 255, 255, 0.08) !important;
-            border-color: #a855f7;
-            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+            border-color: var(--brand-purple) !important;
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2) !important;
         }
 
         .form-floating > label {
-            color: rgba(255, 255, 255, 0.5);
-            padding-left: 1.25rem;
+            color: rgba(255, 255, 255, 0.5) !important;
+            padding-left: 44px !important;
         }
 
-        .form-floating > .form-control-dark:focus ~ label,
-        .form-floating > .form-control-dark:not(:placeholder-shown) ~ label {
-            color: #a855f7 !important;
-            transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem);
+        .field-icon {
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+            z-index: 10;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 1.1rem;
         }
 
-        /* Premium glowing button */
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            z-index: 10;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.4);
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: #ffffff;
+        }
+
+        /* 🚀 Glow CTA Button */
         .btn-glow {
-            background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            background: var(--brand-gradient);
             color: #ffffff;
             border: none;
-            border-radius: 12px;
-            padding: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
+            border-radius: 14px;
+            padding: 0.9rem;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
+            transition: var(--transition-base);
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
         }
 
         .btn-glow:hover {
             color: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+            box-shadow: 0 14px 30px rgba(168, 85, 247, 0.45);
         }
 
         .btn-glow:active {
             transform: translateY(0);
         }
 
+        /* 🌐 Social Outline Button */
+        .btn-social-glass {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-radius: 14px;
+            padding: 11px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-social-glass:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
         .accent-link {
-            color: #a855f7;
+            color: var(--brand-purple);
             text-decoration: none;
             transition: color 0.2s;
         }
@@ -103,58 +196,118 @@
         .accent-link:hover {
             color: #c084fc;
         }
+
+        /* 📊 Password Strength Indicator Bar */
+        .strength-meter {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
 
-<div class="container d-flex justify-content-center align-items-center py-5">
+<!-- Ambient Glow Layer -->
+<div class="ambient-glow"></div>
+
+<div class="container d-flex justify-content-center align-items-center">
     <div class="glass-card text-center">
-                    <nav aria-label="breadcrumb" class="mb-4">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
-                            <li class="breadcrumb-item"><a href="{% url 'sign_in' %}" class="text-decoration-none">Sign In</a></li>
-                            <li class="breadcrumb-item"><a href="{% url 'sign_up' %}" class="text-decoration-none">Sign Up</a></li>
-                        </ol>
-                        </ol>
-                    </nav>
-        <!-- Icon / Logo Area -->
+        
+        <!-- 🧭 Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center small fw-semibold mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-white-50">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'sign_in' %}" class="text-decoration-none text-white-50">Sign In</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Sign Up</li>
+            </ol>
+        </nav>
+
+        <!-- 🛡️ Brand Badge -->
         <div class="brand-icon">
-            <i class="bi bi-shield-lock-fill text-white fs-4"></i>
+            <i class="bi bi-person-plus-fill text-white fs-4"></i>
         </div>
 
         <!-- Headings -->
-        <h3 class="text-white fw-bold mb-1">Create Account</h3>
-        <p class="text-white-50 small mb-4">Join us to secure your custom dashboard.</p>
+        <h3 class="text-white fw-extrabold mb-1">Create Account</h3>
+        <p class="text-white-50 small mb-4">Join RinCart today to access your dashboard & exclusive perks.</p>
 
-        <!-- Minimal Form -->
+        <!-- 🌐 Social Quick Sign Up -->
+        {% load socialaccount %}
+        <a href="{% provider_login_url 'google' %}" class="btn-social-glass mb-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+            </svg>
+            <span>Sign up with Google</span>
+        </a>
+
+        <div class="d-flex align-items-center my-3">
+            <hr class="flex-grow-1 border-white opacity-10 m-0">
+            <span class="mx-3 text-white-50 small fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Or with Email</span>
+            <hr class="flex-grow-1 border-white opacity-10 m-0">
+        </div>
+
+        <!-- ✉️ Registration Form -->
         <form method="POST" action="{% url 'sign_up' %}">
             {% csrf_token %}
             
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-danger p-2 small text-start" role="alert">
-                        {{ message }}
+                    <div class="alert alert-danger p-2.5 rounded-3 small text-start d-flex align-items-center gap-2 mb-3" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span>{{ message }}</span>
                     </div>
                 {% endfor %}
             {% endif %}
 
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control form-control-dark" id="floatingEmail" name="email" placeholder="name@example.com" required autocomplete="off">
+            <!-- Email Field -->
+            <div class="form-floating mb-3 text-start">
+                <i class="bi bi-envelope field-icon"></i>
+                <input type="email" class="form-control form-control-dark" id="floatingEmail" name="email" placeholder="name@example.com" required autocomplete="email">
                 <label for="floatingEmail">Email address</label>
             </div>
 
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control form-control-dark" id="floatingPassword" name="password" placeholder="Password" required>
+            <!-- Password Field -->
+            <div class="form-floating mb-2 text-start">
+                <i class="bi bi-lock field-icon"></i>
+                <input type="password" class="form-control form-control-dark" id="floatingPassword" name="password" placeholder="Password" required autocomplete="new-password">
                 <label for="floatingPassword">Password</label>
+                <button type="button" class="password-toggle" id="togglePassword1" aria-label="Toggle password visibility">
+                    <i class="bi bi-eye" id="toggleIcon1"></i>
+                </button>
             </div>
 
-            <div class="form-floating mb-4">
-                <input type="password" class="form-control form-control-dark" id="floatingConfirmPassword" name="retype_password" placeholder="Retype Password" required>
+            <!-- Password Strength Bar -->
+            <div class="strength-meter mb-3">
+                <div class="strength-bar" id="strengthBar"></div>
+            </div>
+
+            <!-- Retype Password Field -->
+            <div class="form-floating mb-4 text-start">
+                <i class="bi bi-shield-check field-icon"></i>
+                <input type="password" class="form-control form-control-dark" id="floatingConfirmPassword" name="retype_password" placeholder="Retype Password" required autocomplete="new-password">
                 <label for="floatingConfirmPassword">Retype Password</label>
+                <button type="button" class="password-toggle" id="togglePassword2" aria-label="Toggle password visibility">
+                    <i class="bi bi-eye" id="toggleIcon2"></i>
+                </button>
+                <div id="passwordMismatch" class="text-danger small mt-1 d-none" style="font-size: 0.78rem;">
+                    <i class="bi bi-x-circle me-1"></i> Passwords do not match
+                </div>
             </div>
 
-            <button class="btn btn-glow w-100 mb-4" type="submit">
-                Sign Up <i class="bi bi-arrow-right ms-2"></i>
+            <button class="btn btn-glow w-100 mb-4 d-flex align-items-center justify-content-center gap-2" type="submit" id="submitBtn">
+                <span>Create Account</span>
+                <i class="bi bi-arrow-right"></i>
             </button>
         </form>
 
@@ -166,6 +319,66 @@
 </div>
 
 <!-- Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ⚡ Password Toggle & Validation Logic -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password Visibility Toggles
+        const setupPasswordToggle = (inputId, toggleId, iconId) => {
+            const input = document.getElementById(inputId);
+            const toggle = document.getElementById(toggleId);
+            const icon = document.getElementById(iconId);
+
+            toggle.addEventListener('click', () => {
+                const isPassword = input.getAttribute('type') === 'password';
+                input.setAttribute('type', isPassword ? 'text' : 'password');
+                icon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+            });
+        };
+
+        setupPasswordToggle('floatingPassword', 'togglePassword1', 'toggleIcon1');
+        setupPasswordToggle('floatingConfirmPassword', 'togglePassword2', 'toggleIcon2');
+
+        // Password Strength Indicator & Match Checker
+        const pwdInput = document.getElementById('floatingPassword');
+        const confirmInput = document.getElementById('floatingConfirmPassword');
+        const strengthBar = document.getElementById('strengthBar');
+        const mismatchError = document.getElementById('passwordMismatch');
+
+        pwdInput.addEventListener('input', function() {
+            const val = pwdInput.value;
+            let strength = 0;
+
+            if (val.length >= 6) strength += 25;
+            if (val.length >= 10) strength += 25;
+            if (/[A-Z]/.test(val) && /[0-9]/.test(val)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(val)) strength += 25;
+
+            strengthBar.style.width = strength + '%';
+
+            if (strength <= 25) {
+                strengthBar.style.backgroundColor = '#ef4444';
+            } else if (strength <= 50) {
+                strengthBar.style.backgroundColor = '#f59e0b';
+            } else if (strength <= 75) {
+                strengthBar.style.backgroundColor = '#3b82f6';
+            } else {
+                strengthBar.style.backgroundColor = '#10b981';
+            }
+        });
+
+        function checkPasswordMatch() {
+            if (confirmInput.value.length > 0 && pwdInput.value !== confirmInput.value) {
+                mismatchError.classList.remove('d-none');
+            } else {
+                mismatchError.classList.add('d-none');
+            }
+        }
+
+        pwdInput.addEventListener('keyup', checkPasswordMatch);
+        confirmInput.addEventListener('keyup', checkPasswordMatch);
+    });
+</script>
 </body>
 </html>
