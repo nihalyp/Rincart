@@ -1,37 +1,137 @@
 {% extends 'base.html' %}
 {% block title %}
-Confirm Cancellation
+Confirm Cancellation — RinCart
 {% endblock %}
 {% block content %}
 
+<!-- 🔤 Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 🎨 Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <style>
-    /* Custom Radio Box Styling */
+    :root {
+        --brand-gold: #ffb703;
+        --brand-orange: #fb8500;
+        
+        --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        --danger-glow: rgba(239, 68, 68, 0.25);
+        
+        --bg-light: #f8fafc;
+        --bg-dark: #030712;
+        
+        --card-light: #ffffff;
+        --card-dark: #0f172a;
+        
+        --border-light: rgba(226, 232, 240, 0.8);
+        --border-dark: rgba(255, 255, 255, 0.08);
+
+        --transition-smooth: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-light);
+        color: #0f172a;
+    }
+
+    [data-bs-theme="dark"] body {
+        background-color: var(--bg-dark) !important;
+        color: #f8fafc !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* 💎 Cancellation Card */
+    .cancel-form-card {
+        background: var(--card-light);
+        border: 1px solid var(--border-light);
+        border-radius: 28px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
+        transition: var(--transition-smooth);
+        overflow: hidden;
+    }
+
+    [data-bs-theme="dark"] .cancel-form-card {
+        background: var(--card-dark);
+        border-color: var(--border-dark);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Accent Line */
+    .card-accent-bar-warning {
+        height: 6px;
+        width: 100%;
+        background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    }
+
+    /* ⚠️ Animated Warning Icon */
+    .warning-icon-badge {
+        width: 84px;
+        height: 84px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(239, 68, 68, 0.12);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.25);
+        animation: pulseWarning 2s infinite;
+    }
+
+    @keyframes pulseWarning {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+        70% { transform: scale(1.04); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* 📦 Product Preview Summary */
+    .cancel-item-preview {
+        background: rgba(248, 250, 252, 0.8);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+    }
+
+    [data-bs-theme="dark"] .cancel-item-preview {
+        background: rgba(30, 41, 59, 0.4);
+        border-color: var(--border-dark);
+    }
+
+    /* 📻 Interactive Reason Box Selector */
     .reason-box {
         display: flex;
         align-items: center;
-        padding: 14px 16px;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        margin-bottom: 12px;
+        padding: 14px 18px;
+        border: 1.5px solid var(--border-light);
+        border-radius: 16px;
+        margin-bottom: 10px;
         cursor: pointer;
-        transition: all 0.2s ease;
-        background: #ffffff;
+        transition: var(--transition-smooth);
+        background: rgba(248, 250, 252, 0.5);
     }
-    
+
+    [data-bs-theme="dark"] .reason-box {
+        background: rgba(30, 41, 59, 0.25);
+        border-color: var(--border-dark);
+    }
+
     .reason-box:hover {
-        border-color: #fca5a5;
-        background-color: #fff5f5;
+        border-color: rgba(239, 68, 68, 0.5);
+        background-color: rgba(239, 68, 68, 0.04);
+        transform: translateX(3px);
     }
-    
-    /* റേഡിയോ ബട്ടൺ സെലക്ട് ചെയ്യുമ്പോൾ ബോക്സിന്റെ കളർ മാറാൻ */
-    .reason-input:checked + .reason-label-text {
-        color: #dc2626;
-        font-weight: 600;
-    }
-    
-    .reason-input:checked ~ .reason-box-wrapper {
-        border-color: #ef4444;
-        background-color: #fef2f2;
+
+    /* Selected Radio Container Highlighting */
+    .reason-box:has(.reason-input:checked) {
+        border-color: #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.08) !important;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.12);
     }
 
     .reason-input {
@@ -39,69 +139,159 @@ Confirm Cancellation
         width: 18px;
         height: 18px;
         cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .reason-label-text {
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .reason-box:has(.reason-input:checked) .reason-label-text {
+        color: #ef4444 !important;
+        font-weight: 700;
+    }
+
+    /* 🚀 Actions */
+    .btn-keep {
+        background: rgba(241, 245, 249, 0.9);
+        color: #334155;
+        border: 1px solid var(--border-light);
+        font-weight: 700;
+        border-radius: 14px;
+        transition: var(--transition-smooth);
+    }
+
+    [data-bs-theme="dark"] .btn-keep {
+        background: rgba(30, 41, 59, 0.8);
+        color: #f8fafc;
+        border-color: var(--border-dark);
+    }
+
+    .btn-keep:hover {
+        background: #e2e8f0;
+        transform: translateY(-2px);
+    }
+
+    [data-bs-theme="dark"] .btn-keep:hover {
+        background: #334155;
+    }
+
+    .btn-cancel-submit {
+        background: var(--danger-gradient);
+        color: white;
+        border: none;
+        font-weight: 700;
+        border-radius: 14px;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-cancel-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px var(--danger-glow);
+        color: white;
     }
 </style>
 
-<div class="container d-flex justify-content-center my-5">
-   <div class="card shadow-lg border-0 text-center p-4 p-sm-5 rounded-4" style="max-width: 500px; width: 100%; background: #ffffff;">
-      
-      <div class="mb-3">
-         <div class="bg-danger bg-opacity-10 d-inline-block rounded-circle p-3 shadow-sm">
-            <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 2.5rem; line-height: 1;"></i>
-         </div>
-      </div>
+<div class="container py-4 py-md-5 d-flex justify-content-center">
+   
+   <div class="card cancel-form-card text-center" style="max-width: 520px; width: 100%;">
+      <div class="card-accent-bar-warning"></div>
 
-      <h4 class="fw-bold mb-1">Cancel Order?</h4>
-      <p class="text-muted px-2 small">Are you sure you want to cancel this order? This action cannot be undone. 😥</p>
-      
-      <hr class="my-4 text-muted opacity-25">
-
-      <form method="POST" action="{% url 'cancel_order_view' order.id %}" class="text-start mb-4">
-         {% csrf_token %}
+      <div class="p-4 p-sm-5">
          
-         <label class="form-label small text-uppercase fw-bold text-muted mb-3 d-block text-center">Please select a reason for cancellation:</label>
-
-         <label class="reason-box w-100" for="reason1">
-            <input type="radio" name="reason" id="reason1" value="bad_quality" class="reason-input me-3" required>
-            <span class="text-dark small reason-label-text">I changed my mind / Don't like it</span>
-         </label>
-
-         <label class="reason-box w-100" for="reason2">
-            <input type="radio" name="reason" id="reason2" value="wrong_size" class="reason-input me-3">
-            <span class="text-dark small reason-label-text">Size / Fit issue</span>
-         </label>
-
-         <label class="reason-box w-100" for="reason3">
-            <input type="radio" name="reason" id="reason3" value="delivery_delay" class="reason-input me-3">
-            <span class="text-dark small reason-label-text">Delivery is taking too long</span>
-         </label>
-
-         <label class="reason-box w-100" for="reason4">
-            <input type="radio" name="reason" id="reason4" value="other" class="reason-input me-3">
-            <span class="text-dark small reason-label-text">Other reasons</span>
-         </label>
-
-         <div class="row g-2 mt-4">
-            <div class="col-6">
-               <a href="{% url 'view_deals' %}" class="btn btn-light w-100 py-2.5 fw-bold rounded-3 border text-secondary">
-                  No, Keep It
-               </a>
+         <!-- ⚠️ Header & Warning Icon -->
+         <div class="mb-3.5">
+            <div class="warning-icon-badge mb-3">
+               <i class="bi bi-exclamation-triangle-fill fs-2"></i>
             </div>
-            <div class="col-6">
-               <button type="submit" class="btn btn-danger w-100 py-2.5 fw-bold rounded-3 shadow-sm" style="background-color: #ef4444; border: none;">
-                  Cancel Order
-               </button>
-            </div>
-            
+            <h3 class="fw-extrabold mb-1">Cancel Order?</h3>
+            <p class="text-secondary small mb-0 px-2">
+               Are you sure you want to cancel this order? This action cannot be reversed once confirmed.
+            </p>
          </div>
 
-      </form>
+         <!-- 📦 Optional Product Preview Summary -->
+         {% if order.product or order.items.first %}
+         <div class="cancel-item-preview p-2.5 text-start d-flex align-items-center gap-3 mb-4">
+            <div class="bg-body-tertiary rounded-3 border d-flex align-items-center justify-content-center p-1" style="width: 52px; height: 52px; flex-shrink: 0; overflow: hidden;">
+                {% if order.product.image.url %}
+                    <img src="{{ order.product.image.url }}" alt="{{ order.product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% elif order.items.first.product.image.url %}
+                    <img src="{{ order.items.first.product.image.url }}" alt="{{ order.items.first.product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    <i class="bi bi-box-seam text-secondary fs-4"></i>
+                {% endif %}
+            </div>
+            <div style="min-width: 0;" class="flex-grow-1">
+               <h6 class="fw-bold mb-0 text-truncate small" title="{{ order.product.name|default:order.items.first.product.name }}">
+                  {{ order.product.name|default:order.items.first.product.name }}
+               </h6>
+               <span class="text-secondary" style="font-size: 0.75rem;">
+                  Order ID: #{{ order.id }} • Qty: {{ order.quantity|default:order.items.first.quantity|default:1 }}
+               </span>
+            </div>
+         </div>
+         {% else %}
+         <hr class="my-4 border-secondary border-opacity-15">
+         {% endif %}
 
-      <div class="text-center">
-         <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-shield-lock me-1"></i> Safe & Secure Refund Policy Applicable</small>
+         <!-- 📝 Cancellation Reason Form -->
+         <form method="POST" action="{% url 'cancel_order_view' order.id %}" class="text-start">
+            {% csrf_token %}
+            
+            <label class="form-label text-uppercase fw-extrabold text-secondary tracking-wider mb-3 d-block text-center" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+               Select a reason for cancellation:
+            </label>
+
+            <!-- Reason Options -->
+            <label class="reason-box w-100" for="reason1">
+               <input type="radio" name="reason" id="reason1" value="bad_quality" class="reason-input me-3" required>
+               <span class="reason-label-text">I changed my mind / Don't need it anymore</span>
+            </label>
+
+            <label class="reason-box w-100" for="reason2">
+               <input type="radio" name="reason" id="reason2" value="wrong_size" class="reason-input me-3">
+               <span class="reason-label-text">Ordered by mistake / Size fit issue</span>
+            </label>
+
+            <label class="reason-box w-100" for="reason3">
+               <input type="radio" name="reason" id="reason3" value="delivery_delay" class="reason-input me-3">
+               <span class="reason-label-text">Estimated delivery time is too long</span>
+            </label>
+
+            <label class="reason-box w-100" for="reason4">
+               <input type="radio" name="reason" id="reason4" value="other" class="reason-input me-3">
+               <span class="reason-label-text">Other personal reasons</span>
+            </label>
+
+            <!-- Action Buttons Grid -->
+            <div class="row g-2.5 mt-4">
+               <div class="col-6">
+                  <a href="{% url 'view_deals' %}" class="btn btn-keep w-100 py-3 small d-flex align-items-center justify-content-center gap-1.5">
+                     <i class="bi bi-shield-check text-success fs-6"></i> Keep Order
+                  </a>
+               </div>
+               <div class="col-6">
+                  <button type="submit" class="btn btn-cancel-submit w-100 py-3 small d-flex align-items-center justify-content-center gap-1.5">
+                     <i class="bi bi-x-circle fs-6"></i> Cancel Order
+                  </button>
+               </div>
+            </div>
+
+         </form>
+
+         <!-- 🔒 Footer Policy Note -->
+         <div class="text-center mt-4 pt-2">
+            <span class="text-secondary d-inline-flex align-items-center gap-1" style="font-size: 0.75rem;">
+               <i class="bi bi-shield-lock-fill text-success"></i> Safe & Secure Automated Refund Policy
+            </span>
+         </div>
+
       </div>
-
    </div>
 </div>
 
 {% endblock %}
+
