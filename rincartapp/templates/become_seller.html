@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Become a Seller — RinCart</title>
+    <title>Become a Seller — RinCart Merchant Hub</title>
 
     <!-- 🔤 Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
             --brand-gold: #ffb703;
             --brand-orange: #fb8500;
             --brand-gradient: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
-            --brand-glow: rgba(255, 183, 3, 0.25);
+            --brand-glow: rgba(251, 133, 0, 0.22);
             
             --bg-light: #f8fafc;
             --bg-dark: #030712;
@@ -27,17 +27,17 @@
             --card-light: #ffffff;
             --card-dark: #0f172a;
             
-            --border-light: rgba(226, 232, 240, 0.8);
+            --border-light: rgba(226, 232, 240, 0.9);
             --border-dark: rgba(255, 255, 255, 0.08);
 
-            --transition-smooth: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-smooth: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-light);
             color: #0f172a;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            transition: background-color 0.35s ease, color 0.35s ease;
             min-height: 100vh;
         }
 
@@ -64,12 +64,12 @@
             border-bottom: 1px solid var(--border-dark);
         }
 
-        /* 🏪 Main Seller Form Card */
+        /* 🏪 Main Seller Card */
         .seller-card {
             border: 1px solid var(--border-light);
             border-radius: 28px;
             background: var(--card-light);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
             transition: var(--transition-smooth);
             overflow: hidden;
         }
@@ -80,12 +80,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .seller-card:hover {
-            box-shadow: 0 30px 60px -15px var(--brand-glow);
-            border-color: var(--brand-gold);
-        }
-
-        /* Accent Gradient Top Line */
+        /* Accent Top Gradient Line */
         .card-accent-bar {
             height: 6px;
             width: 100%;
@@ -94,63 +89,79 @@
 
         /* 🛍️ Floating Icon Badge */
         .store-icon-badge {
-            width: 84px;
-            height: 84px;
+            width: 76px;
+            height: 76px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border-radius: 24px;
+            border-radius: 22px;
             background: rgba(255, 183, 3, 0.12);
             color: var(--brand-orange);
-            border: 1px solid rgba(245, 158, 11, 0.25);
+            border: 1px solid rgba(251, 133, 0, 0.25);
             box-shadow: 0 10px 20px -5px var(--brand-glow);
-            animation: float 3s infinite ease-in-out;
+            animation: float 3.5s infinite ease-in-out;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-6px); }
         }
 
-        /* ✍️ Form Control Styling */
-        .form-control {
-            border-radius: 14px;
-            padding: 0.8rem 1.1rem;
-            font-size: 0.95rem;
-            transition: var(--transition-smooth);
+        /* ✍️ Floating Label Controls */
+        .form-floating > .form-control {
+            border-radius: 16px;
             border: 1.5px solid var(--border-light);
+            background-color: var(--card-light);
+            padding-left: 44px;
+            height: 58px;
         }
 
-        [data-bs-theme="dark"] .form-control {
+        [data-bs-theme="dark"] .form-floating > .form-control {
             background-color: rgba(30, 41, 59, 0.5);
             border-color: var(--border-dark);
             color: #f8fafc;
         }
 
-        .form-control:focus {
-            border-color: var(--brand-gold);
-            box-shadow: 0 0 0 0.25rem var(--brand-glow);
+        .form-floating > label {
+            padding-left: 44px;
+            color: #64748b;
         }
 
-        /* 🚀 Action Buttons */
+        .field-icon {
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+            z-index: 10;
+            color: var(--brand-orange);
+            font-size: 1.1rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--brand-orange) !important;
+            box-shadow: 0 0 0 0.25rem var(--brand-glow) !important;
+        }
+
+        /* 🚀 Action Button */
         .btn-brand {
             background: var(--brand-gradient);
             color: #ffffff;
             border: none;
             font-weight: 700;
-            padding: 0.85rem;
+            padding: 0.9rem;
             font-size: 1.05rem;
             transition: var(--transition-smooth);
             border-radius: 16px;
+            box-shadow: 0 10px 20px -5px var(--brand-glow);
         }
 
         .btn-brand:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px -5px var(--brand-glow);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px var(--brand-glow);
             color: #ffffff;
         }
 
-        /* Feature Micro Badges */
+        /* 📊 Feature Cards */
         .perk-box {
             border-radius: 16px;
             background: rgba(248, 250, 252, 0.8);
@@ -163,146 +174,236 @@
             border-color: var(--border-dark);
         }
 
-        .btn-theme-toggle {
+        .theme-toggle-btn {
+            border-radius: 50px;
             transition: var(--transition-smooth);
-            border-radius: 99px;
         }
 
-        .btn-theme-toggle:hover {
+        .theme-toggle-btn:hover {
             transform: scale(1.05);
+        }
+
+        /* 📍 Progress Indicator Pills */
+        .step-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(251, 133, 0, 0.15);
+            color: var(--brand-orange);
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem;
         }
     </style>
 </head>
-<body class="d-flex flex-column">
+<body class="d-flex flex-column min-vh-100">
 
     <!-- 🔝 Top Glass Navigation Bar -->
-    <nav class="navbar sticky-top glass-header py-3 mb-4">
-        <div class="container" style="max-width: 900px;">
+    <nav class="navbar sticky-top glass-header py-3">
+        <div class="container" style="max-width: 1080px;">
             <a href="{% url 'home' %}" class="btn btn-link link-body-emphasis text-decoration-none fw-bold d-flex align-items-center gap-2 px-0">
-                <i class="bi bi-arrow-left-short fs-4 text-warning"></i>
-                <span>Back to Store</span>
+                <i class="bi bi-arrow-left-circle-fill fs-5 text-warning"></i>
+                <span>Back to Marketplace</span>
             </a>
             
-            <button id="darkModeToggle" class="btn btn-theme-toggle btn-light border px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm">
+            <button id="darkModeToggle" class="btn btn-outline-secondary theme-toggle-btn px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm" type="button" aria-label="Toggle Theme">
                 <i id="darkModeIcon" class="bi bi-moon-stars-fill text-warning"></i>
+                <span id="darkModeText" class="small fw-semibold d-none d-sm-inline">Theme</span>
             </button>
         </div>
     </nav>
 
-    <!-- 📦 Main Seller Application Form -->
-    <div class="container my-auto py-4" style="max-width: 620px;">
-        
-        <div class="card seller-card">
-            <div class="card-accent-bar"></div>
+    <!-- 📦 Main Container -->
+    <div class="container my-auto py-5" style="max-width: 1080px;">
+        <div class="row g-4 align-items-center">
             
-            <div class="card-body p-4 p-md-5">
-                
-                <!-- Hero Header -->
-                <div class="text-center mb-4">
-                    <div class="store-icon-badge mb-3">
-                        <i class="bi bi-shop fs-1"></i>
-                    </div>
-                    <h2 class="fw-extrabold mb-2">Start Selling on <span class="text-warning">RinCart</span></h2>
-                    <p class="text-secondary small mb-0 lh-base">
-                        Join our merchant network and take your business online to connect with thousands of active buyers.
+            <!-- 🌟 Left Column: Value Proposition & Onboarding Steps (Desktop) -->
+            <div class="col-lg-5 pe-lg-4">
+                <div class="mb-4 text-center text-lg-start">
+                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-3 py-1.5 fw-bold mb-3 small">
+                        ⚡ Merchant Partnership
+                    </span>
+                    <h1 class="display-6 fw-extrabold mb-3">Scale Your Business Nationwide</h1>
+                    <p class="text-secondary lh-base">
+                        Join thousands of successful sellers on RinCart. List your items, reach active buyers, and receive payouts directly to your account.
                     </p>
                 </div>
 
-                <!-- Seller Form -->
-                <form method="POST">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3.5 mb-md-4">
-                        <label class="form-label fw-bold small text-secondary d-flex align-items-center gap-1">
-                            <i class="bi bi-bag-check-fill text-warning"></i> Shop Name
-                        </label>
-                        <input type="text" name="shop_name" class="form-control" placeholder="e.g., Rin Fashion Hub" required>
-                    </div>
-
-                    <div class="mb-3.5 mb-md-4">
-                        <label class="form-label fw-bold small text-secondary d-flex align-items-center gap-1">
-                            <i class="bi bi-telephone-fill text-warning"></i> Phone Number
-                        </label>
-                        <input type="tel" name="phone_number" class="form-control" placeholder="e.g., +91 9876543210" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold small text-secondary d-flex align-items-center justify-content-between">
-                            <span class="d-flex align-items-center gap-1">
-                                <i class="bi bi-receipt-cutoff text-warning"></i> GST Number
-                            </span>
-                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 rounded-pill px-2.5 py-1">Optional</span>
-                        </label>
-                        <input type="text" name="gst_number" class="form-control" placeholder="15-digit GSTIN number">
-                    </div>
-
-                    <button type="submit" class="btn btn-brand w-100 shadow-sm d-flex align-items-center justify-content-center gap-2 mt-2">
-                        <span>Submit Application</span>
-                        <i class="bi bi-arrow-right-circle-fill"></i>
-                    </button>
-                </form>
-
-                <!-- Value Proposition Trust Badges -->
-                <div class="row g-2 mt-4 pt-3 border-top border-secondary border-opacity-10 text-center">
-                    <div class="col-4">
-                        <div class="perk-box p-2">
-                            <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
-                            <p class="small fw-bold mb-0 mt-1" style="font-size: 0.72rem;">0% Fee Setup</p>
+                <!-- Step Checklist -->
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="d-flex align-items-center gap-3 p-2.5 rounded-3 border-0">
+                        <span class="step-badge">1</span>
+                        <div>
+                            <h6 class="fw-bold mb-0">Register Your Store</h6>
+                            <small class="text-secondary">Provide basic shop & contact details</small>
                         </div>
                     </div>
-                    <div class="col-4">
-                        <div class="perk-box p-2">
-                            <i class="bi bi-globe2 text-info fs-5"></i>
-                            <p class="small fw-bold mb-0 mt-1" style="font-size: 0.72rem;">Pan-India Reach</p>
+                    <div class="d-flex align-items-center gap-3 p-2.5 rounded-3 border-0">
+                        <span class="step-badge">2</span>
+                        <div>
+                            <h6 class="fw-bold mb-0">Instant Verification</h6>
+                            <small class="text-secondary">Quick review by our merchant desk</small>
                         </div>
                     </div>
-                    <div class="col-4">
-                        <div class="perk-box p-2">
-                            <i class="bi bi-shield-check text-success fs-5"></i>
-                            <p class="small fw-bold mb-0 mt-1" style="font-size: 0.72rem;">Secure Payouts</p>
+                    <div class="d-flex align-items-center gap-3 p-2.5 rounded-3 border-0">
+                        <span class="step-badge">3</span>
+                        <div>
+                            <h6 class="fw-bold mb-0">Start Selling</h6>
+                            <small class="text-secondary">Upload products and track live orders</small>
                         </div>
                     </div>
                 </div>
 
+                <!-- Trust Stats -->
+                <div class="row g-2 text-center pt-2 d-none d-lg-flex">
+                    <div class="col-6">
+                        <div class="perk-box p-3">
+                            <h4 class="fw-extrabold text-warning mb-0">7-Day</h4>
+                            <span class="small text-secondary fw-semibold">Fast Payouts</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="perk-box p-3">
+                            <h4 class="fw-extrabold text-warning mb-0">0%</h4>
+                            <span class="small text-secondary fw-semibold">Setup Cost</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Universal Footer -->
-        <p class="text-center text-muted small mt-4 mb-2">&copy; 2026 RinCart Merchant Lab. All seller rights reserved.</p>
+            <!-- 🏪 Right Column: Application Form -->
+            <div class="col-lg-7">
+                <div class="card seller-card">
+                    <div class="card-accent-bar"></div>
+                    
+                    <div class="card-body p-4 p-md-5">
+                        
+                        <!-- Header Icon -->
+                        <div class="text-center mb-4">
+                            <div class="store-icon-badge mb-3">
+                                <i class="bi bi-shop-window fs-2"></i>
+                            </div>
+                            <h3 class="fw-extrabold mb-1">Seller Application</h3>
+                            <p class="text-secondary small mb-0">Enter your store details below to set up your seller account.</p>
+                        </div>
+
+                        <!-- Django Flash Messages -->
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags|default:'warning' }} p-3 rounded-3 small d-flex align-items-center gap-2 mb-4" role="alert">
+                                    <i class="bi bi-exclamation-circle-fill fs-6"></i>
+                                    <span>{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <!-- Seller Application Form -->
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            
+                            <!-- Shop Name -->
+                            <div class="form-floating mb-3.5 mb-md-4 text-start position-relative">
+                                <i class="bi bi-bag-check-fill field-icon"></i>
+                                <input type="text" name="shop_name" class="form-control" id="floatingShopName" placeholder="Shop Name" required autocomplete="organization">
+                                <label for="floatingShopName">Shop Name</label>
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="form-floating mb-3.5 mb-md-4 text-start position-relative">
+                                <i class="bi bi-telephone-fill field-icon"></i>
+                                <input type="tel" name="phone_number" class="form-control" id="floatingPhone" placeholder="Phone Number" required autocomplete="tel">
+                                <label for="floatingPhone">Phone Number</label>
+                            </div>
+
+                            <!-- GST Number (Optional) -->
+                            <div class="form-floating mb-4 text-start position-relative">
+                                <i class="bi bi-receipt-cutoff field-icon"></i>
+                                <input type="text" name="gst_number" class="form-control" id="floatingGST" placeholder="GSTIN (Optional)" autocomplete="off">
+                                <label for="floatingGST">GSTIN Number (Optional)</label>
+                            </div>
+
+                            <!-- Submit CTA -->
+                            <button type="submit" class="btn btn-brand w-100 d-flex align-items-center justify-content-center gap-2 mb-3">
+                                <span>Submit Application</span>
+                                <i class="bi bi-arrow-right-circle-fill fs-5"></i>
+                            </button>
+                        </form>
+
+                        <!-- Mobile Perk Badges -->
+                        <div class="row g-2 mt-3 pt-3 border-top border-secondary border-opacity-10 text-center d-lg-none">
+                            <div class="col-4">
+                                <div class="perk-box p-2">
+                                    <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
+                                    <p class="small fw-bold mb-0 mt-1" style="font-size: 0.7rem;">Fast Setup</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="perk-box p-2">
+                                    <i class="bi bi-globe2 text-info fs-5"></i>
+                                    <p class="small fw-bold mb-0 mt-1" style="font-size: 0.7rem;">Nationwide</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="perk-box p-2">
+                                    <i class="bi bi-shield-check text-success fs-5"></i>
+                                    <p class="small fw-bold mb-0 mt-1" style="font-size: 0.7rem;">Protected</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
+
+    <!-- Universal Footer -->
+    <footer class="mt-auto py-3 text-center text-secondary small border-top border-secondary border-opacity-10">
+        <div class="container">
+            <span>&copy; 2026 RinCart Merchant Lab. All seller rights reserved.</span>
+        </div>
+    </footer>
 
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- 💡 Dark Theme Controller Engine -->
+    <!-- 💡 Dark Theme Engine -->
     <script>
-        const toggleBtn = document.getElementById('darkModeToggle');
-        const themeIcon = document.getElementById('darkModeIcon');
-        const htmlElement = document.documentElement;
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('darkModeToggle');
+            const themeIcon = document.getElementById('darkModeIcon');
+            const themeText = document.getElementById('darkModeText');
+            const htmlElement = document.documentElement;
 
-        // Load & Sync Theme State
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        htmlElement.setAttribute('data-bs-theme', savedTheme);
-        updateButton(savedTheme);
-
-        toggleBtn.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-bs-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-            htmlElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateButton(newTheme);
-        });
-
-        function updateButton(theme) {
-            if (theme === 'dark') {
-                themeIcon.className = 'bi bi-sun-fill text-warning';
-                toggleBtn.classList.replace('btn-light', 'btn-dark');
-            } else {
-                themeIcon.className = 'bi bi-moon-stars-fill text-warning';
-                toggleBtn.classList.replace('btn-dark', 'btn-light');
+            function updateButton(theme) {
+                if (!themeIcon) return;
+                if (theme === 'dark') {
+                    themeIcon.className = 'bi bi-sun-fill text-warning';
+                    if (themeText) themeText.innerText = 'Light';
+                } else {
+                    themeIcon.className = 'bi bi-moon-stars-fill text-warning';
+                    if (themeText) themeText.innerText = 'Dark';
+                }
             }
-        }
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            htmlElement.setAttribute('data-bs-theme', savedTheme);
+            updateButton(savedTheme);
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                    const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+
+                    htmlElement.setAttribute('data-bs-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateButton(newTheme);
+                });
+            }
+        });
     </script>
 </body>
 </html>
