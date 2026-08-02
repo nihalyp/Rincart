@@ -1,163 +1,372 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - RinCart</title>
+    <title>Sign In — RinCart</title>
+
+    <!-- 🔤 Google Fonts & Bootstrap Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <style>
-        /* Custom styling to enhance Bootstrap features */
+        :root {
+            --brand-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --brand-primary: #4f46e5;
+            --brand-purple: #764ba2;
+            --card-bg: #ffffff;
+            --border-subtle: rgba(226, 232, 240, 0.8);
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --transition-base: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        [data-bs-theme="dark"] {
+            --card-bg: #0f172a;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
         body {
-            
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            background-color: var(--card-bg);
+            overflow-x: hidden;
         }
-        .login-half-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
         }
-        .form-control:focus {
-            border-color: #764ba2;
-            box-shadow: 0 0 0 0.25rem rgba(118, 75, 162, 0.25);
+
+        /* 🎨 Showcase Panel (Left Side) */
+        .login-showcase-bg {
+            background: var(--brand-gradient);
+            position: relative;
+            overflow: hidden;
         }
-        .btn-custom {
-            background: linear-gradient(to right, #667eea, #764ba2);
+
+        .showcase-glass-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ✏️ Custom Form Floating Elements */
+        .form-floating > .form-control {
+            border-radius: 14px;
+            border: 1.5px solid var(--border-subtle);
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            padding-left: 44px;
+            height: 58px;
+        }
+
+        .form-floating > label {
+            padding-left: 44px;
+            color: var(--text-sub);
+        }
+
+        .field-icon {
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+            z-index: 10;
+            color: var(--text-sub);
+            font-size: 1.15rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            z-index: 10;
+            cursor: pointer;
+            color: var(--text-sub);
+            background: none;
             border: none;
-            color: white;
-            transition: all 0.3s ease;
+            padding: 0;
+            font-size: 1.15rem;
         }
-        .btn-custom:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-            color: white;
+
+        .form-floating > .form-control:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+
+        /* 🚀 Action Buttons */
+        .btn-brand-submit {
+            background: var(--brand-gradient);
+            border: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 14px;
+            padding: 14px;
+            transition: var(--transition-base);
+            box-shadow: 0 10px 20px -5px rgba(118, 75, 162, 0.4);
+        }
+
+        .btn-brand-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 25px -5px rgba(118, 75, 162, 0.5);
+            color: #ffffff;
+        }
+
+        .btn-social-outline {
+            border: 1.5px solid var(--border-subtle);
+            border-radius: 14px;
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 12px;
+            background: var(--card-bg);
+            transition: var(--transition-base);
+        }
+
+        .btn-social-outline:hover {
+            border-color: var(--brand-primary);
+            background: var(--card-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        /* 🌓 Dark Mode Toggle Pill */
+        .theme-toggle-pill {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .theme-toggle-pill:hover {
+            transform: scale(1.05);
         }
     </style>
-
 </head>
 <body>
 
-    <div class="container-fluid vh-100 d-flex align-items-center justify-content-center p-0">
-        <div class="row g-0 w-100 h-100">
+    <!-- 🌓 Theme Toggle Button -->
+    <button id="darkModeToggle" class="theme-toggle-pill" type="button" aria-label="Toggle Theme">
+        <i id="darkModeIcon" class="bi bi-moon-stars-fill text-warning"></i>
+        <span id="darkModeText">Dark Mode</span>
+    </button>
+
+    <div class="container-fluid vh-100 p-0">
+        <div class="row g-0 h-100">
             
-            <div class="col-lg-6 d-none d-lg-flex login-half-bg flex-column justify-content-center align-items-center p-5 text-center">
-                <div class="mb-4">
-                    <i class="bi bi-rocket-takeoff-fill display-1 text-white-50"></i>
+            <!-- 🚀 Left Column: Premium Branding Showcase -->
+            <div class="col-lg-6 d-none d-lg-flex login-showcase-bg flex-column justify-content-between p-5 text-white">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="p-2 rounded-3 bg-white text-dark fw-extrabold fs-4 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                        R
+                    </div>
+                    <span class="fs-4 fw-extrabold tracking-wide text-white">RinCart</span>
                 </div>
-                <h1 class="fw-bold display-4 mb-3">Welcome to Our Community</h1>
-                <p class="fs-5 max-width-400 text-white-700">Experience the most robust, secure, and lightning-fast platform designed just for creators and professionals.</p>
-                
-                <div class="d-flex gap-3 mt-4">
-                    <span class="badge bg-white text-dark p-2 px-3 rounded-pill shadow-sm"><i class="bi bi-shield-check text-success me-1"></i> Secure</span>
-                    <span class="badge bg-white text-dark p-2 px-3 rounded-pill shadow-sm"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Fast</span>
-                    <span class="badge bg-white text-dark p-2 px-3 rounded-pill shadow-sm"><i class="bi bi-heart-fill text-danger me-1"></i> Elegant</span>
+
+                <div class="my-auto max-width-500 pe-lg-4">
+                    <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1.5 mb-3 fw-semibold small">
+                        ✨ Next-Gen E-Commerce Platform
+                    </span>
+                    <h1 class="display-4 fw-extrabold lh-sm mb-3">Welcome Back to Your Shopping Hub</h1>
+                    <p class="fs-5 text-white opacity-75 mb-4 lh-base">
+                        Discover curated products, exclusive member deals, and seamless checkout tracking designed just for you.
+                    </p>
+
+                    <!-- Glassmorphism Stats Badge -->
+                    <div class="showcase-glass-card mt-4">
+                        <div class="row text-center g-2">
+                            <div class="col-4 border-end border-white border-opacity-25">
+                                <h3 class="fw-extrabold mb-0 text-white">100%</h3>
+                                <small class="text-white opacity-75">Secure Checkout</small>
+                            </div>
+                            <div class="col-4 border-end border-white border-opacity-25">
+                                <h3 class="fw-extrabold mb-0 text-white">24/7</h3>
+                                <small class="text-white opacity-75">Customer Care</small>
+                            </div>
+                            <div class="col-4">
+                                <h3 class="fw-extrabold mb-0 text-white">Express</h3>
+                                <small class="text-white opacity-75">Fast Shipping</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between small text-white opacity-75">
+                    <span>© 2026 RinCart Inc. All rights reserved.</span>
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'return_policy' %}" class="text-white text-decoration-none">Privacy Policy</a>
+                        <span>•</span>
+                        <a href="{% url 'return_policy' %}" class="text-white text-decoration-none">Terms of Service</a>
+                    </div>
                 </div>
             </div>
 
-            <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center p-4 p-md-5 ">
-                <div class="w-100" style="max-width: 450px;">
+            <!-- 🔐 Right Column: Interactive Sign-In Form -->
+            <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center p-4 p-md-5">
+                <div class="w-100" style="max-width: 440px;">
+                    
                     <nav aria-label="breadcrumb" class="mb-4">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
-                            <li class="breadcrumb-item"><a href="{% url 'sign_in' %}" class="text-decoration-none">Sign In</a></li>
+                        <ol class="breadcrumb small fw-semibold">
+                            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-secondary">Home</a></li>
+                            <li class="breadcrumb-item active text-primary" aria-current="page">Sign In</li>
                         </ol>
                     </nav>
-                    <div class="text-center text-lg-start mb-5">
-                        <h2 class="fw-bold  mb-2">Sign In</h2>
-                        <p class="text-muted">Welcome back! Please enter your details.</p>
+
+                    <div class="text-start mb-4">
+                        <h2 class="fw-extrabold text-body mb-1" style="font-size: 2rem;">Sign In</h2>
+                        <p class="text-secondary small">Welcome back! Please enter your details to access your account.</p>
                     </div>
 
-                    <div class="d-flex flex-column flex-sm-row gap-3 mb-4">
-                        {% load socialaccount %}
-                        <a  href="{% provider_login_url 'google' %}" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2 py-2">
-                            Sign in with <i class="bi bi-google text-danger" style="margin-right: -6px;"></i>oogle
-                        </a>
-                    </div>
+                    <!-- 🌐 Social Login Provider -->
+                    {% load socialaccount %}
+                    <a href="{% provider_login_url 'google' %}" class="btn btn-social-outline w-100 d-flex align-items-center justify-content-center gap-2 mb-4">
+                        <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                        </svg>
+                        <span>Continue with Google</span>
+                    </a>
 
                     <div class="d-flex align-items-center my-4">
-                        <hr class="flex-grow-1 text-muted">
-                        <span class="mx-3 text-muted fs-7 text-uppercase">Or with Email</span>
-                        <hr class="flex-grow-1 text-muted">
+                        <hr class="flex-grow-1 border-secondary opacity-25 m-0">
+                        <span class="mx-3 text-secondary small fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Or with Email</span>
+                        <hr class="flex-grow-1 border-secondary opacity-25 m-0">
                     </div>
 
+                    <!-- ✉️ Credentials Form -->
                     <form method="POST" action="">
-                        {% csrf_token %} <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="floatingInput" name="username" placeholder="name@example.com" required>
-                            <label for="floatingInput" class="text-muted"><i class="bi bi-envelope me-2"></i>Email address</label>
+                        {% csrf_token %}
+
+                        <!-- Username or Email Field -->
+                        <div class="position-relative mb-3">
+                            <i class="bi bi-envelope field-icon"></i>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Username or Email" required autocomplete="username">
+                                <label for="floatingInput">Username or Email</label>
+                            </div>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" required>
-                            <label for="floatingPassword" class="text-muted"><i class="bi bi-lock me-2"></i>Password</label>
+                        <!-- Password Field -->
+                        <div class="position-relative mb-3">
+                            <i class="bi bi-lock field-icon"></i>
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" required autocomplete="current-password">
+                                <label for="floatingPassword">Password</label>
+                            </div>
+                            <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                                <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                            </button>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="rememberMe">
-                            <label class="form-check-input-label text-secondary small" for="rememberMe">
-                                Remember me
-                            </label>
+                                <input class="form-check-input" type="checkbox" name="remember_me" id="rememberMe">
+                                <label class="form-check-label text-secondary small fw-semibold" for="rememberMe">
+                                    Remember me
+                                </label>
                             </div>
-                            {% load socialaccount %}
-                            <a href="{% url 'account_reset_password' %}" class="btn-reset text-decoration-none small fw-semibold" style="color: #764ba2;">Forgot Password?</a>
+                            <a href="{% url 'account_reset_password' %}" class="text-decoration-none small fw-bold" style="color: var(--brand-purple);">
+                                Forgot Password?
+                            </a>
                         </div>
 
-                        <button class="btn btn-custom w-100 py-3 mb-4 fw-bold rounded-3 shadow-sm" type="submit">Sign In</button>
+                        <button class="btn btn-brand-submit w-100 mb-4" type="submit">
+                            Sign In to Account
+                        </button>
                         
+                        <!-- Alert Messages Section -->
                         {% if messages %}
                             {% for message in messages %}
-                                <div class="alert alert-warning p-2 small" role="alert">
-                                    {{ message }}
+                                <div class="alert alert-{{ message.tags|default:'warning' }} p-2.5 rounded-3 small d-flex align-items-center gap-2 mb-3" role="alert">
+                                    <i class="bi bi-exclamation-circle-fill fs-6"></i>
+                                    <span>{{ message }}</span>
                                 </div>
                             {% endfor %}
                         {% endif %}
                             
-                            <div class="text-center">
-                                <p class="text-muted small">Don't have an account? <a href="{% url 'sign_up' %}" class="text-decoration-none fw-bold" style="color: #764ba2;">Sign up for free</a></p>
-                            </div>
-                        
+                        <div class="text-center pt-2">
+                            <p class="text-secondary small mb-0">
+                                Don't have an account? 
+                                <a href="{% url 'sign_up' %}" class="text-decoration-none fw-bold ms-1" style="color: var(--brand-purple);">
+                                    Sign up for free
+                                </a>
+                            </p>
+                        </div>
                     </form>
+
                 </div>
             </div>
 
         </div>
     </div>
+
+    <!-- ⚡ Dynamic Interactivity Script -->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dark Mode Handler
             const toggleBtn = document.getElementById('darkModeToggle');
             const themeIcon = document.getElementById('darkModeIcon');
             const themeText = document.getElementById('darkModeText');
             const htmlElement = document.documentElement;
 
-            // മുൻപ് സെറ്റ് ചെയ്ത തീം ഉണ്ടോ എന്ന് പരിശോധിക്കുന്നു (Local Storage)
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                htmlElement.setAttribute('data-bs-theme', savedTheme);
-                updateButton(savedTheme);
-            }
+            const updateButton = (theme) => {
+                if (theme === 'dark') {
+                    themeIcon.className = 'bi bi-sun-fill text-warning';
+                    themeText.innerText = 'Light Mode';
+                } else {
+                    themeIcon.className = 'bi bi-moon-stars-fill text-warning';
+                    themeText.innerText = 'Dark Mode';
+                }
+            };
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            htmlElement.setAttribute('data-bs-theme', savedTheme);
+            updateButton(savedTheme);
 
             toggleBtn.addEventListener('click', () => {
-                // നിലവിലെ തീം ഏതാണെന്ന് നോക്കുന്നു
                 const currentTheme = htmlElement.getAttribute('data-bs-theme');
-                let newTheme = 'light';
-
-                if (currentTheme === 'light' || !currentTheme) {
-                    newTheme = 'dark';
-                }
-
-                // തീം മാറ്റുന്നു
+                const newTheme = (currentTheme === 'light') ? 'dark' : 'light';
+                
                 htmlElement.setAttribute('data-bs-theme', newTheme);
-                localStorage.setItem('theme', newTheme); // പേജ് റീഫ്രഷ് ചെയ്താലും മാറതിരിക്കാൻ
+                localStorage.setItem('theme', newTheme);
                 updateButton(newTheme);
             });
 
-            // തീം മാറുന്നതിനനുസരിച്ച് ബട്ടണിലെ ഐക്കണും ടെക്സ്റ്റും മാറ്റാൻ
-            function updateButton(theme) {
-            if (theme === 'dark') {
-                themeIcon.className = 'bi bi-sun-fill text-warning'; // സൂര്യന്റെ ഐക്കൺ
-            } else {
-                themeIcon.className = 'bi bi-moon-stars-fill text-warning'; // ചന്ദ്രന്റെ ഐക്കൺ (Navbar എപ്പോഴും ഡാർക്ക് ആയതുകൊണ്ട് text-warning തന്നെയാണ് ഭംഗി)
-            }
-        }
+            // Password Eye Toggle Handler
+            const passwordInput = document.getElementById('floatingPassword');
+            const togglePasswordBtn = document.getElementById('togglePassword');
+            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
 
+            togglePasswordBtn.addEventListener('click', () => {
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                togglePasswordIcon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+            });
+        });
     </script>
 </body>
 </html>
