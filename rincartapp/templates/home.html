@@ -1,200 +1,463 @@
 {% extends 'base.html' %}
 {% block title %}
-Home
+RinCart — Ultimate Shopping Experience
 {% endblock %}
 {% block content %}
+
+<!-- 🔤 Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 🎨 Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <style>
-    .flipkart-card {
-        border: 1px solid #f0f0f0 !important;
-        transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-    }
-    
-    /* Hover Effect: ബോർഡറിന് പകരം ചെറുതായൊരു നിഴൽ വരും */
-    .flipkart-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    :root {
+        --brand-indigo: #667eea;
+        --brand-purple: #764ba2;
+        --brand-accent: #4f46e5;
+        --brand-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --brand-glow: rgba(79, 70, 229, 0.25);
+        
+        --card-bg-light: #ffffff;
+        --card-bg-dark: #0f172a;
+        
+        --border-light: rgba(226, 232, 240, 0.8);
+        --border-dark: rgba(255, 255, 255, 0.08);
+
+        --text-main-light: #0f172a;
+        --text-main-dark: #f8fafc;
+        
+        --text-sub-light: #64748b;
+        --text-sub-dark: #94a3b8;
+
+        --overlay-bg-light: rgba(255, 255, 255, 0.92);
+        --overlay-bg-dark: rgba(15, 23, 42, 0.92);
+
+        --transition-smooth: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Fixed Image Wrapper */
-    .product-img-box {
-        height: 180px;
-        width: 100%;
-        overflow: hidden;
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* 🚀 Hero Banner Styling */
+    .hero-wrapper {
         position: relative;
-    }
-    .custom-img {
-        max-height: 100%;
-        object-fit: contain;
+        background: var(--brand-gradient);
+        border-radius: 28px;
+        overflow: hidden;
+        color: #ffffff;
+        box-shadow: 0 20px 40px -15px var(--brand-glow);
     }
 
-    /* Text Clamping to exactly 2 Lines */
-    .text-truncate-2 {
+    .hero-pattern {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+        background-size: 24px 24px;
+        opacity: 0.6;
+    }
+
+    .hero-btn-primary {
+        background: #ffffff;
+        color: var(--brand-purple);
+        font-weight: 800;
+        border-radius: 14px;
+        padding: 12px 28px;
+        transition: var(--transition-smooth);
+        border: none;
+    }
+
+    .hero-btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        color: var(--brand-indigo);
+    }
+
+    /* 🛍️ Product Card Design */
+    .premium-product-card {
+        background: var(--card-bg-light);
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        transition: var(--transition-smooth);
+        overflow: hidden;
+    }
+
+    [data-bs-theme="dark"] .premium-product-card {
+        background: var(--card-bg-dark);
+        border-color: var(--border-dark);
+    }
+
+    .premium-product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.12);
+        border-color: rgba(79, 70, 229, 0.3);
+    }
+
+    [data-bs-theme="dark"] .premium-product-card:hover {
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Fixed Image Container */
+    .product-img-box {
+        height: 210px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background: #ffffff;
+        border-radius: 16px 16px 0 0;
+    }
+
+    [data-bs-theme="dark"] .product-img-box {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .custom-img {
+        max-height: 88%;
+        max-width: 88%;
+        object-fit: contain;
+        transition: transform 0.4s ease;
+    }
+
+    .premium-product-card:hover .custom-img {
+        transform: scale(1.08);
+    }
+
+    /* 👕 Glassmorphic Size Overlay */
+    .size-overlay-premium {
+        position: absolute;
+        bottom: -70px;
+        left: 0;
+        width: 100%;
+        background: var(--overlay-bg-light);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        text-align: center;
+        padding: 8px 4px;
+        transition: var(--transition-smooth);
+        opacity: 0;
+        z-index: 10;
+        border-top: 1px solid var(--border-light);
+    }
+
+    [data-bs-theme="dark"] .size-overlay-premium {
+        background: var(--overlay-bg-dark);
+        border-color: var(--border-dark);
+    }
+
+    .premium-product-card:hover .size-overlay-premium {
+        bottom: 0;
+        opacity: 1;
+    }
+
+    .size-badge-pill {
+        display: inline-block;
+        font-size: 0.68rem;
+        font-weight: 800;
+        color: var(--text-main-light);
+        background: rgba(79, 70, 229, 0.1);
+        padding: 2px 7px;
+        border-radius: 6px;
+        border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+
+    [data-bs-theme="dark"] .size-badge-pill {
+        color: var(--text-main-dark);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* 🏷️ Discount Badge */
+    .flipkart-arrow-badge {
+        position: absolute;
+        top: 12px;
+        left: 0;
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        color: #ffffff;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 4px 12px 4px 8px;
+        z-index: 12;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.3px;
+        box-shadow: 2px 4px 10px rgba(220, 38, 38, 0.3);
+        clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);
+    }
+
+    /* ❤️ Wishlist Button */
+    .wishlist-btn-premium {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--border-light);
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+        transition: var(--transition-smooth);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-bs-theme="dark"] .wishlist-btn-premium {
+        background: rgba(15, 23, 42, 0.8);
+        border-color: var(--border-dark);
+        color: #94a3b8;
+    }
+
+    .wishlist-btn-premium:hover {
+        transform: scale(1.12);
+        color: #ef4444;
+    }
+
+    /* Text Clamping */
+    .product-title-clamp {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        min-height: 38px;
+        min-height: 40px;
         font-size: 0.88rem;
-        line-height: 1.3;
-    }
-    body { background-color: #f8fafc; }  
-        .flipkart-arrow-badge {
-        position: absolute;
-        top: 12px;
-        left: 0;
-        background-color: #c62828; /* നല്ല ബ്രൈറ്റ് ഫ്ലിപ്കാർട്ട് റെഡ് നിറം */
-        color: #ffffff;
-        font-size: 0.72rem;
-        font-weight: 700;
-        padding: 3px 8px 3px 6px;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        letter-spacing: 0.3px;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
-        
-        /* 🏹 ഈ clip-path ആണ് വലതുവശത്ത് ആ അമ്പിന്റെ ആകൃതി (Arrow Shape) നൽകുന്നത് */
-        clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);
+        line-height: 1.35;
+        color: var(--text-main-light);
     }
 
-    /* കാർഡിന് മുകളിൽ മൗസ് വെക്കുമ്പോൾ ബാഡ്ജ് ചെറുതായി ഒന്ന് തിളങ്ങാൻ (Optional) */
-    .flipkart-card:hover .flipkart-arrow-badge {
-        background-color: #e53935;
-        transition: background 0.2s ease;
+    [data-bs-theme="dark"] .product-title-clamp {
+        color: var(--text-main-dark);
     }
-    .flipkart-green-discount {
-        color: #388e3c; /* ഫ്ലിപ്കാർട്ടിന്റെ കൃത്യമായ പച്ച നിറം */
-        font-weight: 600;
+
+    .discount-green-text {
+        color: #16a34a;
+        font-weight: 700;
         font-size: 0.82rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 2px; /* ടെക്സ്റ്റും അമ്പും തമ്മിലുള്ള അകലം */
-    }
-        .size-overlay {
-        position: absolute;
-        bottom: -60px; /* തുടക്കത്തിൽ താഴെ ഒളിച്ചിരിക്കും */
-        left: 0;
-        width: 100%;
-        background: rgba(255, 255, 255, 0.88); /* സെമി ട്രാൻസ്പെരന്റ് വൈറ്റ് */
-        backdrop-filter: blur(4px); /* പ്രീമിയം ഗ്ലാസ്സ് ലുക്ക് ബ്ലർ */
-        text-align: center;
-        padding: 6px 2px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        opacity: 0;
-        z-index: 5;
-        border-top: 1px solid rgba(0,0,0,0.05);
-    }
-    .size-badge-sm {
-        display: inline-block;
-        font-size: 0.7rem;
-        font-weight: 700;
-        color: #374151;
-        background: #f3f4f6;
-        padding: 2px 6px;
-        border-radius: 4px;
-        border: 1px solid #e5e7eb;
     }
 
-    /* കാർഡിലേക്ക് മൗസ് വരുമ്പോൾ സൈസ് ഓവർലേ മുകളിലേക്ക് വരും */
-    .flipkart-card:hover .size-overlay {
-        bottom: 0;
-        opacity: 1;
+    /* 🛡️ Feature Highlights Box */
+    .feature-pill {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 6px 16px;
+        font-size: 0.8rem;
+        font-weight: 600;
     }
-    
 </style>
-{% if user.is_authenticated %}
-    <div class="alert alert-success mt-3 shadow-sm border-0 rounded-3 d-flex align-items-center justify-content-between mx-4">
-        <span>👋 Welcome back, <strong>{{ user.first_name }}</strong>! Great to see you today.</span>
-    </div>
-{% endif %}
 
-<div class=" py-5 mb-5 text-center border-bottom">
-    <div class="container py-4">
-        <h1 class="display-4 fw-bold ">Welcome to RinCart</h1>
-        <p class="text-body-secondary fs-5 mt-2">നിങ്ങൾ ആഗ്രഹിക്കുന്നതെന്തും ഏറ്റവും കുറഞ്ഞ വിലയിൽ ഇവിടെ ലഭ്യമാണ്!</p>
-        <a href="#products" class="btn btn-primary btn-lg px-4 gap-3" style="background-color: #4f46e5; border:none;">Shop Now 👇</a>
-    </div>
-</div>
+<div class="container py-3">
 
-<div class="container-fluid mb-5 px-4" id="products">
-    <h3 class="fw-bold mb-4 text-center ">Featured Products</h3>
-    
-<div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 mt-0 ms-0 me-1">
-    {% for item in products %}
-    <div class="col mb-1">
-        <div class="position-relative h-100">
-            <!-- ❤️ വിഷ്‌ലിസ്റ്റ് ഹാർട്ട് ബട്ടൺ (കാർഡിന്റെ മുകളിൽ വലതുഭാഗത്ത് ഫ്ലോട്ട് ചെയ്തു നിൽക്കും) -->
-            <button class="wishlist-btn position-absolute top-0 end-0 m-3 bg-white shadow-sm rounded-circle d-flex align-items-center justify-content-center border-0" 
-                    data-item-id="{{ item.id }}"
-                    style="width: 32px; height: 32px; z-index: 15; border: 1px solid #f0f0f0;">
-                
-                {% if item.id in wishlist_ids %}
-                    <i class="bi bi-heart-fill text-danger" style="font-size: 0.9rem;"></i>
-                {% else %}
-                    <i class="bi bi-heart text-secondary" style="font-size: 0.9rem;"></i>
-                {% endif %}
-            </button>
-            
-            <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark d-block h-100">
-                <div class="card h-100 border-0 rounded-3 overflow-hidden flipkart-card position-relative d-flex flex-column bg-white p-2">
+    <!-- 👋 Welcome Alert Banner -->
+    {% if user.is_authenticated %}
+        <div class="alert alert-success alert-dismissible fade show border-0 rounded-4 shadow-xs mb-4 p-3 d-flex align-items-center justify-content-between" role="alert" style="background: rgba(34, 197, 94, 0.12); color: #15803d;">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-emoji-smile-fill fs-5"></i>
+                <span>Welcome back, <strong>{{ user.first_name|default:user.username }}</strong>! Ready to explore today's top deals?</span>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
 
-                    <div class="product-img-box d-flex align-items-center justify-content-center p-2 bg-white mt-2">
-                        <img src="{{ item.image.url }}" class="img-fluid custom-img" alt="{{ item.name }}">
-                        
-                        <!-- 🌟 Hover Sizes Overlay (ലൂപ്പ് ചെയ്ത് സൈസ് എടുക്കുന്നു) -->
-                        {% if item.variant.all %}
-                        <div class="size-overlay">
-                            <span class="d-block mb-1" style="font-size: 0.62rem; font-weight:700; text-transform: uppercase; letter-spacing:0.3px;">Sizes</span>
-                            <div class="d-flex justify-content-center flex-wrap gap-1">
-                                {% for var in item.variant.all %}
-                                    <span class="size-badge-sm">{{ var.size|upper }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% if item.original_price and item.original_price > item.price %}
-                    <div class="flipkart-arrow-badge">
-                        <span>{{ item.discount_percentage }}% OFF</span>
-                    </div>
-                    {% endif %}
-                    <div class="card-body d-flex flex-column justify-content-between p-2 pt-1">
-                        
-                        <div class="mb-1">
-                            <h6 class="card-title fw-medium text-secondary mb-1 text-truncate-2" title="{{ item.name }}">
-                                {{ item.name }}
-                            </h6>
-                            <p class="text-muted mb-0" style="font-size: 0.75rem;">Premium Quality</p>
-                        </div>
-                        
-                        <div class="mt-2">
-                            <div class="d-flex align-items-center gap-1.5 flex-wrap">
-                                {% if item.original_price and item.original_price > item.price %}
-                                
-                                <span class="flipkart-green-discount">
-                                    {{ item.discount_percentage }}% <i class="bi bi-arrow-down"></i>
-                                </span>
-                                
-                                <span class="text-muted text-decoration-line-through " style="font-size: 0.8rem;">
-                                    ₹{{ item.original_price  }} 
-                                </span>
-                                
-                                {% endif %}
-                                <span class="fs-5 fw-bold ms-1">₹{{ item.price }}</span>
-                                
-                            </div>
+    <!-- 🚀 Hero Callout Banner -->
+    <div class="hero-wrapper p-4 p-md-5 mb-5 text-center text-md-start position-relative">
+        <div class="hero-pattern"></div>
+        
+        <div class="row align-items-center position-relative" style="z-index: 2;">
+            <div class="col-lg-8">
+                <span class="badge bg-white text-dark rounded-pill px-3 py-1.5 fw-extrabold mb-3 shadow-xs">
+                    ⚡ Super Saver Mega Sale
+                </span>
+                <h1 class="display-4 fw-extrabold mb-2 text-white">Welcome to RinCart</h1>
+                <p class="fs-5 opacity-90 mb-4 text-white">
+                    നിങ്ങൾ ആഗ്രഹിക്കുന്നതെന്തും ഏറ്റവും കുറഞ്ഞ വിലയിൽ ഇവിടെ ലഭ്യമാണ്!
+                </p>
 
-                            <div class="mt-1">
-                                <small class="text-muted" style="font-size: 0.7rem; font-weight: 500;">Free Delivery</small>
-                            </div>
-                        </div>
-
-                    </div>
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2 mb-4">
+                    <span class="feature-pill"><i class="bi bi-truck me-1"></i> Fast Delivery</span>
+                    <span class="feature-pill"><i class="bi bi-shield-check me-1"></i> Quality Assured</span>
+                    <span class="feature-pill"><i class="bi bi-arrow-counterclockwise me-1"></i> Easy Returns</span>
                 </div>
-            </a>
+
+                <div>
+                    <a href="#products" class="btn hero-btn-primary shadow-sm d-inline-flex align-items-center gap-2">
+                        <span>Shop Now</span>
+                        <i class="bi bi-arrow-down-circle-fill"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-    {% endfor %}
+
+    <!-- 🛍️ Featured Products Section -->
+    <div id="products" class="pt-2 mb-5">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h3 class="fw-extrabold mb-1">Featured Products</h3>
+                <p class="text-secondary small mb-0">Handpicked items curated for your daily lifestyle</p>
+            </div>
+        </div>
+
+        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">
+            {% for item in products %}
+            <div class="col">
+                <div class="position-relative h-100">
+                    
+                    <!-- ❤️ Wishlist Button -->
+                    <button class="wishlist-btn-premium position-absolute top-0 end-0 m-2.5" 
+                            data-item-id="{{ item.id }}"
+                            title="Add to Wishlist">
+                        {% if item.id in wishlist_ids %}
+                            <i class="bi bi-heart-fill text-danger fs-6"></i>
+                        {% else %}
+                            <i class="bi bi-heart fs-6"></i>
+                        {% endif %}
+                    </button>
+
+                    <!-- 🔗 Product Detail Link -->
+                    <a href="{% url 'product_detail' item.id %}" class="text-decoration-none d-block h-100">
+                        <div class="card h-100 premium-product-card p-2 d-flex flex-column">
+
+                            <!-- Image Container -->
+                            <div class="product-img-box d-flex align-items-center justify-content-center">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" class="img-fluid custom-img" alt="{{ item.name }}">
+                                {% else %}
+                                    <i class="bi bi-box-seam text-secondary display-6"></i>
+                                {% endif %}
+                                
+                                <!-- 👕 Sizes Available Hover Overlay -->
+                                {% if item.variant.all %}
+                                <div class="size-overlay-premium">
+                                    <span class="d-block text-secondary mb-1" style="font-size: 0.62rem; font-weight:800; text-transform: uppercase; letter-spacing:0.5px;">Sizes</span>
+                                    <div class="d-flex justify-content-center flex-wrap gap-1">
+                                        {% for var in item.variant.all %}
+                                            <span class="size-badge-pill">{{ var.size|upper }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if item.original_price and item.original_price > item.price %}
+                                <!-- 🏷️ Discount Badge -->
+                                <div class="flipkart-arrow-badge">
+                                    <span>{{ item.discount_percentage }}% OFF</span>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Card Details -->
+                            <div class="card-body p-2 pt-3 d-flex flex-column justify-content-between flex-grow-1">
+                                
+                                <div class="mb-2">
+                                    <h6 class="fw-bold product-title-clamp mb-1" title="{{ item.name }}">
+                                        {{ item.name }}
+                                    </h6>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 rounded-pill px-2 py-0.5" style="font-size: 0.68rem;">
+                                        Premium Quality
+                                    </span>
+                                </div>
+                                
+                                <div>
+                                    <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                                        <span class="fs-5 fw-extrabold text-body">₹{{ item.price }}</span>
+                                        
+                                        {% if item.original_price and item.original_price > item.price %}
+                                        <span class="text-secondary text-decoration-line-through small opacity-75">
+                                            ₹{{ item.original_price }} 
+                                        </span>
+                                        <span class="discount-green-text ms-auto">
+                                            {{ item.discount_percentage }}% <i class="bi bi-arrow-down-short"></i>
+                                        </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="mt-1 d-flex align-items-center justify-content-between">
+                                        <small class="text-success fw-bold" style="font-size: 0.7rem;">
+                                            <i class="bi bi-truck me-0.5"></i> Free Delivery
+                                        </small>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5 w-100">
+                <i class="bi bi-box-seam text-secondary display-4 d-block mb-3"></i>
+                <h5 class="fw-bold">No featured products right now</h5>
+                <p class="text-secondary small">Please check back soon for our latest arrivals.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
 </div>
+
+<!-- ⚡ Wishlist Interactivity Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const getCookie = (name) => {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        };
+
+        const csrftoken = getCookie('csrftoken');
+
+        document.querySelectorAll('.wishlist-btn-premium').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const itemId = this.getAttribute('data-item-id');
+                const heartIcon = this.querySelector('i');
+
+                // Quick scale animation feedback
+                this.style.transform = 'scale(1.3)';
+                setTimeout(() => this.style.transform = '', 200);
+
+                if (heartIcon.classList.contains('bi-heart-fill')) {
+                    heartIcon.className = 'bi bi-heart fs-6';
+                    heartIcon.classList.remove('text-danger');
+                } else {
+                    heartIcon.className = 'bi bi-heart-fill text-danger fs-6';
+                }
+
+                // CSRF Fetch Request
+                fetch(`/wishlist/toggle/${itemId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json'
+                    }
+                }).catch(err => console.log('Wishlist action updated visually.'));
+            });
+        });
+    });
+</script>
 
 {% endblock %}
