@@ -1,43 +1,221 @@
 {% extends 'base.html' %}
 {% block title %}
-Confirm Cancel
+Cancellation Confirmed — RinCart
 {% endblock %}
 {% block content %}
-<div class="container d-flex justify-content-center my-5">
-   <div class="card shadow-lg border-0 text-center p-4 p-sm-5 rounded-4" style="max-width: 480px; width: 100%; background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);">
-      
-      <div class="mb-4">
-         <div class="bg-danger bg-opacity-10 d-inline-block rounded-circle p-3 shadow-sm">
-            <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem; line-height: 1;"></i>
-         </div>
-      </div>
 
-      <h4 class="fw-bold text-danger mb-2">Cancellation Confirmed!</h4>
-      <p class="text-dark px-2 small">Your cancellation has been successfully completed. The amount will be processed as per policy.</p>
-      
-      <hr class="my-4 text-muted opacity-25">
+<!-- 🔤 Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-      <div class="d-flex align-items-center gap-3 bg-light p-3 rounded-3 text-start border border-dashed mb-4">
-         {% if product.image.url %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 70px; height: 70px; object-fit: contain;" class="bg-white p-1 rounded border shadow-sm">
-         {% else %}
-            <div class="bg-white p-1 rounded border shadow-sm d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
-               <i class="bi bi-box-seam text-secondary fs-3"></i>
+<!-- 🎨 Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    :root {
+        --brand-gold: #ffb703;
+        --brand-orange: #fb8500;
+        --brand-gradient: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
+        --brand-glow: rgba(255, 183, 3, 0.25);
+        
+        --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        --danger-glow: rgba(239, 68, 68, 0.25);
+        
+        --bg-light: #f8fafc;
+        --bg-dark: #030712;
+        
+        --card-light: #ffffff;
+        --card-dark: #0f172a;
+        
+        --border-light: rgba(226, 232, 240, 0.8);
+        --border-dark: rgba(255, 255, 255, 0.08);
+
+        --transition-smooth: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-light);
+        color: #0f172a;
+    }
+
+    [data-bs-theme="dark"] body {
+        background-color: var(--bg-dark) !important;
+        color: #f8fafc !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* 💎 Cancellation Hero Card */
+    .cancel-card {
+        background: var(--card-light);
+        border: 1px solid var(--border-light);
+        border-radius: 28px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
+        transition: var(--transition-smooth);
+        overflow: hidden;
+    }
+
+    [data-bs-theme="dark"] .cancel-card {
+        background: var(--card-dark);
+        border-color: var(--border-dark);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Accent Top Bar */
+    .card-accent-bar-danger {
+        height: 6px;
+        width: 100%;
+        background: var(--danger-gradient);
+    }
+
+    /* Animated Icon Badge */
+    .cancel-icon-badge {
+        width: 90px;
+        height: 90px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(239, 68, 68, 0.12);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.3);
+        animation: popScale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes popScale {
+        0% { transform: scale(0); opacity: 0; }
+        70% { transform: scale(1.12); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Item Box */
+    .cancelled-item-box {
+        background: rgba(248, 250, 252, 0.8);
+        border: 1px dashed rgba(239, 68, 68, 0.3);
+        border-radius: 18px;
+    }
+
+    [data-bs-theme="dark"] .cancelled-item-box {
+        background: rgba(30, 41, 59, 0.4);
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .product-img-wrap {
+        width: 68px;
+        height: 68px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-light);
+    }
+
+    [data-bs-theme="dark"] .product-img-wrap {
+        border-color: var(--border-dark);
+    }
+
+    /* 🏷️ Refund Status Info Box */
+    .refund-info-banner {
+        background: rgba(239, 68, 68, 0.06);
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: 16px;
+    }
+
+    /* 🚀 Action Buttons */
+    .btn-cancel-return {
+        background: var(--danger-gradient);
+        color: white;
+        border: none;
+        font-weight: 700;
+        border-radius: 16px;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-cancel-return:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px -6px var(--danger-glow);
+        color: white;
+    }
+</style>
+
+<div class="container py-4 py-md-5 d-flex justify-content-center">
+    
+    <div class="card cancel-card text-center" style="max-width: 520px; width: 100%;">
+        <div class="card-accent-bar-danger"></div>
+
+        <div class="p-4 p-sm-5">
+            
+            <!-- 🌟 Animated Hero Icon -->
+            <div class="mb-4">
+                <div class="cancel-icon-badge mb-3">
+                    <i class="bi bi-x-lg display-5"></i>
+                </div>
+                <h3 class="fw-extrabold text-danger mb-1">Cancellation Confirmed</h3>
+                <p class="text-secondary small mb-0 px-2">
+                    Your order cancellation request has been successfully processed.
+                </p>
             </div>
-         {% endif %}
-         <div class="flex-grow-1">
-            <h6 class="fw-bold text-dark mb-1 text-truncate" style="max-width: 250px;">{{ product.name }}</h6>
-            <small class="text-muted d-block">Quantity: {{ quantity }}</small>
-            <span class="fw-bold text-danger small">Cancelled Price: ₹{{ price|floatformat:2 }}</span>
-         </div>
-      </div>
 
-      <div class="d-grid gap-2">
-         <a href="{% url 'view_deals' %}" class="btn btn-danger py-2.5 fw-bold rounded-3 shadow-sm" style="background-color: #ef4444; border: none;">
-            <i class="bi bi-arrow-left me-1"></i> Back to Exclusive Deals
-         </a>
-      </div>
+            <!-- 📦 Cancelled Item Details Box -->
+            <div class="cancelled-item-box p-3 text-start mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    
+                    <div class="product-img-wrap bg-body-tertiary d-flex align-items-center justify-content-center">
+                        {% if product.image.url %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% elif item.product.image.url %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <i class="bi bi-box-seam text-secondary fs-3"></i>
+                        {% endif %}
+                    </div>
 
-   </div>
+                    <div class="flex-grow-1" style="min-width: 0;">
+                        <h6 class="fw-bold mb-1 text-truncate" title="{{ product.name|default:item.product.name }}">
+                            {{ product.name|default:item.product.name }}
+                        </h6>
+                        
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">
+                                Qty: {{ quantity|default:item.quantity|default:1 }}
+                            </span>
+                        </div>
+
+                        <span class="fw-extrabold text-danger small">
+                            Amount: ₹{% if price %}{{ price|floatformat:2 }}{% elif item.final_amount %}{{ item.final_amount|floatformat:2 }}{% else %}{{ product.price|floatformat:2 }}{% endif %}
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 💳 Refund Info Banner -->
+            <div class="refund-info-banner p-3 text-start mb-4">
+                <div class="d-flex gap-2.5 align-items-start">
+                    <i class="bi bi-info-circle-fill text-danger fs-5 lh-1 mt-0.5"></i>
+                    <div>
+                        <h6 class="fw-bold text-danger mb-0.5" style="font-size: 0.88rem;">Refund Processing</h6>
+                        <p class="text-secondary small mb-0" style="font-size: 0.78rem;">
+                            If payment was already completed, your refund will be automatically credited back to your original payment method within 3–5 business days.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🚀 Action Navigation Button -->
+            <div class="d-grid gap-2">
+                <a href="{% url 'view_deals' %}" class="btn btn-cancel-return py-3 px-4 d-flex align-items-center justify-content-center gap-2 shadow-xs">
+                    <i class="bi bi-arrow-left fs-6"></i>
+                    <span>Back to Exclusive Deals</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
 </div>
-{% endblock %} 
+
+{% endblock %}
