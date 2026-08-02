@@ -1,32 +1,186 @@
-
 {% extends 'base.html' %}
+
 {% block title %}
+Mobile Phones — Explore Deals | RinCart
 {% endblock %}
+
 {% block content %}
+
+<!-- 🔤 Typography & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <style>
-    .flipkart-card {
-        border: 1px solid #f0f0f0 !important;
-        transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-    }
-    
-    /* Hover Effect: ബോർഡറിന് പകരം ചെറുതായൊരു നിഴൽ വരും */
-    .flipkart-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    :root {
+        --brand-indigo: #667eea;
+        --brand-purple: #764ba2;
+        --brand-accent: #4f46e5;
+        --brand-glow: rgba(79, 70, 229, 0.25);
+        
+        --bg-card: #ffffff;
+        --border-subtle: rgba(226, 232, 240, 0.8);
+        --text-main: #0f172a;
+        --text-sub: #64748b;
+
+        --badge-bg: rgba(255, 255, 255, 0.9);
+        --transition-base: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Fixed Image Wrapper */
-    .product-img-box {
-        height: 180px;
-        width: 100%;
+    [data-bs-theme="dark"] {
+        --bg-card: #0f172a;
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --text-main: #f8fafc;
+        --text-sub: #94a3b8;
+        --badge-bg: rgba(15, 23, 42, 0.85);
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* 🎛️ Filter Card Styling */
+    .filter-card-premium {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+        transition: var(--transition-base);
+    }
+
+    .price-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 18px;
+        border: 1px solid var(--border-subtle);
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-main);
+        text-decoration: none;
+        transition: var(--transition-base);
+        background: var(--bg-card);
+        white-space: nowrap;
+    }
+
+    .price-chip:hover {
+        border-color: var(--brand-accent);
+        color: var(--brand-accent);
+        background-color: rgba(79, 70, 229, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .price-chip.active {
+        background-color: var(--brand-accent);
+        border-color: var(--brand-accent);
+        color: #ffffff !important;
+        box-shadow: 0 6px 16px var(--brand-glow);
+    }
+
+    .clear-filter-link {
+        font-size: 0.85rem;
+        color: #ef4444;
+        text-decoration: none;
+        font-weight: 600;
+        transition: opacity 0.2s ease;
+    }
+
+    .clear-filter-link:hover {
+        opacity: 0.8;
+        text-decoration: underline;
+    }
+
+    /* 📱 Product Card Styling */
+    .premium-mobile-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        transition: var(--transition-base);
         overflow: hidden;
     }
-    .custom-img {
-        max-height: 100%;
-        object-fit: contain;
+
+    .premium-mobile-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.12);
+        border-color: rgba(79, 70, 229, 0.3);
     }
 
-    /* Text Clamping to exactly 2 Lines */
-    .text-truncate-2 {
+    [data-bs-theme="dark"] .premium-mobile-card:hover {
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+    }
+
+    .product-img-wrapper {
+        height: 200px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background: #ffffff;
+        border-radius: 16px 16px 0 0;
+    }
+
+    [data-bs-theme="dark"] .product-img-wrapper {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .custom-img {
+        max-height: 88%;
+        max-width: 88%;
+        object-fit: contain;
+        transition: transform 0.4s ease;
+    }
+
+    .premium-mobile-card:hover .custom-img {
+        transform: scale(1.08);
+    }
+
+    /* 🏷️ Discount Badge */
+    .arrow-badge-discount {
+        position: absolute;
+        top: 12px;
+        left: 0;
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        color: #ffffff;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 4px 12px 4px 8px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.3px;
+        box-shadow: 2px 4px 10px rgba(220, 38, 38, 0.3);
+        clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);
+    }
+
+    /* ❤️ Wishlist Floating Button */
+    .wishlist-btn-pill {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--badge-bg);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-sub);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 15;
+        transition: var(--transition-base);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .wishlist-btn-pill:hover {
+        transform: scale(1.12);
+        color: #ef4444;
+    }
+
+    .text-truncate-clamp {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -34,188 +188,230 @@
         text-overflow: ellipsis;
         min-height: 38px;
         font-size: 0.88rem;
-        line-height: 1.3;
+        line-height: 1.35;
+        color: var(--text-main);
     }
 
-    /* Filter Card Settings */
-    .filter-card {
-        background: #ffffff;
-        border: none;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-        padding: 20px;
-    }
-    .clear-filter-btn {
-        font-size: 0.85rem;
-        color: #ef4444;
-        text-decoration: none;
-        font-weight: 500;
-    }
-    .clear-filter-btn:hover {
-        text-decoration: underline;
-    }
-    .price-filter-btn {
-        display: inline-block;
-        padding: 10px 16px;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        font-weight: 500;
-        font-size: 0.85rem;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        margin-right: 8px;
-        margin-bottom: 8px;
-    }
-    .price-filter-btn:hover {
-        border-color: #4f46e5;
-        color: #4f46e5;
-        background-color: #f5f3ff;
-    }
-    .price-filter-btn.active {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-        color: #ffffff;
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-    }
-    .flipkart-arrow-badge {
-        position: absolute;
-        top: 12px;
-        left: 0;
-        background-color: #c62828; /* നല്ല ബ്രൈറ്റ് ഫ്ലിപ്കാർട്ട് റെഡ് നിറം */
-        color: #ffffff;
-        font-size: 0.72rem;
+    .green-discount-tag {
+        color: #16a34a;
         font-weight: 700;
-        padding: 3px 8px 3px 6px;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        letter-spacing: 0.3px;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
-        
-        /* 🏹 ഈ clip-path ആണ് വലതുവശത്ത് ആ അമ്പിന്റെ ആകൃതി (Arrow Shape) നൽകുന്നത് */
-        clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);
-    }
-
-    /* കാർഡിന് മുകളിൽ മൗസ് വെക്കുമ്പോൾ ബാഡ്ജ് ചെറുതായി ഒന്ന് തിളങ്ങാൻ (Optional) */
-    .flipkart-card:hover .flipkart-arrow-badge {
-        background-color: #e53935;
-        transition: background 0.2s ease;
-    }
-    .flipkart-green-discount {
-        color: #388e3c; /* ഫ്ലിപ്കാർട്ടിന്റെ കൃത്യമായ പച്ച നിറം */
-        font-weight: 600;
         font-size: 0.82rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 2px; /* ടെക്സ്റ്റും അമ്പും തമ്മിലുള്ള അകലം */
     }
 
-    /* അമ്പടയാളം ചെറുതായി ഒന്ന് അനങ്ങാൻ (Optional Hover Animation) */
-    .flipkart-card:hover .flipkart-green-discount i {
-        transform: translateY(2px);
-        transition: transform 0.2s ease;
+    .horizontal-scroll-container {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+    }
+    
+    .horizontal-scroll-container::-webkit-scrollbar {
+        display: none;
     }
 </style>
-<div class="card filter-card mb-5 mx-2">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+
+<div class="container py-4">
+
+    <!--  Header Section -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h5 class="fw-bold mb-0"><i class="bi bi-sliders me-2 text-primary"></i>Filter Products</h5>
-            <p class="text-muted small mb-0">Refine your search by price range</p>
+            <h2 class="fw-extrabold mb-1">Mobile Phones</h2>
+            <p class="text-secondary small mb-0">Browse top smartphones with exclusive budget deals</p>
         </div>
-        {% if selected_price %}
-            <a href="?" class="clear-filter-btn"><i class="bi bi-x-circle me-1"></i>Clear All Filters</a>
-        {% endif %}
     </div>
 
-    <div class="row g-4">
-        <div class="col-12  ps-md-4">
-            <span class="small text-uppercase fw-bold text-muted d-block mb-2">Budget Range:</span>
-            <div class="d-flex flex-wrap align-items-center">
-                <a href="?price=under_2000{% if selected_size %}&size={{ selected_size }}{% endif %}" class="price-filter-btn {% if selected_price == 'under_2000' %}active{% endif %}">Under ₹2000</a>
-                <a href="?price=2000_10000{% if selected_size %}&size={{ selected_size }}{% endif %}" class="price-filter-btn {% if selected_price == '2000_10000' %}active{% endif %}">₹2000 - ₹10000</a>
-                <a href="?price=10000_20000{% if selected_size %}&size={{ selected_size }}{% endif %}" class="price-filter-btn {% if selected_price == '10000_20000' %}active{% endif %}">₹10000 - ₹20000</a>
-                <a href="?price=20000_30000{% if selected_size %}&size={{ selected_size }}{% endif %}" class="price-filter-btn {% if selected_price == '20000_30000' %}active{% endif %}">₹20000 - ₹30000</a>
-                <a href="?price=30000_40000{% if selected_size %}&size={{ selected_size }}{% endif %}" class="price-filter-btn {% if selected_price == '30000_40000' %}active{% endif %}">₹30000 - ₹40000</a>
-                <a href="?price=above_40000{% if selected_size %}&size={{ selected_size }}{% endif %}" class="price-filter-btn {% if selected_price == 'above_40000' %}active{% endif %}">Over ₹40000</a>
+    <!-- 🎛️ Filter Products Section -->
+    <div class="card filter-card-premium mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h6 class="fw-bold mb-0 text-body d-flex align-items-center gap-2">
+                    <i class="bi bi-sliders text-primary fs-5"></i>
+                    <span>Filter By Price</span>
+                </h6>
+            </div>
+            {% if selected_price %}
+                <a href="?" class="clear-filter-link d-flex align-items-center gap-1">
+                    <i class="bi bi-x-circle-fill"></i> Clear Filters
+                </a>
+            {% endif %}
+        </div>
+
+        <div>
+            <span class="small text-uppercase fw-bold text-secondary d-block mb-2 style="letter-spacing: 0.5px; font-size: 0.72rem;">
+                Select Budget Range:
+            </span>
+            <div class="horizontal-scroll-container">
+                <a href="?price=under_2000{% if selected_size %}&size={{ selected_size }}{% endif %}" 
+                   class="price-chip {% if selected_price == 'under_2000' %}active{% endif %}">
+                   Under ₹2,000
+                </a>
+                <a href="?price=2000_10000{% if selected_size %}&size={{ selected_size }}{% endif %}" 
+                   class="price-chip {% if selected_price == '2000_10000' %}active{% endif %}">
+                   ₹2,000 - ₹10,000
+                </a>
+                <a href="?price=10000_20000{% if selected_size %}&size={{ selected_size }}{% endif %}" 
+                   class="price-chip {% if selected_price == '10000_20000' %}active{% endif %}">
+                   ₹10,000 - ₹20,000
+                </a>
+                <a href="?price=20000_30000{% if selected_size %}&size={{ selected_size }}{% endif %}" 
+                   class="price-chip {% if selected_price == '20000_30000' %}active{% endif %}">
+                   ₹20,000 - ₹30,000
+                </a>
+                <a href="?price=30000_40000{% if selected_size %}&size={{ selected_size }}{% endif %}" 
+                   class="price-chip {% if selected_price == '30000_40000' %}active{% endif %}">
+                   ₹30,000 - ₹40,000
+                </a>
+                <a href="?price=above_40000{% if selected_size %}&size={{ selected_size }}{% endif %}" 
+                   class="price-chip {% if selected_price == 'above_40000' %}active{% endif %}">
+                   Over ₹40,000
+                </a>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 mt-2 mb-5 ms-1">
-    {% for item in productss %}
-    <div class="col">
-        <!-- 🌟 വിഷ്‌ലിസ്റ്റ് ബട്ടൺ കൃത്യമായി വർക്ക് ചെയ്യാൻ വേണ്ടി ഇവിടെ ഒരു position-relative ഡിവൈഡർ നൽകുന്നു -->
-        <div class="position-relative h-100">
-            
-            <!-- ❤️ വിഷ്‌ലിസ്റ്റ് ഹാർട്ട് ബട്ടൺ (കാർഡിന്റെ മുകളിൽ വലതുഭാഗത്ത് ഫ്ലോട്ട് ചെയ്തു നിൽക്കും) -->
-            <button class="wishlist-btn position-absolute top-0 end-0 m-3 bg-white shadow-sm rounded-circle d-flex align-items-center justify-content-center border-0" 
-                    data-item-id="{{ item.id }}"
-                    style="width: 32px; height: 32px; z-index: 15; border: 1px solid #f0f0f0;">
+    <!-- 📱 Product Cards Grid -->
+    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4 mb-5">
+        {% for item in productss %}
+        <div class="col">
+            <div class="position-relative h-100">
                 
-                {% if item.id in wishlist_ids %}
-                    <i class="bi bi-heart-fill text-danger" style="font-size: 0.9rem;"></i>
-                {% else %}
-                    <i class="bi bi-heart text-secondary" style="font-size: 0.9rem;"></i>
-                {% endif %}
-            </button>
-
-            <!-- പ്രൊഡക്റ്റ് ഡീറ്റൈൽ പേജിലേക്കുള്ള മെയിൻ ലിങ്ക് -->
-            <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark d-block h-100">
-                <div class="card h-100 border-0 rounded-3 overflow-hidden flipkart-card position-relative d-flex flex-column bg-white p-2">
-
-                    <div class="product-img-box d-flex align-items-center justify-content-center p-2 bg-white mt-2">
-                        <img src="{{ item.image.url }}" class="img-fluid custom-img" alt="{{ item.name }}">
-                    </div>
-                    
-                    {% if item.original_price and item.original_price > item.price %}
-                    <!-- ഡിസ്‌കൗണ്ട് ബാഡ്ജ് ഇടതുവശത്ത് വരും -->
-                    <div class="flipkart-arrow-badge" style="z-index: 10;">
-                        <span>{{ item.discount_percentage }}% OFF</span>
-                    </div>
+                <!-- ❤️ Wishlist Action Button -->
+                <button class="wishlist-btn-pill position-absolute top-0 end-0 m-2.5" 
+                        data-item-id="{{ item.id }}"
+                        title="Add to Wishlist">
+                    {% if item.id in wishlist_ids %}
+                        <i class="bi bi-heart-fill text-danger fs-6"></i>
+                    {% else %}
+                        <i class="bi bi-heart fs-6"></i>
                     {% endif %}
-                    
-                    <div class="card-body d-flex flex-column justify-content-between p-2 pt-1">
-                        
-                        <div class="mb-1">
-                            <h6 class="card-title fw-medium  mb-1 text-truncate-2" title="{{ item.name }}">
-                                {{ item.name }}
-                            </h6>
-                            <p class="text-muted mb-0" style="font-size: 0.75rem;">Premium Quality</p>
-                        </div>
-                        
-                        <div class="mt-2">
-                            <div class="d-flex align-items-center gap-1.5 flex-wrap">
-                                {% if item.original_price and item.original_price > item.price %}
-                                <span class="flipkart-green-discount">
-                                    {{ item.discount_percentage }}% <i class="bi bi-arrow-down"></i>
-                                </span>
-                                <span class="text-muted text-decoration-line-through" style="font-size: 0.8rem;">
-                                    ₹{{ item.original_price }} 
-                                </span>
-                                {% endif %}
-                                <span class="fs-5 fw-bold ms-1">₹{{ item.price }}</span>
-                            </div>
+                </button>
 
-                            <div class="mt-1">
-                                <small class="text-muted" style="font-size: 0.7rem; font-weight: 500;">Free Delivery</small>
+                <!-- Product Detail Navigation Link -->
+                <a href="{% url 'product_detail' item.id %}" class="text-decoration-none d-block h-100">
+                    <div class="card h-100 premium-mobile-card p-2 d-flex flex-column">
+
+                        <!-- Image Container -->
+                        <div class="product-img-wrapper d-flex align-items-center justify-content-center">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" class="img-fluid custom-img" alt="{{ item.name }}">
+                            {% else %}
+                                <i class="bi bi-phone text-secondary display-6"></i>
+                            {% endif %}
+
+                            {% if item.original_price and item.original_price > item.price %}
+                            <!-- Discount Badge -->
+                            <div class="arrow-badge-discount">
+                                <span>{{ item.discount_percentage }}% OFF</span>
                             </div>
+                            {% endif %}
                         </div>
 
+                        <!-- Card Information -->
+                        <div class="card-body p-2 pt-3 d-flex flex-column justify-content-between flex-grow-1">
+                            
+                            <div class="mb-2">
+                                <h6 class="fw-bold text-truncate-clamp mb-1" title="{{ item.name }}">
+                                    {{ item.name }}
+                                </h6>
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 rounded-pill px-2 py-0.5" style="font-size: 0.68rem;">
+                                    Premium Quality
+                                </span>
+                            </div>
+                            
+                            <div>
+                                <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                                    <span class="fs-5 fw-extrabold text-body">₹{{ item.price }}</span>
+
+                                    {% if item.original_price and item.original_price > item.price %}
+                                    <span class="text-secondary text-decoration-line-through small opacity-75">
+                                        ₹{{ item.original_price }}
+                                    </span>
+                                    <span class="green-discount-tag ms-auto">
+                                        {{ item.discount_percentage }}% <i class="bi bi-arrow-down-short"></i>
+                                    </span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mt-1 d-flex align-items-center justify-content-between">
+                                    <small class="text-success fw-bold" style="font-size: 0.7rem;">
+                                        <i class="bi bi-truck me-0.5"></i> Free Delivery
+                                    </small>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
+        {% empty %}
+        <div class="col-12 text-center py-5 w-100">
+            <i class="bi bi-phone-vibrate text-secondary display-4 d-block mb-3 opacity-50"></i>
+            {% if selected_price %}
+                <h5 class="fw-bold text-body">No mobile phones found</h5>
+                <p class="text-secondary small mb-3">There are no devices available in the selected budget range.</p>
+                <a href="?" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-xs" style="background-color: var(--brand-accent); border:none;">
+                    <i class="bi bi-arrow-left me-1"></i> View All Mobile Phones
+                </a>
+            {% else %}
+                <h5 class="fw-bold text-body">No products listed</h5>
+                <p class="text-secondary small">Check back soon for new arrivals.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
     </div>
-    {% empty %}
-    <div class="col-12 text-center py-5 w-100">
-        {% if selected_price %}
-        <i class="bi bi-emoji-frown text-muted display-4"></i>
-        <p class="text-muted mt-2">Sorry, no mobiles available in "₹{{ selected_price }}"</p>
-        <a href="?" class="btn btn-primary btn-sm px-4 rounded-3 fw-medium" style="background-color: #4f46e5; border:none;">View All Mobiles</a>
-        {% endif %}
-    </div>
-    {% endfor %}
+
 </div>
+
+<!-- ⚡ Wishlist AJAX Interactivity Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const getCookie = (name) => {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        };
+
+        const csrftoken = getCookie('csrftoken');
+
+        document.querySelectorAll('.wishlist-btn-pill').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const itemId = this.getAttribute('data-item-id');
+                const heartIcon = this.querySelector('i');
+
+                this.style.transform = 'scale(1.25)';
+                setTimeout(() => this.style.transform = '', 200);
+
+                if (heartIcon.classList.contains('bi-heart-fill')) {
+                    heartIcon.className = 'bi bi-heart fs-6';
+                    heartIcon.classList.remove('text-danger');
+                } else {
+                    heartIcon.className = 'bi bi-heart-fill text-danger fs-6';
+                }
+
+                fetch(`/wishlist/toggle/${itemId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json'
+                    }
+                }).catch(err => console.log('Wishlist state updated locally.'));
+            });
+        });
+    });
+</script>
 
 {% endblock %}
