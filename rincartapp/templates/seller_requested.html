@@ -1,28 +1,376 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Pending | RinCart</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <title>Application Pending — RinCart Merchant Hub</title>
+
+    <!-- 🔤 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- 🎨 Bootstrap 5.3.3 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-amber: #f59e0b;
+            --brand-orange: #ea580c;
+            --brand-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --glow-amber: rgba(245, 158, 11, 0.25);
+            
+            --bg-light: #f8fafc;
+            --bg-dark: #030712;
+            
+            --card-light: #ffffff;
+            --card-dark: #0f172a;
+            
+            --border-light: rgba(226, 232, 240, 0.9);
+            --border-dark: rgba(255, 255, 255, 0.08);
+
+            --transition-smooth: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: #0f172a;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 2rem 1rem;
+        }
+
+        [data-bs-theme="dark"] body {
+            background-color: var(--bg-dark) !important;
+            color: #f8fafc !important;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* 💎 Ambient Background Blur */
+        .ambient-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(234, 88, 12, 0.05) 70%, transparent 100%);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 📦 Pending Card Container */
+        .status-card {
+            position: relative;
+            z-index: 10;
+            border: 1px solid var(--border-light);
+            border-radius: 32px;
+            background: var(--card-light);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.07);
+            transition: var(--transition-smooth);
+            overflow: hidden;
+            max-width: 580px;
+            width: 100%;
+        }
+
+        [data-bs-theme="dark"] .status-card {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-accent-bar {
+            height: 6px;
+            width: 100%;
+            background: var(--brand-gradient);
+        }
+
+        /* ⏳ Animated Hourglass Badge */
+        .icon-badge-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 96px;
+            height: 96px;
+            border-radius: 30px;
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--brand-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 25px -5px var(--glow-amber);
+        }
+
+        .icon-badge-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 36px;
+            border: 1.5px dashed rgba(245, 158, 11, 0.4);
+            animation: rotate-ring 12s linear infinite;
+        }
+
+        @keyframes rotate-ring {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-pulse {
+            animation: pulse-flip 3s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        @keyframes pulse-flip {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 1; }
+        }
+
+        /* 📍 Timeline Indicator */
+        .timeline-step {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .timeline-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .timeline-icon.completed {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .timeline-icon.active {
+            background: var(--brand-amber);
+            color: #ffffff;
+            box-shadow: 0 0 0 4px var(--glow-amber);
+            animation: ring-pulse 2s infinite;
+        }
+
+        .timeline-icon.upcoming {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        @keyframes ring-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+            70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: rgba(148, 163, 184, 0.25);
+            z-index: 1;
+        }
+
+        .timeline-line.active {
+            background: var(--brand-amber);
+        }
+
+        /* 🚀 Action Buttons */
+        .btn-brand-outline {
+            border: 2px solid var(--border-light);
+            color: var(--text-main);
+            font-weight: 700;
+            border-radius: 16px;
+            padding: 0.85rem 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        [data-bs-theme="dark"] .btn-brand-outline {
+            border-color: var(--border-dark);
+            color: #f8fafc;
+        }
+
+        .btn-brand-outline:hover {
+            border-color: var(--brand-amber);
+            background: rgba(245, 158, 11, 0.08);
+            color: var(--brand-amber);
+            transform: translateY(-2px);
+        }
+
+        /* 🌓 Theme Button Pill */
+        .theme-toggle-pill {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            background: var(--card-light);
+            border: 1px solid var(--border-light);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        [data-bs-theme="dark"] .theme-toggle-pill {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        .theme-toggle-pill:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-    <div class="container text-center">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card border-0 shadow p-5 rounded-4 bg-white">
-                    <div class="text-warning mb-4">
-                        <i class="bi bi-hourglass-split display-1 animate-pulse"></i>
-                    </div>
-                    <h2 class="fw-bold mb-3">Application Under Review!</h2>
-                    <p class="text-muted fs-5 mb-4">
-                        Thank you for applying to be a seller on RinCart. Our administration team is currently reviewing your details. You will get access to the dashboard once approved.
-                    </p>
-                    <a href="/" class="btn btn-outline-primary btn-lg px-4 rounded-pill fw-bold">Back to Marketplace</a>
+<body>
+
+    <!-- Ambient Glow Layer -->
+    <div class="ambient-glow"></div>
+
+    <!-- 🌓 Floating Theme Switcher -->
+    <button id="darkModeToggle" class="theme-toggle-pill" type="button" aria-label="Toggle Theme">
+        <i id="darkModeIcon" class="bi bi-moon-stars-fill text-warning"></i>
+        <span id="darkModeText">Theme</span>
+    </button>
+
+    <div class="container d-flex justify-content-center">
+        <div class="card status-card text-center">
+            
+            <div class="card-accent-bar"></div>
+
+            <div class="card-body p-4 p-md-5">
+                
+                <!-- ⏳ Hourglass Animated Icon -->
+                <div class="icon-badge-wrapper">
+                    <i class="bi bi-hourglass-split display-4 animate-pulse"></i>
                 </div>
+
+                <!-- Main Status Heading -->
+                <h2 class="fw-extrabold mb-2">Application Under Review</h2>
+                <p class="text-secondary lh-base mb-4 mx-auto" style="max-width: 440px;">
+                    Thank you for applying to sell on <strong>RinCart</strong>! Our merchant verification team is currently processing your submitted details.
+                </p>
+
+                <!-- 📍 Application Status Timeline -->
+                <div class="p-3 rounded-4 bg-body-tertiary border border-secondary border-opacity-10 mb-4">
+                    <div class="d-flex justify-content-between position-relative">
+                        
+                        <!-- Step 1 -->
+                        <div class="timeline-step">
+                            <div class="timeline-line active"></div>
+                            <div class="timeline-icon completed mb-2">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <span class="small fw-bold" style="font-size: 0.75rem;">Submitted</span>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="timeline-step">
+                            <div class="timeline-line"></div>
+                            <div class="timeline-icon active mb-2">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <span class="small fw-bold text-warning" style="font-size: 0.75rem;">Reviewing</span>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="timeline-step">
+                            <div class="timeline-icon upcoming mb-2">
+                                <i class="bi bi-shop"></i>
+                            </div>
+                            <span class="small fw-bold text-secondary" style="font-size: 0.75rem;">Dashboard Access</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Info Callout -->
+                <div class="alert alert-warning alert-dismissible fade show p-3 rounded-3 small text-start d-flex align-items-center gap-2 mb-4 border-warning border-opacity-25" role="alert">
+                    <i class="bi bi-info-circle-fill text-warning fs-5 flex-shrink-0"></i>
+                    <span>Reviews typically take <strong>24 to 48 hours</strong>. You will receive an email notification once approved.</span>
+                </div>
+
+                <!-- Navigation Actions -->
+                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                    <a href="{% url 'home' %}" class="btn btn-brand-outline d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-arrow-left"></i>
+                        <span>Back to Marketplace</span>
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-warning fw-bold text-dark rounded-3 px-4 py-2.5 d-flex align-items-center justify-content-center gap-2 shadow-sm" style="border-radius: 16px !important;">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <span>Check Status</span>
+                    </a>
+                </div>
+
             </div>
+
+            <!-- Footer Note -->
+            <div class="card-footer bg-transparent border-top border-secondary border-opacity-10 py-3 text-secondary small">
+                Need help? <a href="#" class="text-warning text-decoration-none fw-semibold">Contact Seller Support</a>
+            </div>
+
         </div>
     </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 💡 Dark Theme Controller Engine -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('darkModeToggle');
+            const themeIcon = document.getElementById('darkModeIcon');
+            const themeText = document.getElementById('darkModeText');
+            const htmlElement = document.documentElement;
+
+            function updateButton(theme) {
+                if (!themeIcon) return;
+                if (theme === 'dark') {
+                    themeIcon.className = 'bi bi-sun-fill text-warning';
+                    if (themeText) themeText.innerText = 'Light';
+                } else {
+                    themeIcon.className = 'bi bi-moon-stars-fill text-warning';
+                    if (themeText) themeText.innerText = 'Dark';
+                }
+            }
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            htmlElement.setAttribute('data-bs-theme', savedTheme);
+            updateButton(savedTheme);
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                    const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+
+                    htmlElement.setAttribute('data-bs-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateButton(newTheme);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
