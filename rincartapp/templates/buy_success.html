@@ -1,141 +1,283 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<!-- 🔤 Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 🎨 Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-    /* Premium Success Page Styling */
+    :root {
+        --brand-gold: #ffb703;
+        --brand-orange: #fb8500;
+        --brand-gradient: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
+        --brand-glow: rgba(255, 183, 3, 0.25);
+        
+        --bg-light: #f8fafc;
+        --bg-dark: #030712;
+        
+        --card-light: #ffffff;
+        --card-dark: #0f172a;
+        
+        --border-light: rgba(226, 232, 240, 0.8);
+        --border-dark: rgba(255, 255, 255, 0.08);
+
+        --transition-smooth: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-light);
+        color: #0f172a;
+    }
+
+    [data-bs-theme="dark"] body {
+        background-color: var(--bg-dark) !important;
+        color: #f8fafc !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* 💎 Success Hero Card */
     .success-card {
-        background: #ffffff;
-        border: none;
-        border-radius: 24px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+        background: var(--card-light);
+        border: 1px solid var(--border-light);
+        border-radius: 28px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
+        transition: var(--transition-smooth);
         overflow: hidden;
     }
-    .success-icon-wrap {
-        animation: scaleIn 0.5s ease-out forwards;
+
+    [data-bs-theme="dark"] .success-card {
+        background: var(--card-dark);
+        border-color: var(--border-dark);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
-    .savings-banner {
-        background: linear-gradient(135deg, #d1e7dd 0%, #c1e1d2 100%);
-        border-left: 5px solid #198754;
-        border-radius: 12px;
+
+    /* Top Color Accent Line */
+    .card-accent-bar {
+        height: 6px;
+        width: 100%;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     }
-    .btn-deals {
-        background: linear-gradient(135deg, #4f46e5 0%, #3b31c4 100%);
-        color: white;
-        border: none;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    /* 🎉 Animated Success Check Icon */
+    .success-icon-badge {
+        width: 90px;
+        height: 90px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
+        animation: popScale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
-    .btn-deals:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
-        color: white;
+
+    @keyframes popScale {
+        0% { transform: scale(0); opacity: 0; }
+        70% { transform: scale(1.12); }
+        100% { transform: scale(1); opacity: 1; }
     }
-    /* Scrollbar for multiple items */
+
+    /* 🛒 Product Scroll Area */
     .ordered-items-box {
-        max-height: 260px;
+        max-height: 280px;
         overflow-y: auto;
-        padding-right: 5px;
+        padding-right: 4px;
     }
+
     .ordered-items-box::-webkit-scrollbar {
         width: 5px;
     }
+
     .ordered-items-box::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 10px;
+        background: rgba(156, 163, 175, 0.4);
+        border-radius: 99px;
     }
 
-    /* 🌟 ലോങ് ടെക്സ്റ്റ് കാരണം ലേഔട്ട് തകരാതിരിക്കാനുള്ള ഫിക്സ് */
+    .order-item-row {
+        background: rgba(248, 250, 252, 0.8);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        transition: var(--transition-smooth);
+    }
+
+    [data-bs-theme="dark"] .order-item-row {
+        background: rgba(30, 41, 59, 0.4);
+        border-color: var(--border-dark);
+    }
+
     .product-img-container {
-        width: 65px;
-        height: 65px;
-        flex-shrink: 0; /* ഇമേജ് ബോക്സ് ചുരുങ്ങിപ്പോകില്ല */
-    }
-    .product-text-container {
-        min-width: 0; /* text-truncate കൃത്യമായി വർക്ക് ചെയ്യാൻ ഇത് നിർബന്ധമാണ് */
+        width: 62px;
+        height: 62px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-light);
     }
 
-    @keyframes scaleIn {
-        0% { transform: scale(0); opacity: 0; }
-        80% { transform: scale(1.1); }
-        100% { transform: scale(1); opacity: 1; }
+    [data-bs-theme="dark"] .product-img-container {
+        border-color: var(--border-dark);
+    }
+
+    .product-text-container {
+        min-width: 0;
+    }
+
+    /* 🐷 Savings Banner */
+    .savings-banner {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.12) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        border-radius: 18px;
+    }
+
+    /* 🧾 Receipt Card Breakdown */
+    .receipt-box {
+        background: rgba(248, 250, 252, 0.6);
+        border: 1px solid var(--border-light);
+        border-radius: 18px;
+    }
+
+    [data-bs-theme="dark"] .receipt-box {
+        background: rgba(30, 41, 59, 0.3);
+        border-color: var(--border-dark);
+    }
+
+    /* 🚀 Action Buttons */
+    .btn-deals {
+        background: var(--brand-gradient);
+        color: white;
+        border: none;
+        font-weight: 700;
+        border-radius: 16px;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-deals:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px -6px var(--brand-glow);
+        color: white;
+    }
+
+    .btn-theme-toggle {
+        transition: var(--transition-smooth);
+        border-radius: 99px;
+    }
+
+    .btn-theme-toggle:hover {
+        transform: scale(1.05);
     }
 </style>
 
-<div class="container my-5 d-flex justify-content-center">
-    <div class="card success-card p-4 p-sm-5 text-center" style="max-width: 550px; width: 100%;">
-        
-        <div class="success-icon-wrap mb-4">
-            <i class="bi bi-check-circle-fill text-success" style="font-size: 5.5rem; line-height: 1;"></i>
-        </div>
+<div class="container py-4 py-md-5 d-flex justify-content-center">
+    
+    <div class="card success-card text-center" style="max-width: 580px; width: 100%;">
+        <div class="card-accent-bar"></div>
 
-        <h2 class="fw-bold text-success mb-1">Booking Successful!</h2>
-        <p class="text-muted small px-3">Thank you for your purchase. Your order has been verified and securely processed.</p>
-        
-        <div class="ordered-items-box my-4">
-            {% for item in ordered_items %}
-            <div class="d-flex align-items-center gap-3 bg-light p-3 rounded-3 text-start border border-dashed mb-2">
+        <div class="p-4 p-sm-5">
+            
+            <!-- 🌟 Success Icon Hero Header -->
+            <div class="mb-4">
+                <div class="success-icon-badge mb-3">
+                    <i class="bi bi-check-lg display-4"></i>
+                </div>
+                <h2 class="fw-extrabold text-success mb-1">Booking Successful!</h2>
+                <p class="text-secondary small mb-0 px-2">
+                    Thank you for your order! Your payment has been verified and your booking is confirmed.
+                </p>
+            </div>
+
+            <!-- 📦 Ordered Items List (Scrollable) -->
+            <div class="ordered-items-box my-4">
+                {% for item in ordered_items %}
+                <div class="order-item-row d-flex align-items-center gap-3 p-3 text-start mb-2.5">
+                    
+                    <!-- Product Image -->
+                    <div class="product-img-container bg-body-tertiary d-flex align-items-center justify-content-center">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <i class="bi bi-box-seam text-secondary fs-4"></i>
+                        {% endif %}
+                    </div>
+
+                    <!-- Product Title & Quantity -->
+                    <div class="product-text-container flex-grow-1">
+                        <h6 class="fw-bold mb-1 text-truncate" title="{{ item.product.name }}" style="font-size: 0.92rem;">
+                            {{ item.product.name }}
+                        </h6>
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 rounded-pill px-2.5 py-1" style="font-size: 0.72rem;">
+                            Qty: {{ item.quantity }}
+                        </span>
+                    </div>
+
+                    <!-- Computed Item Subtotal -->
+                    <div class="text-end flex-shrink-0">
+                        <span class="fw-extrabold text-body small">
+                            ₹{% if item.final_amount %}{{ item.final_amount|floatformat:2 }}{% elif item.subtotal %}{{ item.subtotal|floatformat:2 }}{% else %}{{ item.product.price|floatformat:2 }}{% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 🐷 Discount Savings Banner -->
+            {% if total_savings > 0 %}
+            <div class="savings-banner p-3 text-start mb-4 shadow-xs">
+                <div class="d-flex align-items-center gap-2.5">
+                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; flex-shrink: 0;">
+                        <i class="bi bi-piggy-bank-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-extrabold text-success mb-0">You Saved ₹{{ total_savings|floatformat:2 }}!</h6>
+                        <p class="text-success-emphasis small mb-0 mt-0.5" style="font-size: 0.78rem;">
+                            You locked in the best available promotion and deal discount on this booking.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- 🧾 Invoice Receipt Breakdown -->
+            <div class="receipt-box p-3.5 p-sm-4 text-start mb-4 small">
+                <div class="d-flex justify-content-between mb-2 text-secondary">
+                    <span>Original Item Price:</span>
+                    <span class="text-decoration-line-through fw-semibold">₹{{ original_total|floatformat:2 }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 text-secondary">
+                    <span>Discounted Item Price:</span>
+                    <span class="fw-bold text-body">₹{{ discounted_total|floatformat:2 }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 text-secondary">
+                    <span>GST / Taxes:</span>
+                    <span class="fw-bold text-danger">+₹{{ tax_amount|floatformat:2 }}</span>
+                </div>
                 
-                <div class="product-img-container">
-                    {% if item.product.image %}
-                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="65" height="65" style="object-fit: cover;" class="bg-white p-1 rounded border shadow-sm">
-                    {% else %}
-                        <div class="bg-white p-1 rounded border shadow-sm d-flex align-items-center justify-content-center w-100 h-100">
-                            <i class="bi bi-box-seam text-secondary fs-3"></i>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <div class="product-text-container flex-grow-1">
-                    <h6 class="fw-bold text-dark mb-1 lh-sm text-truncate" title="{{ item.product.name }}" style="font-size: 0.95rem;">
-                        {{ item.product.name }}
-                    </h6>
-                    <span class="badge bg-secondary rounded-pill small">Qty: {{ item.quantity }}</span>
-                </div>
-
-                <div class="text-end flex-shrink-0">
-                    <span class="fw-bold text-dark small">₹{{ item.final_amount|floatformat:2 }}</span>
+                <hr class="my-2.5 border-secondary border-opacity-15">
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-extrabold fs-6">Final Amount Paid:</span>
+                    <span class="fw-extrabold text-success fs-5">₹{{ final_amount|floatformat:2 }}</span>
                 </div>
             </div>
-            {% endfor %}
-        </div>
 
-        {% if total_savings > 0 %}
-        <div class="savings-banner p-3 text-start mb-4 shadow-sm">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-piggy-bank-fill text-success fs-4"></i>
-                <h5 class="fw-bold text-success mb-0">You Saved ₹{{ total_savings|floatformat:2 }}!</h5>
+            <!-- 🚀 Navigation Action Button -->
+            <div class="d-grid gap-2">
+                <a href="{% url 'view_deals' %}" class="btn btn-deals py-3 px-4 d-flex align-items-center justify-content-center gap-2 shadow-sm">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i>
+                    <span>Explore More Exclusive Deals</span>
+                </a>
             </div>
-            <p class="text-success-emphasis small mb-0 mt-1">Awesome! You successfully locked in the best original price discount on this slot.</p>
-        </div>
-        {% endif %}
 
-        <div class="text-start  p-3 rounded-3 mb-4 small border">
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">Original Total Price:</span>
-                <span class="text-decoration-line-through text-muted fw-semibold">₹{{ original_total|floatformat:2 }}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">Your Discounted Price:</span>
-                <span class=" fw-bold">₹{{ discounted_total|floatformat:2 }}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">GST / Government Taxes:</span>
-                <span class=" fw-semibold">+₹{{ tax_amount|floatformat:2 }}</span>
-            </div>
-            <hr class="my-2 opacity-25">
-            <div class="d-flex justify-content-between align-items-center fs-6 fw-bold">
-                <span >Final Amount Paid:</span>
-                <span class="text-success" style="font-size: 1.2rem;">₹{{ final_amount|floatformat:2 }}</span>
-            </div>
         </div>
-
-        <div class="d-grid mt-2">
-            <a href="{% url 'view_deals' %}" class="btn btn-deals btn-lg py-3 fw-bold rounded-3 d-flex align-items-center justify-content-center gap-2 shadow-sm">
-                <i class="bi bi-lightning-charge-fill text-warning"></i> View Exclusive Deals
-            </a>
-        </div>
-        
     </div>
 </div>
 
