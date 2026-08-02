@@ -1,72 +1,368 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Options - RinCart</title>
+    <title>Payment Options — RinCart</title>
+
+    <!-- 🔤 Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
+
+    <style>
+        :root {
+            --brand-accent: #4f46e5;
+            --brand-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            
+            --card-bg: #ffffff;
+            --sub-card-bg: #f8fafc;
+            --border-subtle: rgba(226, 232, 240, 0.8);
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --input-bg: #ffffff;
+            
+            --transition-base: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        [data-bs-theme="dark"] {
+            --card-bg: #0f172a;
+            --sub-card-bg: rgba(255, 255, 255, 0.03);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --input-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--sub-card-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4, h5, h6, .navbar-brand {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* 🌐 Navigation Header */
+        .navbar-brand { font-weight: 800; letter-spacing: 0.5px; }
+
+        /* 💳 Payment Container Cards */
+        .payment-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06);
+            transition: var(--transition-base);
+        }
+
+        /* 🗂️ Nav Tabs Modern Styling */
+        .nav-pills-custom {
+            background: var(--sub-card-bg);
+            padding: 6px;
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .nav-pills-custom .nav-link {
+            color: var(--text-sub);
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 12px;
+            padding: 10px 18px;
+            transition: var(--transition-base);
+        }
+
+        .nav-pills-custom .nav-link.active {
+            background: var(--brand-accent);
+            color: #ffffff;
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+        }
+
+        /* 🏦 Method Tile Box */
+        .payment-method-box {
+            background: var(--sub-card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            transition: var(--transition-base);
+        }
+
+        .payment-method-box:hover {
+            border-color: rgba(79, 70, 229, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 🔒 Security Badge Pill */
+        .security-badge {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-radius: 50px;
+            padding: 6px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 🔘 Custom Inputs */
+        .form-control-custom {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+        }
+
+        .form-control-custom:focus {
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            border-color: var(--brand-accent);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+        }
+
+        .btn-brand {
+            background: var(--brand-accent);
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 12px 24px;
+            border: none;
+            transition: var(--transition-base);
+        }
+
+        .btn-brand:hover {
+            background: #4338ca;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.25);
+        }
+
+        .payment-icon-pill {
+            font-size: 1.8rem;
+            color: var(--text-sub);
+            transition: var(--transition-base);
+        }
+
+        .payment-icon-pill:hover {
+            color: var(--brand-accent);
+            transform: scale(1.1);
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container py-5" style="max-width: 900px;">
+<body>
+
+    <!-- 🌐 Header & Navbar -->
+    <nav class="navbar navbar-dark bg-dark shadow-sm py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a class="navbar-brand text-warning m-0 fs-4" href="{% url 'home' %}">
+                <i class="fa-solid fa-bolt me-1 text-warning"></i>RinCart
+            </a>
+            
+            <div class="d-flex align-items-center gap-3">
+                <a class="text-white text-decoration-none small d-none d-sm-inline" href="{% url 'home' %}">
+                    <i class="fa-solid fa-house text-primary me-1"></i> Home
+                </a>
+                <a class="text-white text-decoration-none small d-none d-sm-inline" href="{% url 'user_account' %}">
+                    <i class="fa-solid fa-user text-info me-1"></i> Account
+                </a>
+
+                <!-- 🌓 Dark Mode Toggle Button -->
+                <button id="darkModeToggle" class="btn btn-outline-light btn-sm rounded-pill px-3 d-flex align-items-center gap-2">
+                    <i id="darkModeIcon" class="bi bi-moon-stars-fill text-warning"></i>
+                    <span id="darkModeText" class="d-none d-md-inline">Theme</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 📦 Main Content Area -->
+    <div class="container py-4 py-md-5" style="max-width: 820px;">
+        
+        <!-- Breadcrumbs -->
         <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb small">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'user_account' %}" class="text-decoration-none">Your Account</a></li>
-                <li class="breadcrumb-item active">Payments</li>
+                <li class="breadcrumb-item active text-body fw-semibold">Payment Options</li>
             </ol>
         </nav>
 
-        <h3 class="fw-bold mb-4">Payment Options</h3>
-
-        <div class="card border-0 shadow-sm p-4 rounded-4">
-            <h5 class="fw-bold mb-3"><i class="bi bi-credit-card-2-front me-2 text-primary"></i>Saved Cards & Wallets</h5>
-            <p class="text-muted small">You have no saved cards. RinCart accepts all major credit/debit cards and UPI options.</p>
-            <hr>
-            <div class="d-flex gap-3 text-muted fs-3">
-                <i class="bi bi-credit-card"></i>
-                <i class="bi bi-wallet2"></i>
-                <i class="bi bi-paypal"></i>
+        <!-- Page Title & Security Header -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <h3 class="fw-extrabold mb-1">Payment Options & Wallets</h3>
+                <p class="text-secondary small mb-0">Manage saved payment methods and preferred options</p>
+            </div>
+            <div class="security-badge">
+                <i class="bi bi-shield-lock-fill"></i> 256-Bit Encrypted
             </div>
         </div>
+
+        <!-- 💳 Main Payment Card -->
+        <div class="card payment-card p-4 p-md-5">
+
+            <!-- Tabbed Navigation -->
+            <ul class="nav nav-pills nav-pills-custom mb-4 gap-1" id="paymentTabs" role="tablist">
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100 active" id="saved-tab" data-bs-toggle="pill" data-bs-target="#saved-pane" type="button" role="tab">
+                        <i class="bi bi-wallet2 me-1.5"></i> Saved Methods
+                    </button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100" id="add-card-tab" data-bs-toggle="pill" data-bs-target="#add-card-pane" type="button" role="tab">
+                        <i class="bi bi-credit-card me-1.5"></i> Add New Card
+                    </button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100" id="upi-tab" data-bs-toggle="pill" data-bs-target="#upi-pane" type="button" role="tab">
+                        <i class="bi bi-qr-code-scan me-1.5"></i> UPI & Net Banking
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="paymentTabsContent">
+                
+                <!-- Tab 1: Saved Methods -->
+                <div class="tab-pane fade show active" id="saved-pane" role="tabpanel" aria-labelledby="saved-tab">
+                    <div class="payment-method-box text-center py-5">
+                        <div class="mb-3">
+                            <i class="bi bi-credit-card-2-front text-secondary display-4 opacity-50"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1">No Saved Payment Methods Found</h6>
+                        <p class="text-secondary small mb-3" style="max-width: 420px; margin: 0 auto;">
+                            Save your credit/debit cards or UPI IDs during checkout for ultra-fast single-click ordering.
+                        </p>
+                        <button class="btn btn-outline-primary btn-sm rounded-pill fw-bold px-4" onclick="document.getElementById('add-card-tab').click()">
+                            <i class="bi bi-plus-circle me-1"></i> Add a New Card
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Add New Card Form -->
+                <div class="tab-pane fade" id="add-card-pane" role="tabpanel" aria-labelledby="add-card-tab">
+                    <form onsubmit="event.preventDefault(); alert('Card details saved securely!');">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label small fw-bold">Cardholder Name</label>
+                                <input type="text" class="form-control form-control-custom" placeholder="e.g. Rahul Sharma" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold">Card Number</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-control-custom" placeholder="4532 •••• •••• 8892" maxlength="19" required>
+                                    <span class="input-group-text bg-transparent border-start-0 text-secondary">
+                                        <i class="bi bi-credit-card-fill"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Expiry Date</label>
+                                <input type="text" class="form-control form-control-custom" placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">CVV</label>
+                                <input type="password" class="form-control form-control-custom" placeholder="•••" maxlength="4" required>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-brand w-100">
+                                    <i class="bi bi-shield-check me-1"></i> Save Card Securely
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tab 3: UPI & Net Banking -->
+                <div class="tab-pane fade" id="upi-pane" role="tabpanel" aria-labelledby="upi-tab">
+                    <div class="payment-method-box mb-3">
+                        <h6 class="fw-bold mb-2"><i class="bi bi-phone text-primary me-2"></i>Instant UPI Payments</h6>
+                        <p class="text-secondary small mb-3">Pay directly using any installed UPI application.</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-secondary bg-opacity-10 text-body border p-2 fw-semibold"><i class="bi bi-google me-1 text-danger"></i> Google Pay</span>
+                            <span class="badge bg-secondary bg-opacity-10 text-body border p-2 fw-semibold"><i class="bi bi-phone-vibrate me-1 text-primary"></i> PhonePe</span>
+                            <span class="badge bg-secondary bg-opacity-10 text-body border p-2 fw-semibold"><i class="bi bi-wallet-fill me-1 text-info"></i> Paytm UPI</span>
+                            <span class="badge bg-secondary bg-opacity-10 text-body border p-2 fw-semibold"><i class="bi bi-bank me-1 text-success"></i> BHIM UPI</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="my-4 opacity-10">
+
+            <!-- Accepted Payment Partners Section -->
+            <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 text-center text-sm-start">
+                <span class="small text-secondary fw-semibold">Accepted Partners:</span>
+                <div class="d-flex align-items-center gap-4 payment-icon-pill">
+                    <i class="bi bi-credit-card" title="Credit / Debit Cards"></i>
+                    <i class="bi bi-paypal" title="PayPal"></i>
+                    <i class="bi bi-wallet2" title="Net Banking"></i>
+                    <i class="bi bi-qr-code" title="UPI Options"></i>
+                </div>
+            </div>
+
+        </div>
+
     </div>
-        <script>
+
+    <!-- 🌐 Footer -->
+    <footer class="bg-dark text-light py-4 mt-auto border-top border-secondary text-center">
+        <p class="mb-0 small opacity-75">&copy; 2026 RinCart Inc. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ⚡ Theme Toggle Script (Bug-Free & Persistent) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
             const toggleBtn = document.getElementById('darkModeToggle');
             const themeIcon = document.getElementById('darkModeIcon');
             const themeText = document.getElementById('darkModeText');
             const htmlElement = document.documentElement;
 
-            // മുൻപ് സെറ്റ് ചെയ്ത തീം ഉണ്ടോ എന്ന് പരിശോധിക്കുന്നു (Local Storage)
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                htmlElement.setAttribute('data-bs-theme', savedTheme);
-                updateButton(savedTheme);
-            }
-
-            toggleBtn.addEventListener('click', () => {
-                // നിലവിലെ തീം ഏതാണെന്ന് നോക്കുന്നു
-                const currentTheme = htmlElement.getAttribute('data-bs-theme');
-                let newTheme = 'light';
-
-                if (currentTheme === 'light' || !currentTheme) {
-                    newTheme = 'dark';
+            const updateButton = (theme) => {
+                if (!themeIcon) return;
+                if (theme === 'dark') {
+                    themeIcon.className = 'bi bi-sun-fill text-warning';
+                    if (themeText) themeText.textContent = 'Light Mode';
+                } else {
+                    themeIcon.className = 'bi bi-moon-stars-fill text-warning';
+                    if (themeText) themeText.textContent = 'Dark Mode';
                 }
+            };
 
-                // തീം മാറ്റുന്നു
-                htmlElement.setAttribute('data-bs-theme', newTheme);
-                localStorage.setItem('theme', newTheme); // പേജ് റീഫ്രഷ് ചെയ്താലും മാറതിരിക്കാൻ
-                updateButton(newTheme);
-            });
+            // Check stored preference
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            htmlElement.setAttribute('data-bs-theme', savedTheme);
+            updateButton(savedTheme);
 
-            // തീം മാറുന്നതിനനുസരിച്ച് ബട്ടണിലെ ഐക്കണും ടെക്സ്റ്റും മാറ്റാൻ
-            function updateButton(theme) {
-            if (theme === 'dark') {
-                themeIcon.className = 'bi bi-sun-fill text-warning'; // സൂര്യന്റെ ഐക്കൺ
-            } else {
-                themeIcon.className = 'bi bi-moon-stars-fill text-warning'; // ചന്ദ്രന്റെ ഐക്കൺ (Navbar എപ്പോഴും ഡാർക്ക് ആയതുകൊണ്ട് text-warning തന്നെയാണ് ഭംഗി)
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                    const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+
+                    htmlElement.setAttribute('data-bs-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateButton(newTheme);
+                });
             }
-        }
-
+        });
     </script>
 </body>
 </html>
